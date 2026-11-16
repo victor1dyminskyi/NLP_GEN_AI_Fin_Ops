@@ -1,0 +1,96 @@
+{
+  "alert": {
+    "alert_id": "AL-011",
+    "resource": "ml-train-74",
+    "account": "ml-dev",
+    "rule": "new_resource",
+    "start_date": "2026-06-25 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 136.11,
+    "extra_usd_day": 136.11,
+    "usage_effect": 136.11,
+    "price_effect": 0.0,
+    "related": NaN,
+    "resource_kind": "gpu_server"
+  },
+  "resource": "ml-train-74",
+  "form": {
+    "type": "planned_change",
+    "owner_team": "ml",
+    "action": "no_action",
+    "start_date": "2026-06-25",
+    "confidence": 1.0,
+    "explanation": "The cost spike is explained by an approved change ticket (CHG-4022) for a 3-day training run.",
+    "evidence": [
+      "The GPU server is now busy (78.8% GPU usage).",
+      "There is an approved change ticket (CHG-4022) for a 3-day training run."
+    ],
+    "owner_message": ""
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 13.9,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.5,
+      "raw": "{\"thought\": \"The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"ml-train-74\"}}",
+      "thought": "The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "ml-train-74"
+      },
+      "result": "{\"ResourceName\": \"ml-train-74\", \"ResourceId\": \"i-0a290ee86c4b9528c\", \"account\": \"ml-dev\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$5.672 per On Demand Linux g5.12xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"ml\\\", \\\"application\\\": \\\"training\\\", \\\"environment\\\": \\\"dev\\\"}\", \"first_billed\": \"2026-06-25\", \"last_billed\": \"2026-06-27\", \"avg_cost_per_day\": 136.11, \"account_team\": \"ml\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 3.0,
+      "raw": "{\"thought\": \"The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.\", \"tool\": \"usage\", \"args\": {\"resource\": \"ml-train-74\", \"around_date\": \"2026-06-25\"}}",
+      "thought": "The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.",
+      "tool": "usage",
+      "args": {
+        "resource": "ml-train-74",
+        "around_date": "2026-06-25"
+      },
+      "result": "CHANGE: GPU busy: n/a% before \u2192 78.8% after (3 days after); CPU busy: n/a% before \u2192 29.6% after (3 days after)\nperiod,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nafter,3,29.6,78.8,83.2,1\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.1,
+      "raw": "{\"thought\": \"The GPU server is now busy, which explains the cost spike. I need to check if there's an approved ticket.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"ml-train-74\"}}",
+      "thought": "The GPU server is now busy, which explains the cost spike. I need to check if there's an approved ticket.",
+      "tool": "change_events",
+      "args": {
+        "resource": "ml-train-74"
+      },
+      "result": "TICKETS: CHG-4022: approved training run, 3 days\nevent_time,event_name,actor,ticket,details\n2026-06-25 11:00:00,RunInstances,omar.haddad,\"CHG-4022: approved training run, 3 days\",\n2026-06-27 18:00:00,TerminateInstances,omar.haddad,\"CHG-4022: approved training run, 3 days\",\n"
+    },
+    {
+      "step": 4,
+      "seconds": 6.2,
+      "raw": "{\"thought\": \"The cost spike is covered by an approved change ticket. This is a planned change.\", \"final\": {\n    \"type\": \"planned_change\",\n    \"owner_team\": \"ml\",\n    \"action\": \"no_action\",\n    \"start_date\": \"2026-06-25\",\n    \"confidence\": 1.0,\n    \"explanation\": \"The cost spike is explained by an approved change ticket (CHG-4022) for a 3-day training run.\",\n    \"evidence\": [\"The GPU server is now busy (78.8% GPU usage).\", \"There is an approved change ticket (CHG-4022) for a 3-day training run.\"],\n    \"owner_message\": \"\"\n}}",
+      "thought": "The cost spike is covered by an approved change ticket. This is a planned change.",
+      "final": {
+        "type": "planned_change",
+        "owner_team": "ml",
+        "action": "no_action",
+        "start_date": "2026-06-25",
+        "confidence": 1.0,
+        "explanation": "The cost spike is explained by an approved change ticket (CHG-4022) for a 3-day training run.",
+        "evidence": [
+          "The GPU server is now busy (78.8% GPU usage).",
+          "There is an approved change ticket (CHG-4022) for a 3-day training run."
+        ],
+        "owner_message": ""
+      }
+    }
+  ]
+}

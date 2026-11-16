@@ -1,0 +1,96 @@
+{
+  "alert": {
+    "alert_id": "AL-003",
+    "resource": "data-etl-workers",
+    "account": "data-prod",
+    "rule": "price+usage",
+    "start_date": "2026-04-23 00:00:00",
+    "score": 42.9,
+    "normal_usd_day": 54.89,
+    "current_usd_day": 78.62,
+    "extra_usd_day": 23.73,
+    "usage_effect": 0.15,
+    "price_effect": 23.59,
+    "related": NaN,
+    "resource_kind": "server"
+  },
+  "resource": "data-etl-workers",
+  "form": {
+    "type": "idle_gpu",
+    "owner_team": "data",
+    "action": "stop_instance",
+    "start_date": "2026-04-23",
+    "confidence": 0.9,
+    "explanation": "The server is still running and busy, but there's no approved ticket for the cost increase.",
+    "evidence": [
+      "The server is still running and busy.",
+      "There's no approved ticket for the cost increase."
+    ],
+    "owner_message": "The data-etl-workers server is still running and busy, but there's no approved ticket for the cost increase. Please stop the instance to avoid unnecessary costs."
+  },
+  "gate": {
+    "needs_approval": true,
+    "escalated": false,
+    "status": "awaiting_approval"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 13.7,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"The resource is a server, and the cost has increased significantly. I need to check if it's still busy and if there's an approved ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"data-etl-workers\"}}",
+      "thought": "The resource is a server, and the cost has increased significantly. I need to check if it's still busy and if there's an approved ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "data-etl-workers"
+      },
+      "result": "{\"ResourceName\": \"data-etl-workers\", \"ResourceId\": \"i-09223657f9dcb7d34\", \"account\": \"data-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.252 per On Demand Linux r5.xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"data\\\", \\\"application\\\": \\\"etl\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 71.16, \"account_team\": \"data\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 3.1,
+      "raw": "{\"thought\": \"The server is still running and has tags, so it's not untagged. I need to check if it's busy and if there's an approved ticket.\", \"tool\": \"usage\", \"args\": {\"resource\": \"data-etl-workers\", \"around_date\": \"2026-04-23\"}}",
+      "thought": "The server is still running and has tags, so it's not untagged. I need to check if it's busy and if there's an approved ticket.",
+      "tool": "usage",
+      "args": {
+        "resource": "data-etl-workers",
+        "around_date": "2026-04-23"
+      },
+      "result": "CHANGE: CPU busy: 6.2% before \u2192 6.2% after (131 days after)\nperiod,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nbefore,53,6.2,,,12.9\nafter,131,6.2,,,12.9\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.1,
+      "raw": "{\"thought\": \"The server is still busy, but there's no significant change in CPU usage. I need to check if there's an approved ticket.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"data-etl-workers\"}}",
+      "thought": "The server is still busy, but there's no significant change in CPU usage. I need to check if there's an approved ticket.",
+      "tool": "change_events",
+      "args": {
+        "resource": "data-etl-workers"
+      },
+      "result": "TICKETS: none\nevent_time,event_name,actor,ticket,details\n2025-12-23 17:24:00,RunInstances,mei.lin,,\n"
+    },
+    {
+      "step": 4,
+      "seconds": 6.2,
+      "raw": "{\"thought\": \"There's no approved ticket for the increase in cost. The server is still busy, so this is likely a waste of money.\", \"final\": {\n    \"type\": \"idle_gpu\",\n    \"owner_team\": \"data\",\n    \"action\": \"stop_instance\",\n    \"start_date\": \"2026-04-23\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The server is still running and busy, but there's no approved ticket for the cost increase.\",\n    \"evidence\": [\"The server is still running and busy.\", \"There's no approved ticket for the cost increase.\"],\n    \"owner_message\": \"The data-etl-workers server is still running and busy, but there's no approved ticket for the cost increase. Please stop the instance to avoid unnecessary costs.\"\n}}",
+      "thought": "There's no approved ticket for the increase in cost. The server is still busy, so this is likely a waste of money.",
+      "final": {
+        "type": "idle_gpu",
+        "owner_team": "data",
+        "action": "stop_instance",
+        "start_date": "2026-04-23",
+        "confidence": 0.9,
+        "explanation": "The server is still running and busy, but there's no approved ticket for the cost increase.",
+        "evidence": [
+          "The server is still running and busy.",
+          "There's no approved ticket for the cost increase."
+        ],
+        "owner_message": "The data-etl-workers server is still running and busy, but there's no approved ticket for the cost increase. Please stop the instance to avoid unnecessary costs."
+      }
+    }
+  ]
+}

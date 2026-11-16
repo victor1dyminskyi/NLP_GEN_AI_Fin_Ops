@@ -1,0 +1,17 @@
+alert_id,resource,rule,start_date,type,owner_team,action,confidence,status,tool_calls,seconds
+AL-001,sf-perf-test-24,new_resource,2026-04-14,untagged_resource,storefront,tag_and_notify_owner,0.9,auto_executed (simulated),3,22.4
+AL-002,sf-egress,usage,2026-05-11,planned_change,storefront,no_action,1.0,no_action,2,15.2
+AL-003,sf-perf-test-53,new_resource,2026-05-22,untagged_resource,storefront,tag_and_notify_owner,0.9,auto_executed (simulated),3,15.1
+AL-004,ml-train-37,new_resource,2026-06-06,other,ml,no_action,0.9,escalated_to_human,4,15.2
+AL-005,bi-egress,usage,2026-06-11,other,analytics,no_action,0.8,escalated_to_human,3,11.9
+AL-006,pay-fraud-82,new_resource,2026-06-14,planned_change,payments,no_action,1.0,no_action,3,15.0
+AL-007,data-migration-45,new_resource,2026-06-26,no_issue,data,no_action,0.9,no_action,3,14.8
+AL-008,data-migration-45-vol,new_resource,2026-06-26,other,data,no_action,0.9,escalated_to_human,2,11.1
+AL-009,data-etl-workers,price+usage,2026-07-01,idle_gpu,data,stop_instance,0.9,awaiting_approval,3,14.4
+AL-010,sf-api-asg,price+usage,2026-07-01,other,storefront,no_action,0.9,escalated_to_human,2,12.7
+AL-011,sf-web-asg,price+usage,2026-07-01,sp_expired,platform,recommend_sp_renewal,0.9,awaiting_approval,4,16.3
+AL-012,plat-inter-az,usage,2026-07-06,no_issue,platform,no_action,0.9,no_action,3,15.6
+AL-013,ml-train-72,new_resource,2026-07-07,idle_gpu,ml,stop_instance,0.9,awaiting_approval,3,13.5
+AL-014,data-migration-45-vol,orphan,2026-07-10,orphaned_disk,data,snapshot_then_delete_volume,1.0,awaiting_approval,5,18.4
+AL-015,sf-perf-test-29,new_resource,2026-08-01,untagged_resource,storefront,tag_and_notify_owner,0.9,auto_executed (simulated),3,15.3
+AL-016,ml-train-22,new_resource,2026-08-08,idle_gpu,ml,stop_instance,0.9,awaiting_approval,3,13.6

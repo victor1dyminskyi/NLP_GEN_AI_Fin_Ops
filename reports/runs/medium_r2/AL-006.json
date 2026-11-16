@@ -1,0 +1,97 @@
+{
+  "alert": {
+    "alert_id": "AL-006",
+    "resource": "sf-perf-test-45",
+    "account": "storefront-dev",
+    "rule": "new_resource",
+    "start_date": "2026-06-17 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 32.49,
+    "extra_usd_day": 32.49,
+    "usage_effect": 32.49,
+    "price_effect": 0.0,
+    "related": NaN,
+    "resource_kind": "server"
+  },
+  "resource": "sf-perf-test-45",
+  "form": {
+    "type": "untagged_resource",
+    "owner_team": "storefront",
+    "action": "tag_and_notify_owner",
+    "start_date": "2026-06-17",
+    "confidence": 0.9,
+    "explanation": "The server has a significant cost spike and is untagged, so it's not accounted for. It was created by 'alex.moreno' without an approved ticket.",
+    "evidence": [
+      "The server has a significant cost spike of $32.49 per day.",
+      "The server is untagged.",
+      "The server was created by 'alex.moreno' without an approved ticket."
+    ],
+    "owner_message": "The server sf-perf-test-45 has been created without tags and is costing $32.49 per day. Please tag the resource and open a ticket if necessary."
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "auto_executed (simulated)"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 15.1,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"The resource is a server with a significant cost spike. I need to determine if it's still running and if there's an approved ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"sf-perf-test-45\"}}",
+      "thought": "The resource is a server with a significant cost spike. I need to determine if it's still running and if there's an approved ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "sf-perf-test-45"
+      },
+      "result": "{\"ResourceName\": \"sf-perf-test-45\", \"ResourceId\": \"i-03af04fabf8137cbe\", \"account\": \"storefront-dev\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.68 per On Demand Linux c5.4xlarge Instance Hour\", \"tags\": \"NONE (untagged)\", \"first_billed\": \"2026-06-17\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 32.55, \"account_team\": \"storefront\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.5,
+      "raw": "{\"thought\": \"The server is untagged and has a significant cost spike. I need to find out who created it and if there's an approved ticket.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-perf-test-45\"}}",
+      "thought": "The server is untagged and has a significant cost spike. I need to find out who created it and if there's an approved ticket.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-perf-test-45"
+      },
+      "result": "TICKETS: none\nevent_time,event_name,actor,ticket,details\n2026-06-17 10:00:00,RunInstances,alex.moreno,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"The server was created by 'alex.moreno' on 2026-06-17 but there's no approved ticket. This is an untagged resource.\", \"tool\": \"get_owner\", \"args\": {\"account\": \"storefront-dev\"}}",
+      "thought": "The server was created by 'alex.moreno' on 2026-06-17 but there's no approved ticket. This is an untagged resource.",
+      "tool": "get_owner",
+      "args": {
+        "account": "storefront-dev"
+      },
+      "result": "team,owner,email,slack\nstorefront,Alex Moreno,storefront-team@demoshop.example,#team-storefront\n"
+    },
+    {
+      "step": 4,
+      "seconds": 8.0,
+      "raw": "{\"thought\": \"The server is untagged and created by 'alex.moreno' without an approved ticket. The owner is 'Alex Moreno' from the 'storefront' team.\", \"final\": {\n     \"type\": \"untagged_resource\",\n     \"owner_team\": \"storefront\",\n     \"action\": \"tag_and_notify_owner\",\n     \"start_date\": \"2026-06-17\",\n     \"confidence\": 0.9,\n     \"explanation\": \"The server has a significant cost spike and is untagged, so it's not accounted for. It was created by 'alex.moreno' without an approved ticket.\",\n     \"evidence\": [\"The server has a significant cost spike of $32.49 per day.\", \"The server is untagged.\", \"The server was created by 'alex.moreno' without an approved ticket.\"],\n     \"owner_message\": \"The server sf-perf-test-45 has been created without tags and is costing $32.49 per day. Please tag the resource and open a ticket if necessary.\"\n}}",
+      "thought": "The server is untagged and created by 'alex.moreno' without an approved ticket. The owner is 'Alex Moreno' from the 'storefront' team.",
+      "final": {
+        "type": "untagged_resource",
+        "owner_team": "storefront",
+        "action": "tag_and_notify_owner",
+        "start_date": "2026-06-17",
+        "confidence": 0.9,
+        "explanation": "The server has a significant cost spike and is untagged, so it's not accounted for. It was created by 'alex.moreno' without an approved ticket.",
+        "evidence": [
+          "The server has a significant cost spike of $32.49 per day.",
+          "The server is untagged.",
+          "The server was created by 'alex.moreno' without an approved ticket."
+        ],
+        "owner_message": "The server sf-perf-test-45 has been created without tags and is costing $32.49 per day. Please tag the resource and open a ticket if necessary."
+      }
+    }
+  ]
+}

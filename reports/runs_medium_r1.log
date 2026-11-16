@@ -1,0 +1,18 @@
+16 alerts on data/synthetic/medium/r1 · model finops-agent
+  AL-001 sf-perf-test-24          → untagged_resource  storefront  tag_and_notify_owner         conf=1.0 [auto_executed (simulated)] 3 tools, 17.1s
+  AL-002 sf-egress                → planned_change     storefront  no_action                    conf=1.0 [no_action] 3 tools, 16.5s
+  AL-003 sf-perf-test-53          → untagged_resource  storefront  tag_and_notify_owner         conf=1.0 [auto_executed (simulated)] 3 tools, 11.3s
+  AL-004 ml-train-37              → planned_change     ml          no_action                    conf=1.0 [no_action] 2 tools, 19.3s
+  AL-005 bi-egress                → transfer_spike     analytics   notify_owner_open_ticket     conf=0.9 [auto_executed (simulated)] 3 tools, 17.0s
+  AL-006 pay-fraud-82             → planned_change     payments    no_action                    conf=1.0 [no_action] 2 tools, 14.1s
+  AL-007 data-migration-45        → no_issue           data        no_action                    conf=1.0 [no_action] 2 tools, 18.8s
+  AL-008 data-migration-45-vol    → no_issue           data        no_action                    conf=1.0 [no_action] 4 tools, 18.8s
+  AL-009 data-etl-workers         → sp_expired         platform    recommend_sp_renewal         conf=0.9 [awaiting_approval] 4 tools, 22.6s
+  AL-010 sf-api-asg               → sp_expired         platform    recommend_sp_renewal         conf=0.9 [awaiting_approval] 5 tools, 18.2s
+  AL-011 sf-web-asg               → other              None        no_action                    conf=0.0 [escalated_to_human] 1 tools, 23.5s
+  AL-012 plat-inter-az            → other              platform    no_action                    conf=0.9 [no_action] 5 tools, 17.5s
+  AL-013 ml-train-72              → other              ml          no_action                    conf=0.9 [no_action] 3 tools, 13.3s
+  AL-014 data-migration-45-vol    → orphaned_disk      data        snapshot_then_delete_volume  conf=0.9 [awaiting_approval] 5 tools, 15.8s
+  AL-015 sf-perf-test-29          → untagged_resource  storefront  tag_and_notify_owner         conf=1.0 [auto_executed (simulated)] 3 tools, 11.7s
+  AL-016 ml-train-22              → no_issue           ml          no_action                    conf=1.0 [no_action] 2 tools, 20.0s
+Saved reports/runs/medium_r1/

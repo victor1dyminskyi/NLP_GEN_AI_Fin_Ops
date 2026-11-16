@@ -1,0 +1,86 @@
+{
+  "alert": {
+    "alert_id": "AL-005",
+    "resource": "sf-web-asg",
+    "account": "storefront-prod",
+    "rule": "price+usage",
+    "start_date": "2026-04-23 00:00:00",
+    "score": 42.9,
+    "normal_usd_day": 114.96,
+    "current_usd_day": 167.38,
+    "extra_usd_day": 52.41,
+    "usage_effect": 2.2,
+    "price_effect": 50.21,
+    "related": NaN,
+    "resource_kind": "server"
+  },
+  "resource": "sf-web-asg",
+  "form": {
+    "type": "planned_change",
+    "owner_team": "storefront",
+    "action": "no_action",
+    "start_date": "2026-04-23",
+    "confidence": 0.9,
+    "explanation": "The server is still running and has tags, indicating it's part of a planned change. There's no approved ticket for the cost increase.",
+    "evidence": [
+      "The server is still running.",
+      "The server has tags.",
+      "No approved ticket for the cost increase."
+    ],
+    "owner_message": ""
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 3,
+  "tool_calls": 2,
+  "form_fixes": 0,
+  "seconds": 10.4,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The resource is a server, and there's a significant increase in cost. I need to check if it's still running and if there's an approved ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"sf-web-asg\"}}",
+      "thought": "The resource is a server, and there's a significant increase in cost. I need to check if it's still running and if there's an approved ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "sf-web-asg"
+      },
+      "result": "{\"ResourceName\": \"sf-web-asg\", \"ResourceId\": \"i-0573caab302269683\", \"account\": \"storefront-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.34 per On Demand Linux c5.2xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"storefront\\\", \\\"application\\\": \\\"web\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 149.01, \"account_team\": \"storefront\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.5,
+      "raw": "{\"thought\": \"The server is still running and has tags, so it's not untagged. I need to check if there's an approved ticket for the cost increase.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-web-asg\"}}",
+      "thought": "The server is still running and has tags, so it's not untagged. I need to check if there's an approved ticket for the cost increase.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-web-asg"
+      },
+      "result": "TICKETS: none\nevent_time,event_name,actor,ticket,details\n2025-06-29 07:06:00,RunInstances,alex.moreno,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 5.4,
+      "raw": "{\"thought\": \"There's no approved ticket for the cost increase, and the server is still running. This is a planned change.\", \"final\": {\n    \"type\": \"planned_change\",\n    \"owner_team\": \"storefront\",\n    \"action\": \"no_action\",\n    \"start_date\": \"2026-04-23\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The server is still running and has tags, indicating it's part of a planned change. There's no approved ticket for the cost increase.\",\n    \"evidence\": [\"The server is still running.\", \"The server has tags.\", \"No approved ticket for the cost increase.\"],\n    \"owner_message\": \"\"\n}}",
+      "thought": "There's no approved ticket for the cost increase, and the server is still running. This is a planned change.",
+      "final": {
+        "type": "planned_change",
+        "owner_team": "storefront",
+        "action": "no_action",
+        "start_date": "2026-04-23",
+        "confidence": 0.9,
+        "explanation": "The server is still running and has tags, indicating it's part of a planned change. There's no approved ticket for the cost increase.",
+        "evidence": [
+          "The server is still running.",
+          "The server has tags.",
+          "No approved ticket for the cost increase."
+        ],
+        "owner_message": ""
+      }
+    }
+  ]
+}

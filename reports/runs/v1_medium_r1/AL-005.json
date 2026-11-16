@@ -1,0 +1,93 @@
+{
+  "alert": {
+    "alert_id": "AL-005",
+    "resource": "bi-egress",
+    "account": "analytics-prod",
+    "rule": "usage",
+    "start_date": "2026-06-11 00:00:00",
+    "score": 12.9,
+    "normal_usd_day": 0.74,
+    "current_usd_day": 2.63,
+    "extra_usd_day": 1.9,
+    "usage_effect": 1.9,
+    "price_effect": -0.0,
+    "related": NaN
+  },
+  "resource": "bi-egress",
+  "form": {
+    "type": "transfer_spike",
+    "owner_team": "analytics",
+    "action": "notify_owner_open_ticket",
+    "start_date": "2026-06-11",
+    "confidence": 0.9,
+    "explanation": "The cost increase is due to a sharp spike in data transfer out, which is within the expected range for data transfer. No approved ticket is mentioned.",
+    "evidence": [
+      "The cost increased from $0.74 to $2.63 per day.",
+      "No approved change ticket is mentioned."
+    ]
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "auto_executed (simulated)"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 17.0,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.8,
+      "raw": "{\"thought\": \"The resource 'bi-egress' has a significant increase in cost from $0.74 to $2.63 per day, which is 1.9 times the normal usage. This suggests a potential issue that needs investigation.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"bi-egress\"}}",
+      "thought": "The resource 'bi-egress' has a significant increase in cost from $0.74 to $2.63 per day, which is 1.9 times the normal usage. This suggests a potential issue that needs investigation.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "bi-egress"
+      },
+      "result": "{\"ResourceName\": \"bi-egress\", \"ResourceId\": \"bi-egress-e5e7ea94\", \"account\": \"analytics-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.090 per GB - first 10 TB / month data transfer out beyond the global free tier\", \"tags\": \"{\\\"team\\\": \\\"analytics\\\", \\\"application\\\": \\\"dashboards\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 0.64, \"account_team\": \"analytics\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 3.7,
+      "raw": "{\"thought\": \"The resource 'bi-egress' is tagged with 'analytics' team, which means it should be accounted for. The price line indicates data transfer out, and the cost increase is within the expected range for data transfer. No approved ticket is mentioned.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"bi-egress\", \"around_date\": \"2026-06-11\"}}",
+      "thought": "The resource 'bi-egress' is tagged with 'analytics' team, which means it should be accounted for. The price line indicates data transfer out, and the cost increase is within the expected range for data transfer. No approved ticket is mentioned.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "bi-egress",
+        "around_date": "2026-06-11"
+      },
+      "result": "SUMMARY {\"avg_cost_before\": 0.61, \"avg_cost_after\": 1.2, \"avg_quantity_before\": 6.72, \"avg_quantity_after\": 13.37, \"unit_price_before\": 0.09, \"unit_price_after\": 0.09, \"pricing_before\": \"Standard\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-06-08,0.77,8.58,GB,0.09,Standard,\n2026-06-09,0.67,7.44,GB,0.09,Standard,\n2026-06-10,0.74,8.22,GB,0.09,Standard,\n2026-06-11,2.63,29.27,GB,0.09,Standard,\n2026-06-12,2.63,29.23,GB,0.09,Standard,\n2026-06-13,0.84,9.35,GB,0.09,Standard,\n2026-06-14,0.71,7.84,GB,0.09,Standard,\n2026-06-15,2.4,26.64,GB,0.09,Standard,\n2026-06-16,1.88,20.91,GB,0.09,Standard,\n2026-06-17,2.22,24.64,GB,0.09,Standard,\n2026-06-18,0.62,6.88,GB,0.09,Standard,\n2026-06-19,0.56,6.19,GB,0.09,Standard,\n2026-06-20,0.21,2.34,GB,0.09,Standard,\n2026-06-21,0.2,2.25,GB,0.09,Standard,\n2026-06-22,0.84,9.36,GB,0.09,Standard,\n2026-06-23,0.88,9.77,GB,0.09,Standard,\n2026-06-24,0.6,6.68,GB,0.09,Standard,\n2026-06-25,0.83,9.2,GB,0.09,Standard,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 4.8,
+      "raw": "{\"thought\": \"The cost increase from $0.74 to $2.63 per day is due to a sharp spike in data transfer out, which is within the expected range for data transfer. No approved ticket is mentioned.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"bi-egress\"}}",
+      "thought": "The cost increase from $0.74 to $2.63 per day is due to a sharp spike in data transfer out, which is within the expected range for data transfer. No approved ticket is mentioned.",
+      "tool": "change_events",
+      "args": {
+        "resource": "bi-egress"
+      },
+      "result": "(no create/delete/ticket events)"
+    },
+    {
+      "step": 4,
+      "seconds": 5.7,
+      "raw": "{\"thought\": \"There are no create/delete/ticket events for the resource 'bi-egress', which means there is no approved change ticket for the cost increase.\", \"final\": {\n    \"type\": \"transfer_spike\",\n    \"owner_team\": \"analytics\",\n    \"action\": \"notify_owner_open_ticket\",\n    \"start_date\": \"2026-06-11\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The cost increase is due to a sharp spike in data transfer out, which is within the expected range for data transfer. No approved ticket is mentioned.\",\n    \"evidence\": [\"The cost increased from $0.74 to $2.63 per day.\", \"No approved change ticket is mentioned.\"]\n}}",
+      "thought": "There are no create/delete/ticket events for the resource 'bi-egress', which means there is no approved change ticket for the cost increase.",
+      "final": {
+        "type": "transfer_spike",
+        "owner_team": "analytics",
+        "action": "notify_owner_open_ticket",
+        "start_date": "2026-06-11",
+        "confidence": 0.9,
+        "explanation": "The cost increase is due to a sharp spike in data transfer out, which is within the expected range for data transfer. No approved ticket is mentioned.",
+        "evidence": [
+          "The cost increased from $0.74 to $2.63 per day.",
+          "No approved change ticket is mentioned."
+        ]
+      }
+    }
+  ]
+}

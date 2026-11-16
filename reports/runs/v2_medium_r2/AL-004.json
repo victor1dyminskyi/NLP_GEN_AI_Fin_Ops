@@ -1,0 +1,118 @@
+{
+  "alert": {
+    "alert_id": "AL-004",
+    "resource": "plat-nat-traffic",
+    "account": "platform-shared",
+    "rule": "usage",
+    "start_date": "2026-06-06 00:00:00",
+    "score": 4.5,
+    "normal_usd_day": 4.12,
+    "current_usd_day": 8.17,
+    "extra_usd_day": 4.05,
+    "usage_effect": 4.05,
+    "price_effect": 0.0,
+    "related": NaN
+  },
+  "resource": "plat-nat-traffic",
+  "form": {
+    "type": "transfer_spike",
+    "owner_team": "platform",
+    "action": "notify_owner_open_ticket",
+    "start_date": "2026-06-06",
+    "confidence": 0.9,
+    "explanation": "The daily cost increased from $4.18 to $7.98, and the quantity increased from 92.78 GB to 177.3 GB. There is no approved ticket or Savings Plan.",
+    "evidence": [
+      "The daily cost increased from $4.18 to $7.98",
+      "The quantity increased from 92.78 GB to 177.3 GB",
+      "No approved ticket or Savings Plan"
+    ]
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "auto_executed (simulated)"
+  },
+  "model": "finops-agent",
+  "llm_calls": 6,
+  "tool_calls": 5,
+  "form_fixes": 0,
+  "seconds": 20.2,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 1.9,
+      "raw": "{\"thought\": \"Investigate the resource 'plat-nat-traffic' in the 'platform-shared' account.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"plat-nat-traffic\"}}",
+      "thought": "Investigate the resource 'plat-nat-traffic' in the 'platform-shared' account.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "plat-nat-traffic"
+      },
+      "result": "{\"ResourceName\": \"plat-nat-traffic\", \"ResourceId\": \"nat-06f3cabcbbbc3e99b\", \"account\": \"platform-shared\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.045 per GB Data Processed by NAT Gateways\", \"tags\": \"{\\\"team\\\": \\\"platform\\\", \\\"application\\\": \\\"network\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 5.56, \"account_team\": \"platform\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 3.0,
+      "raw": "{\"thought\": \"Check the cost history of 'plat-nat-traffic' around the alert date to see if there was a significant change in quantity or price per unit.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"plat-nat-traffic\", \"around_date\": \"2026-06-06\"}}",
+      "thought": "Check the cost history of 'plat-nat-traffic' around the alert date to see if there was a significant change in quantity or price per unit.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "plat-nat-traffic",
+        "around_date": "2026-06-06"
+      },
+      "result": "SUMMARY {\"avg_cost_before\": 4.18, \"avg_cost_after\": 7.54, \"avg_quantity_before\": 92.78, \"avg_quantity_after\": 167.54, \"unit_price_before\": 0.045, \"unit_price_after\": 0.045, \"pricing_before\": \"Standard\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-06-03,5.01,111.3,GB,0.045,Standard,\n2026-06-04,6.32,140.3,GB,0.045,Standard,\n2026-06-05,4.94,109.8,GB,0.045,Standard,\n2026-06-06,7.98,177.3,GB,0.045,Standard,\n2026-06-07,6.44,143.1,GB,0.045,Standard,\n2026-06-08,5.87,130.4,GB,0.045,Standard,\n2026-06-09,5.18,115,GB,0.045,Standard,\n2026-06-10,8.17,181.6,GB,0.045,Standard,\n2026-06-11,7.96,176.8,GB,0.045,Standard,\n2026-06-12,7.43,165.1,GB,0.045,Standard,\n2026-06-13,9.45,210,GB,0.045,Standard,\n2026-06-14,8.33,185.2,GB,0.045,Standard,\n2026-06-15,8.12,180.4,GB,0.045,Standard,\n2026-06-16,5.77,128.2,GB,0.045,Standard,\n2026-06-17,6.7,148.9,GB,0.045,Standard,\n2026-06-18,6.81,151.2,GB,0.045,Standard,\n2026-06-19,9.15,203.2,GB,0.045,Standard,\n2026-06-20,9.75,216.6,GB,0.045,Standard,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 4.8,
+      "raw": "{\"thought\": \"Check the usage metrics for 'plat-nat-traffic' around the alert date to see if the server was busy.\", \"tool\": \"usage\", \"args\": {\"resource\": \"plat-nat-traffic\", \"around_date\": \"2026-06-06\"}}",
+      "thought": "Check the usage metrics for 'plat-nat-traffic' around the alert date to see if the server was busy.",
+      "tool": "usage",
+      "args": {
+        "resource": "plat-nat-traffic",
+        "around_date": "2026-06-06"
+      },
+      "result": "(no usage metrics \u2014 not a server, or never running)"
+    },
+    {
+      "step": 4,
+      "seconds": 1.8,
+      "raw": "{\"thought\": \"Check the change events for 'plat-nat-traffic' to see if there was an approved change ticket.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"plat-nat-traffic\"}}",
+      "thought": "Check the change events for 'plat-nat-traffic' to see if there was an approved change ticket.",
+      "tool": "change_events",
+      "args": {
+        "resource": "plat-nat-traffic"
+      },
+      "result": "(no create/delete/ticket events)"
+    },
+    {
+      "step": 5,
+      "seconds": 1.8,
+      "raw": "{\"thought\": \"Check the commitment status for 'plat-nat-traffic' to see if the price per unit changed.\", \"tool\": \"commitment_status\", \"args\": {\"resource\": \"plat-nat-traffic\"}}",
+      "thought": "Check the commitment status for 'plat-nat-traffic' to see if the price per unit changed.",
+      "tool": "commitment_status",
+      "args": {
+        "resource": "plat-nat-traffic"
+      },
+      "result": "No Savings Plan covers this resource."
+    },
+    {
+      "step": 6,
+      "seconds": 7.0,
+      "raw": "{\"thought\": \"The resource 'plat-nat-traffic' is a data transfer cost and has no approved ticket or Savings Plan. It is likely a data spike.\", \"final\": {\n    \"type\": \"transfer_spike\",\n    \"owner_team\": \"platform\",\n    \"action\": \"notify_owner_open_ticket\",\n    \"start_date\": \"2026-06-06\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The daily cost increased from $4.18 to $7.98, and the quantity increased from 92.78 GB to 177.3 GB. There is no approved ticket or Savings Plan.\",\n    \"evidence\": [\"The daily cost increased from $4.18 to $7.98\", \"The quantity increased from 92.78 GB to 177.3 GB\", \"No approved ticket or Savings Plan\"]\n}}",
+      "thought": "The resource 'plat-nat-traffic' is a data transfer cost and has no approved ticket or Savings Plan. It is likely a data spike.",
+      "final": {
+        "type": "transfer_spike",
+        "owner_team": "platform",
+        "action": "notify_owner_open_ticket",
+        "start_date": "2026-06-06",
+        "confidence": 0.9,
+        "explanation": "The daily cost increased from $4.18 to $7.98, and the quantity increased from 92.78 GB to 177.3 GB. There is no approved ticket or Savings Plan.",
+        "evidence": [
+          "The daily cost increased from $4.18 to $7.98",
+          "The quantity increased from 92.78 GB to 177.3 GB",
+          "No approved ticket or Savings Plan"
+        ]
+      }
+    }
+  ]
+}

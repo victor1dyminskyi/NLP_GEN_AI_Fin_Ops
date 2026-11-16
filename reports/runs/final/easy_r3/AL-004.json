@@ -1,0 +1,95 @@
+{
+  "alert": {
+    "alert_id": "AL-004",
+    "resource": "sf-search-60",
+    "account": "storefront-prod",
+    "rule": "new_resource",
+    "start_date": "2026-05-22 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 18.4,
+    "extra_usd_day": 18.4,
+    "usage_effect": 18.4,
+    "price_effect": 0.0,
+    "resource_kind": "server"
+  },
+  "resource": "sf-search-60",
+  "form": {
+    "type": "no_issue",
+    "owner_team": "storefront",
+    "action": "no_action",
+    "start_date": "2026-05-22",
+    "confidence": 1.0,
+    "explanation": "The server was launched with a change ticket and the cost matches the ticket details.",
+    "evidence": [
+      "The server was launched with a change ticket CHG-8797.",
+      "The cost matches the change ticket details."
+    ],
+    "owner_message": ""
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 14.5,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"The resource is a server with a significant cost spike. I need to determine if it's still running and if there's an approved ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"sf-search-60\"}}",
+      "thought": "The resource is a server with a significant cost spike. I need to determine if it's still running and if there's an approved ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "sf-search-60"
+      },
+      "result": "{\"ResourceName\": \"sf-search-60\", \"ResourceId\": \"i-0eeee900b98477eae\", \"account\": \"storefront-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.192 per On Demand Linux m5.xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"storefront\\\", \\\"application\\\": \\\"sf-search\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-05-22\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 18.41, \"account_team\": \"storefront\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The server is tagged and owned by the storefront team. I need to check if it's still running and if there's an approved ticket.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-search-60\"}}",
+      "thought": "The server is tagged and owned by the storefront team. I need to check if it's still running and if there's an approved ticket.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-search-60"
+      },
+      "result": "TICKETS: CHG-8797: launch new service sf-search (4\u00d7 ec2_m5_xlarge)\nevent_time,event_name,actor,ticket,details\n2026-05-22 11:00:00,RunInstances,alex.moreno,CHG-8797: launch new service sf-search (4\u00d7 ec2_m5_xlarge),\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.5,
+      "raw": "{\"thought\": \"The server was launched with a change ticket. I need to verify if the cost matches the ticket details.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"sf-search-60\", \"around_date\": \"2026-05-22\"}}",
+      "thought": "The server was launched with a change ticket. I need to verify if the cost matches the ticket details.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "sf-search-60",
+        "around_date": "2026-05-22"
+      },
+      "result": "CHANGE from 2026-05-22: cost None%, quantity None%, price per unit None%; pricing None \u2192 Standard\nSUMMARY {\"avg_cost_before\": null, \"avg_cost_after\": 18.41, \"avg_quantity_before\": null, \"avg_quantity_after\": 95.87, \"unit_price_before\": null, \"unit_price_after\": 0.192, \"pricing_before\": null, \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-05-22,18.38,95.71,Hours,0.192,Standard,\n2026-05-23,18.43,96,Hours,0.192,Standard,\n2026-05-24,18.36,95.62,Hours,0.192,Standard,\n2026-05-25,18.43,96,Hours,0.192,Standard,\n2026-05-26,18.43,96,Hours,0.192,Standard,\n2026-05-27,18.43,96,Hours,0.192,Standard,\n2026-05-28,18.43,96,Hours,0.192,Standard,\n2026-05-29,18.43,96,Hours,0.192,Standard,\n2026-05-30,18.39,95.8,Hours,0.192,Standard,\n2026-05-31,18.42,95.94,Hours,0.192,Standard,\n2026-06-01,18.34,95.51,Hours,0.192,Standard,\n2026-06-02,18.43,96,Hours,0.192,Standard,\n2026-06-03,18.43,96,Hours,0.192,Standard,\n2026-06-04,18.32,95.41,Hours,0.192,Standard,\n2026-06-05,18.43,96,Hours,0.192,Standard,\n"
+    },
+    {
+      "step": 4,
+      "seconds": 7.3,
+      "raw": "{\"thought\": \"The cost matches the change ticket details. The server was launched with a ticket and the cost is legitimate.\", \"final\": {\n     \"type\": \"no_issue\",\n     \"owner_team\": \"storefront\",\n     \"action\": \"no_action\",\n     \"start_date\": \"2026-05-22\",\n     \"confidence\": 1.0,\n     \"explanation\": \"The server was launched with a change ticket and the cost matches the ticket details.\",\n     \"evidence\": [\"The server was launched with a change ticket CHG-8797.\", \"The cost matches the change ticket details.\"],\n     \"owner_message\": \"\"\n}}",
+      "thought": "The cost matches the change ticket details. The server was launched with a ticket and the cost is legitimate.",
+      "final": {
+        "type": "no_issue",
+        "owner_team": "storefront",
+        "action": "no_action",
+        "start_date": "2026-05-22",
+        "confidence": 1.0,
+        "explanation": "The server was launched with a change ticket and the cost matches the ticket details.",
+        "evidence": [
+          "The server was launched with a change ticket CHG-8797.",
+          "The cost matches the change ticket details."
+        ],
+        "owner_message": ""
+      }
+    }
+  ]
+}

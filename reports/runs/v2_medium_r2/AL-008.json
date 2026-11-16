@@ -1,0 +1,107 @@
+{
+  "alert": {
+    "alert_id": "AL-008",
+    "resource": "plat-inter-az",
+    "account": "platform-shared",
+    "rule": "usage",
+    "start_date": "2026-07-18 00:00:00",
+    "score": 4.5,
+    "normal_usd_day": 6.3,
+    "current_usd_day": 12.95,
+    "extra_usd_day": 6.66,
+    "usage_effect": 6.66,
+    "price_effect": -0.0,
+    "related": NaN
+  },
+  "resource": "plat-inter-az",
+  "form": {
+    "type": "transfer_spike",
+    "owner_team": "platform",
+    "action": "notify_owner_open_ticket",
+    "start_date": "2026-07-18",
+    "confidence": 0.9,
+    "explanation": "The resource is a data transfer cost, and the cost increased sharply on 2026-07-18 without any usage metrics or approved ticket.",
+    "evidence": [
+      "price_line contains 'regional data transfer'",
+      "cost increased sharply on 2026-07-18",
+      "no usage metrics"
+    ]
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "auto_executed (simulated)"
+  },
+  "model": "finops-agent",
+  "llm_calls": 5,
+  "tool_calls": 4,
+  "form_fixes": 0,
+  "seconds": 17.0,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 1.8,
+      "raw": "{\"thought\": \"Investigate the resource 'plat-inter-az' in the 'platform-shared' account.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"plat-inter-az\"}}",
+      "thought": "Investigate the resource 'plat-inter-az' in the 'platform-shared' account.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "plat-inter-az"
+      },
+      "result": "{\"ResourceName\": \"plat-inter-az\", \"ResourceId\": \"plat-inter-az-acc41810\", \"account\": \"platform-shared\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.010 per GB - regional data transfer - in/out/between EC2 AZs or using elastic IPs or ELB\", \"tags\": \"{\\\"team\\\": \\\"platform\\\", \\\"application\\\": \\\"network\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 6.86, \"account_team\": \"platform\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"Check the change events for 'plat-inter-az' to see if there were any changes that could explain the cost increase.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"plat-inter-az\"}}",
+      "thought": "Check the change events for 'plat-inter-az' to see if there were any changes that could explain the cost increase.",
+      "tool": "change_events",
+      "args": {
+        "resource": "plat-inter-az"
+      },
+      "result": "(no create/delete/ticket events)"
+    },
+    {
+      "step": 3,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"Examine the cost history around the alert date to see if there were any changes in quantity or price per unit.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"plat-inter-az\", \"around_date\": \"2026-07-18\"}}",
+      "thought": "Examine the cost history around the alert date to see if there were any changes in quantity or price per unit.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "plat-inter-az",
+        "around_date": "2026-07-18"
+      },
+      "result": "SUMMARY {\"avg_cost_before\": 7.19, \"avg_cost_after\": 10.83, \"avg_quantity_before\": 719.08, \"avg_quantity_after\": 1082.63, \"unit_price_before\": 0.01, \"unit_price_after\": 0.01, \"pricing_before\": \"Standard\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-07-15,9.04,904.2,GB,0.01,Standard,\n2026-07-16,11.69,1169,GB,0.01,Standard,\n2026-07-17,9.81,980.6,GB,0.01,Standard,\n2026-07-18,12.95,1295,GB,0.01,Standard,\n2026-07-19,11.94,1194,GB,0.01,Standard,\n2026-07-20,6.47,646.9,GB,0.01,Standard,\n2026-07-21,9.97,996.6,GB,0.01,Standard,\n2026-07-22,9.2,919.7,GB,0.01,Standard,\n2026-07-23,11.11,1111,GB,0.01,Standard,\n2026-07-24,9.44,944.4,GB,0.01,Standard,\n2026-07-25,14.1,1410,GB,0.01,Standard,\n2026-07-26,11.89,1189,GB,0.01,Standard,\n2026-07-27,11.51,1151,GB,0.01,Standard,\n2026-07-28,9.67,966.8,GB,0.01,Standard,\n2026-07-29,10.86,1086,GB,0.01,Standard,\n2026-07-30,9.61,961.2,GB,0.01,Standard,\n2026-07-31,11.4,1140,GB,0.01,Standard,\n2026-08-01,12.26,1226,GB,0.01,Standard,\n"
+    },
+    {
+      "step": 4,
+      "seconds": 4.7,
+      "raw": "{\"thought\": \"Check the usage metrics for 'plat-inter-az' to see if the server was busy on the alert date.\", \"tool\": \"usage\", \"args\": {\"resource\": \"plat-inter-az\", \"around_date\": \"2026-07-18\"}}",
+      "thought": "Check the usage metrics for 'plat-inter-az' to see if the server was busy on the alert date.",
+      "tool": "usage",
+      "args": {
+        "resource": "plat-inter-az",
+        "around_date": "2026-07-18"
+      },
+      "result": "(no usage metrics \u2014 not a server, or never running)"
+    },
+    {
+      "step": 5,
+      "seconds": 5.8,
+      "raw": "{\"thought\": \"The resource 'plat-inter-az' is not a server and has no usage metrics. It is likely a data transfer cost.\", \"final\": {\n    \"type\": \"transfer_spike\",\n    \"owner_team\": \"platform\",\n    \"action\": \"notify_owner_open_ticket\",\n    \"start_date\": \"2026-07-18\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The resource is a data transfer cost, and the cost increased sharply on 2026-07-18 without any usage metrics or approved ticket.\",\n    \"evidence\": [\"price_line contains 'regional data transfer'\", \"cost increased sharply on 2026-07-18\", \"no usage metrics\"]\n}}",
+      "thought": "The resource 'plat-inter-az' is not a server and has no usage metrics. It is likely a data transfer cost.",
+      "final": {
+        "type": "transfer_spike",
+        "owner_team": "platform",
+        "action": "notify_owner_open_ticket",
+        "start_date": "2026-07-18",
+        "confidence": 0.9,
+        "explanation": "The resource is a data transfer cost, and the cost increased sharply on 2026-07-18 without any usage metrics or approved ticket.",
+        "evidence": [
+          "price_line contains 'regional data transfer'",
+          "cost increased sharply on 2026-07-18",
+          "no usage metrics"
+        ]
+      }
+    }
+  ]
+}

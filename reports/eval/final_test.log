@@ -1,0 +1,153 @@
+AUDIT
+  detector tuned on replicas [1, 2] (dev) ✓
+  model benchmark on data/synthetic/medium/r1 (dev) ✓
+  agent v1 developed on replicas [1] (dev) ✓
+  agent v2 developed on replicas [1, 2] (dev) ✓
+  agent v3 developed on replicas [1, 2] (dev) ✓
+
+easy/r3: 14 alerts, detector caught 6/6
+  AL-001 plat-inter-az            → no_issue           [no_action]
+  AL-002 ml-train-72              → planned_change     [no_action]
+  AL-003 plat-nat-traffic         → no_issue           [no_action]
+  AL-004 sf-search-60             → no_issue           [no_action]
+  AL-005 ml-train-63              → planned_change     [no_action]
+  AL-006 data-etl-workers         → idle_gpu           [awaiting_approval]
+  AL-007 sf-api-asg               → sp_expired         [awaiting_approval]
+  AL-008 sf-web-asg               → transfer_spike     [auto_executed (simulated)]
+  AL-009 ml-train-17              → idle_gpu           [awaiting_approval]
+  AL-010 sf-search-82             → no_issue           [no_action]
+  AL-011 ml-train-69              → planned_change     [no_action]
+  AL-012 sf-perf-test-83          → untagged_resource  [auto_executed (simulated)]
+  AL-013 sf-egress                → planned_change     [no_action]
+  AL-014 ml-train-10              → idle_gpu           [awaiting_approval]
+
+easy/r4: 13 alerts, detector caught 6/7
+  AL-001 bi-migration-48          → no_issue           [no_action]
+  AL-002 bi-migration-48-vol      → orphaned_disk      [awaiting_approval]
+  AL-003 plat-inter-az            → no_issue           [no_action]
+  AL-004 sf-egress                → planned_change     [no_action]
+  AL-005 bi-migration-48-vol      → orphaned_disk      [awaiting_approval]
+  AL-006 bi-migration-51          → other              [escalated_to_human]
+  AL-007 bi-migration-51-vol      → orphaned_disk      [awaiting_approval]
+  AL-008 ml-train-20              → idle_gpu           [awaiting_approval]
+  AL-009 bi-migration-51-vol      → orphaned_disk      [awaiting_approval]
+  AL-010 bi-egress                → other              [escalated_to_human]
+  AL-011 ml-train-74              → planned_change     [no_action]
+  AL-012 ml-train-46              → idle_gpu           [awaiting_approval]
+  AL-013 sf-search-81             → no_issue           [no_action]
+
+easy/r5: 13 alerts, detector caught 6/6
+  AL-001 data-migration-47        → no_issue           [no_action]
+  AL-002 data-migration-47-vol    → untagged_resource  [auto_executed (simulated)]
+  AL-003 data-etl-workers         → idle_gpu           [awaiting_approval]
+  AL-004 sf-api-asg               → sp_expired         [awaiting_approval]
+  AL-005 sf-web-asg               → sp_expired         [awaiting_approval]
+  AL-006 data-migration-47-vol    → orphaned_disk      [awaiting_approval]
+  AL-007 data-replication         → transfer_spike     [auto_executed (simulated)]
+  AL-008 bi-egress                → transfer_spike     [auto_executed (simulated)]
+  AL-009 sf-perf-test-29          → untagged_resource  [auto_executed (simulated)]
+  AL-010 ml-train-13              → planned_change     [no_action]
+  AL-011 data-migration-80        → no_issue           [no_action]
+  AL-012 data-migration-80-vol    → untagged_resource  [auto_executed (simulated)]
+  AL-013 data-migration-80-vol    → orphaned_disk      [awaiting_approval]
+
+medium/r3: 14 alerts, detector caught 6/6
+  AL-001 plat-inter-az            → transfer_spike     [auto_executed (simulated)]
+  AL-002 ml-train-72              → planned_change     [no_action]
+  AL-003 plat-nat-traffic         → transfer_spike     [auto_executed (simulated)]
+  AL-004 sf-search-60             → no_issue           [no_action]
+  AL-005 ml-train-63              → planned_change     [no_action]
+  AL-006 data-etl-workers         → sp_expired         [awaiting_approval]
+  AL-007 sf-api-asg               → sp_expired         [awaiting_approval]
+  AL-008 sf-web-asg               → sp_expired         [awaiting_approval]
+  AL-009 ml-train-17              → idle_gpu           [awaiting_approval]
+  AL-010 sf-search-82             → no_issue           [no_action]
+  AL-011 ml-train-69              → planned_change     [no_action]
+  AL-012 sf-perf-test-83          → untagged_resource  [auto_executed (simulated)]
+  AL-013 sf-egress                → no_issue           [no_action]
+  AL-014 ml-train-10              → idle_gpu           [awaiting_approval]
+
+medium/r4: 13 alerts, detector caught 6/7
+  AL-001 bi-migration-48          → no_issue           [no_action]
+  AL-002 bi-migration-48-vol      → orphaned_disk      [awaiting_approval]
+  AL-003 sf-egress                → no_issue           [no_action]
+  AL-004 plat-inter-az            → no_issue           [no_action]
+  AL-005 bi-migration-48-vol      → orphaned_disk      [awaiting_approval]
+  AL-006 bi-migration-51          → other              [escalated_to_human]
+  AL-007 bi-migration-51-vol      → orphaned_disk      [awaiting_approval]
+  AL-008 ml-train-20              → idle_gpu           [awaiting_approval]
+  AL-009 bi-migration-51-vol      → orphaned_disk      [awaiting_approval]
+  AL-010 bi-egress                → other              [escalated_to_human]
+  AL-011 ml-train-74              → planned_change     [no_action]
+  AL-012 ml-train-46              → idle_gpu           [awaiting_approval]
+  AL-013 sf-search-81             → no_issue           [no_action]
+
+medium/r5: 13 alerts, detector caught 6/6
+  AL-001 data-migration-47        → no_issue           [no_action]
+  AL-002 data-migration-47-vol    → untagged_resource  [auto_executed (simulated)]
+  AL-003 data-etl-workers         → idle_gpu           [awaiting_approval]
+  AL-004 sf-api-asg               → other              [escalated_to_human]
+  AL-005 sf-web-asg               → planned_change     [no_action]
+  AL-006 data-migration-47-vol    → orphaned_disk      [awaiting_approval]
+  AL-007 data-replication         → transfer_spike     [auto_executed (simulated)]
+  AL-008 bi-egress                → other              [escalated_to_human]
+  AL-009 sf-perf-test-29          → untagged_resource  [auto_executed (simulated)]
+  AL-010 ml-train-13              → planned_change     [no_action]
+  AL-011 data-migration-80        → no_issue           [no_action]
+  AL-012 data-migration-80-vol    → no_issue           [no_action]
+  AL-013 data-migration-80-vol    → orphaned_disk      [awaiting_approval]
+
+hard/r3: 12 alerts, detector caught 4/6
+  AL-001 ml-train-72              → planned_change     [no_action]
+  AL-002 sf-search-60             → no_issue           [no_action]
+  AL-003 ml-train-63              → planned_change     [no_action]
+  AL-004 data-etl-workers         → other              [escalated_to_human]
+  AL-005 sf-api-asg               → sp_expired         [awaiting_approval]
+  AL-006 sf-web-asg               → no_issue           [no_action]
+  AL-007 ml-train-17              → idle_gpu           [awaiting_approval]
+  AL-008 sf-search-82             → no_issue           [no_action]
+  AL-009 ml-train-69              → planned_change     [no_action]
+  AL-010 sf-perf-test-83          → untagged_resource  [auto_executed (simulated)]
+  AL-011 sf-egress                → planned_change     [no_action]
+  AL-012 ml-train-10              → idle_gpu           [awaiting_approval]
+
+hard/r4: 11 alerts, detector caught 4/7
+  AL-001 bi-migration-48          → no_issue           [no_action]
+  AL-002 bi-migration-48-vol      → orphaned_disk      [awaiting_approval]
+  AL-003 sf-egress                → planned_change     [no_action]
+  AL-004 bi-migration-48-vol      → orphaned_disk      [awaiting_approval]
+  AL-005 bi-migration-51          → no_issue           [no_action]
+  AL-006 bi-migration-51-vol      → orphaned_disk      [awaiting_approval]
+  AL-007 ml-train-20              → idle_gpu           [awaiting_approval]
+  AL-008 bi-migration-51-vol      → orphaned_disk      [awaiting_approval]
+  AL-009 ml-train-74              → planned_change     [no_action]
+  AL-010 ml-train-46              → idle_gpu           [awaiting_approval]
+  AL-011 sf-search-81             → no_issue           [no_action]
+
+hard/r5: 11 alerts, detector caught 4/6
+  AL-001 data-migration-47        → no_issue           [no_action]
+  AL-002 data-migration-47-vol    → untagged_resource  [auto_executed (simulated)]
+  AL-003 data-etl-workers         → idle_gpu           [awaiting_approval]
+  AL-004 sf-api-asg               → idle_gpu           [awaiting_approval]
+  AL-005 sf-web-asg               → no_issue           [no_action]
+  AL-006 data-migration-47-vol    → orphaned_disk      [awaiting_approval]
+  AL-007 sf-perf-test-29          → untagged_resource  [auto_executed (simulated)]
+  AL-008 ml-train-13              → planned_change     [no_action]
+  AL-009 data-migration-80        → other              [escalated_to_human]
+  AL-010 data-migration-80-vol    → untagged_resource  [auto_executed (simulated)]
+  AL-011 data-migration-80-vol    → orphaned_disk      [awaiting_approval]
+
+DETECTOR (test)
+             anomalies  caught  alerts  false_alarms  catch_rate_%  precision_%
+difficulty                                                                    
+easy               19      18      40             8          95.0         80.0
+hard               19      12      34             8          63.0         76.0
+medium             19      18      40             8          95.0         80.0
+
+AGENT (test)
+ difficulty  anomaly_alerts  type_acc_%  owner_acc_%  action_acc_%  tier_acc_% decoys_dismissed false_alarms_dismissed  end_to_end_%  escalated  risky_without_approval
+      easy              22          68           82            68          95            10/10                    3/8            74          2                       0
+    medium              22          64           86            73          91            10/10                    4/8            63          4                       0
+      hard              16          69           69            69          81            10/10                    3/8            58          2                       0
+
+Saved reports/eval/final_test.json

@@ -1,0 +1,92 @@
+{
+  "alert": {
+    "alert_id": "AL-013",
+    "resource": "ml-train-72",
+    "account": "ml-dev",
+    "rule": "new_resource",
+    "start_date": "2026-07-07 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 135.46,
+    "extra_usd_day": 135.46,
+    "usage_effect": 135.46,
+    "price_effect": 0.0,
+    "related": NaN
+  },
+  "resource": "ml-train-72",
+  "form": {
+    "type": "other",
+    "owner_team": "ml",
+    "action": "no_action",
+    "start_date": "2026-07-07",
+    "confidence": 0.9,
+    "explanation": "The resource has tags and is owned by the 'ml' team. There is no approved change ticket, which is unusual.",
+    "evidence": [
+      "The resource has tags and is owned by the 'ml' team.",
+      "There is no approved change ticket."
+    ]
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 13.3,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.6,
+      "raw": "{\"thought\": \"The resource 'ml-train-72' in 'ml-dev' account has a significant cost increase. I need to determine if it's a new resource or if there's an approved change.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"ml-train-72\"}}",
+      "thought": "The resource 'ml-train-72' in 'ml-dev' account has a significant cost increase. I need to determine if it's a new resource or if there's an approved change.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "ml-train-72"
+      },
+      "result": "{\"ResourceName\": \"ml-train-72\", \"ResourceId\": \"i-0c23c9da90cb6a153\", \"account\": \"ml-dev\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$5.672 per On Demand Linux g5.12xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"ml\\\", \\\"application\\\": \\\"training\\\", \\\"environment\\\": \\\"dev\\\"}\", \"first_billed\": \"2026-07-07\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 135.67, \"account_team\": \"ml\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.7,
+      "raw": "{\"thought\": \"The resource 'ml-train-72' has tags and is owned by the 'ml' team. I need to check if there's an approved change for this resource.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"ml-train-72\"}}",
+      "thought": "The resource 'ml-train-72' has tags and is owned by the 'ml' team. I need to check if there's an approved change for this resource.",
+      "tool": "change_events",
+      "args": {
+        "resource": "ml-train-72"
+      },
+      "result": "event_time,event_name,actor,ticket,details\n2026-07-07 11:00:00,RunInstances,omar.haddad,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The resource 'ml-train-72' was created by 'omar.haddad' on 2026-07-07 but there is no approved change ticket. This is unusual.\", \"tool\": \"get_owner\", \"args\": {\"account\": \"ml-dev\"}}",
+      "thought": "The resource 'ml-train-72' was created by 'omar.haddad' on 2026-07-07 but there is no approved change ticket. This is unusual.",
+      "tool": "get_owner",
+      "args": {
+        "account": "ml-dev"
+      },
+      "result": "team,owner,email,slack\nml,Omar Haddad,ml-team@demoshop.example,#team-ml\n"
+    },
+    {
+      "step": 4,
+      "seconds": 5.5,
+      "raw": "{\"thought\": \"The resource 'ml-train-72' is owned by the 'ml' team and was created by Omar Haddad. There is no approved change ticket. This is a potential issue.\", \"final\": {\n    \"type\": \"other\",\n    \"owner_team\": \"ml\",\n    \"action\": \"no_action\",\n    \"start_date\": \"2026-07-07\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The resource has tags and is owned by the 'ml' team. There is no approved change ticket, which is unusual.\",\n    \"evidence\": [\"The resource has tags and is owned by the 'ml' team.\", \"There is no approved change ticket.\"]\n}}",
+      "thought": "The resource 'ml-train-72' is owned by the 'ml' team and was created by Omar Haddad. There is no approved change ticket. This is a potential issue.",
+      "final": {
+        "type": "other",
+        "owner_team": "ml",
+        "action": "no_action",
+        "start_date": "2026-07-07",
+        "confidence": 0.9,
+        "explanation": "The resource has tags and is owned by the 'ml' team. There is no approved change ticket, which is unusual.",
+        "evidence": [
+          "The resource has tags and is owned by the 'ml' team.",
+          "There is no approved change ticket."
+        ]
+      }
+    }
+  ]
+}

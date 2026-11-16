@@ -1,0 +1,12 @@
+alert_id,resource,rule,start_date,type,owner_team,action,confidence,status,tool_calls,seconds
+AL-001,sf-search-10,new_resource,2026-04-29,no_issue,storefront,no_action,1.0,no_action,2,10.5
+AL-002,data-migration-71,new_resource,2026-05-25,no_issue,data,no_action,1.0,no_action,2,11.4
+AL-003,data-migration-71-vol,new_resource,2026-05-25,orphaned_disk,data,snapshot_then_delete_volume,0.9,awaiting_approval,2,13.2
+AL-004,plat-nat-traffic,usage,2026-06-06,transfer_spike,platform,notify_owner_open_ticket,0.9,auto_executed (simulated),4,16.4
+AL-005,data-migration-71-vol,orphan,2026-06-08,orphaned_disk,data,snapshot_then_delete_volume,1.0,awaiting_approval,4,14.7
+AL-006,sf-perf-test-45,new_resource,2026-06-17,untagged_resource,storefront,tag_and_notify_owner,0.9,auto_executed (simulated),3,14.9
+AL-007,bi-egress,usage,2026-06-29,other,analytics,no_action,0.8,escalated_to_human,3,12.0
+AL-008,plat-inter-az,usage,2026-07-18,other,platform,no_action,0.8,escalated_to_human,10,34.1
+AL-009,data-etl-workers,price+usage,2026-07-24,sp_expired,platform,recommend_sp_renewal,0.9,awaiting_approval,4,17.5
+AL-010,sf-api-asg,price+usage,2026-07-24,sp_expired,platform,recommend_sp_renewal,0.9,awaiting_approval,5,21.2
+AL-011,sf-web-asg,price+usage,2026-07-24,other,,no_action,0.0,escalated_to_human,10,36.4

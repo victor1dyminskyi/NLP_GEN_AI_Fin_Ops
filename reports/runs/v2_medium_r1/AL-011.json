@@ -1,0 +1,133 @@
+{
+  "alert": {
+    "alert_id": "AL-011",
+    "resource": "sf-web-asg",
+    "account": "storefront-prod",
+    "rule": "price+usage",
+    "start_date": "2026-07-01 00:00:00",
+    "score": 8.3,
+    "normal_usd_day": 113.42,
+    "current_usd_day": 164.89,
+    "extra_usd_day": 51.46,
+    "usage_effect": 2.0,
+    "price_effect": 49.47,
+    "related": NaN
+  },
+  "resource": "sf-web-asg",
+  "form": {
+    "type": "idle_gpu",
+    "owner_team": "storefront",
+    "action": "stop_instance",
+    "start_date": "2026-07-01",
+    "confidence": 0.9,
+    "explanation": "The resource 'sf-web-asg' is still billed and busy, with a significant increase in cost. There is no approved change ticket and the price per unit change is not covered by a Savings Plan.",
+    "evidence": [
+      "The resource is still billed.",
+      "The resource is busy with an average CPU usage of 3.1%.",
+      "There is no approved change ticket.",
+      "The price per unit change is not covered by a Savings Plan."
+    ]
+  },
+  "gate": {
+    "needs_approval": true,
+    "escalated": false,
+    "status": "awaiting_approval"
+  },
+  "model": "finops-agent",
+  "llm_calls": 8,
+  "tool_calls": 5,
+  "form_fixes": 1,
+  "seconds": 27.4,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.0,
+      "raw": "{\"thought\": \"Investigate the resource 'sf-web-asg' in the 'storefront-prod' account.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"sf-web-asg\"}}",
+      "thought": "Investigate the resource 'sf-web-asg' in the 'storefront-prod' account.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "sf-web-asg"
+      },
+      "result": "{\"ResourceName\": \"sf-web-asg\", \"ResourceId\": \"i-0573caab302269683\", \"account\": \"storefront-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.34 per On Demand Linux c5.2xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"storefront\\\", \\\"application\\\": \\\"web\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 130.83, \"account_team\": \"storefront\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"Check the change events for 'sf-web-asg' to see if it was created or modified recently.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-web-asg\"}}",
+      "thought": "Check the change events for 'sf-web-asg' to see if it was created or modified recently.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-web-asg"
+      },
+      "result": "event_time,event_name,actor,ticket,details\n2025-06-29 07:06:00,RunInstances,alex.moreno,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"Examine the cost history of 'sf-web-asg' around the alert date to see if there were any significant changes.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"sf-web-asg\", \"around_date\": \"2026-07-01\"}}",
+      "thought": "Examine the cost history of 'sf-web-asg' around the alert date to see if there were any significant changes.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "sf-web-asg",
+        "around_date": "2026-07-01"
+      },
+      "result": "SUMMARY {\"avg_cost_before\": 114.05, \"avg_cost_after\": 164.86, \"avg_quantity_before\": 479.19, \"avg_quantity_after\": 484.88, \"unit_price_before\": 0.238, \"unit_price_after\": 0.34, \"pricing_before\": \"Committed\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-06-28,108.2,454.7,Hours,0.238,Committed,sp-compute-2025\n2026-06-29,114.8,482.5,Hours,0.238,Committed,sp-compute-2025\n2026-06-30,118.7,498.8,Hours,0.238,Committed,sp-compute-2025\n2026-07-01,164.9,485,Hours,0.34,Standard,\n2026-07-02,167.9,493.8,Hours,0.34,Standard,\n2026-07-03,172.9,508.5,Hours,0.34,Standard,\n2026-07-04,166.2,488.9,Hours,0.34,Standard,\n2026-07-05,166.7,490.3,Hours,0.34,Standard,\n2026-07-06,157.5,463.1,Hours,0.34,Standard,\n2026-07-07,154.9,455.5,Hours,0.34,Standard,\n2026-07-08,169.3,498.1,Hours,0.34,Standard,\n2026-07-09,165.6,486.9,Hours,0.34,Standard,\n2026-07-10,163.5,480.8,Hours,0.34,Standard,\n2026-07-11,163.5,480.8,Hours,0.34,Standard,\n2026-07-12,155.9,458.7,Hours,0.34,Standard,\n2026-07-13,170.2,500.4,Hours,0.34,Standard,\n2026-07-14,164.9,485,Hours,0.34,Standard,\n2026-07-15,169.1,497.3,Hours,0.34,Standard,\n"
+    },
+    {
+      "step": 4,
+      "seconds": 4.9,
+      "raw": "{\"thought\": \"Check the usage metrics for 'sf-web-asg' around the alert date to see if it was busy or idle.\", \"tool\": \"usage\", \"args\": {\"resource\": \"sf-web-asg\", \"around_date\": \"2026-07-01\"}}",
+      "thought": "Check the usage metrics for 'sf-web-asg' around the alert date to see if it was busy or idle.",
+      "tool": "usage",
+      "args": {
+        "resource": "sf-web-asg",
+        "around_date": "2026-07-01"
+      },
+      "result": "period,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nbefore,122,3.1,,,19.9\nafter,62,3.1,,,20.2\n"
+    },
+    {
+      "step": 5,
+      "seconds": 1.6,
+      "raw": "{\"thought\": \"Determine if the price per unit change is covered by an approved change ticket.\", \"tool\": \"change_log\", \"args\": {\"resource\": \"sf-web-asg\"}}",
+      "error": "unknown tool 'change_log'"
+    },
+    {
+      "step": 6,
+      "seconds": 5.6,
+      "raw": "{\"thought\": \"The price per unit change is not covered by an approved change ticket. The resource is still billed and busy.\", \"final\": {\n    \"type\": \"idle_gpu\",\n    \"owner_team\": \"storefront\",\n    \"action\": \"stop_instance\",\n    \"start_date\": \"2026-07-01\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The resource 'sf-web-asg' is still billed and busy, with a significant increase in cost. There is no approved change ticket.\",\n    \"evidence\": [\"The resource is still billed.\", \"The resource is busy with an average CPU usage of 3.1%.\", \"There is no approved change ticket.\"]\n}}",
+      "thought": "The price per unit change is not covered by an approved change ticket. The resource is still billed and busy.",
+      "error": "before the final answer you must also call: commitment_status"
+    },
+    {
+      "step": 7,
+      "seconds": 2.0,
+      "raw": "{\"thought\": \"Check the commitment status for 'sf-web-asg' to see if the price per unit change is covered by a Savings Plan.\", \"tool\": \"commitment_status\", \"args\": {\"resource\": \"sf-web-asg\"}}",
+      "thought": "Check the commitment status for 'sf-web-asg' to see if the price per unit change is covered by a Savings Plan.",
+      "tool": "commitment_status",
+      "args": {
+        "resource": "sf-web-asg"
+      },
+      "result": "commitment_id,type,discount,start,end,managed_by\nsp-compute-2025,Savings Plan,0.3,2025-09-01,2026-07-01,platform\n"
+    },
+    {
+      "step": 8,
+      "seconds": 6.7,
+      "raw": "{\"thought\": \"The price per unit change is not covered by a Savings Plan. The resource is still billed and busy.\", \"final\": {\n    \"type\": \"idle_gpu\",\n    \"owner_team\": \"storefront\",\n    \"action\": \"stop_instance\",\n    \"start_date\": \"2026-07-01\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The resource 'sf-web-asg' is still billed and busy, with a significant increase in cost. There is no approved change ticket and the price per unit change is not covered by a Savings Plan.\",\n    \"evidence\": [\"The resource is still billed.\", \"The resource is busy with an average CPU usage of 3.1%.\", \"There is no approved change ticket.\", \"The price per unit change is not covered by a Savings Plan.\"]\n}}",
+      "thought": "The price per unit change is not covered by a Savings Plan. The resource is still billed and busy.",
+      "final": {
+        "type": "idle_gpu",
+        "owner_team": "storefront",
+        "action": "stop_instance",
+        "start_date": "2026-07-01",
+        "confidence": 0.9,
+        "explanation": "The resource 'sf-web-asg' is still billed and busy, with a significant increase in cost. There is no approved change ticket and the price per unit change is not covered by a Savings Plan.",
+        "evidence": [
+          "The resource is still billed.",
+          "The resource is busy with an average CPU usage of 3.1%.",
+          "There is no approved change ticket.",
+          "The price per unit change is not covered by a Savings Plan."
+        ]
+      }
+    }
+  ]
+}

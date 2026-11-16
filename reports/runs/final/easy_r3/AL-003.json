@@ -1,0 +1,97 @@
+{
+  "alert": {
+    "alert_id": "AL-003",
+    "resource": "plat-nat-traffic",
+    "account": "platform-shared",
+    "rule": "usage",
+    "start_date": "2026-05-13 00:00:00",
+    "score": 3.7,
+    "normal_usd_day": 3.7,
+    "current_usd_day": 4.87,
+    "extra_usd_day": 1.17,
+    "usage_effect": 1.17,
+    "price_effect": -0.0,
+    "resource_kind": "data_transfer"
+  },
+  "resource": "plat-nat-traffic",
+  "form": {
+    "type": "no_issue",
+    "owner_team": "platform",
+    "action": "no_action",
+    "start_date": "2026-05-13",
+    "confidence": 0.9,
+    "explanation": "The cost increase is gradual and not covered by a Savings Plan, indicating legitimate usage.",
+    "evidence": [
+      "The cost increased gradually over 14 days.",
+      "No Savings Plan covers the resource.",
+      "No approved change ticket."
+    ],
+    "owner_message": ""
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 15.3,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The resource is a data transfer resource with a significant increase in cost. I need to check if there's an approved ticket or if the increase is legitimate.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"plat-nat-traffic\"}}",
+      "thought": "The resource is a data transfer resource with a significant increase in cost. I need to check if there's an approved ticket or if the increase is legitimate.",
+      "tool": "change_events",
+      "args": {
+        "resource": "plat-nat-traffic"
+      },
+      "result": "TICKETS: none\n(no create/delete/ticket events)"
+    },
+    {
+      "step": 2,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"There are no approved change tickets for this resource. I need to check if the increase in cost is due to a legitimate usage pattern.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"plat-nat-traffic\", \"around_date\": \"2026-05-13\"}}",
+      "thought": "There are no approved change tickets for this resource. I need to check if the increase in cost is due to a legitimate usage pattern.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "plat-nat-traffic",
+        "around_date": "2026-05-13"
+      },
+      "result": "CHANGE from 2026-05-13: cost 137.4%, quantity 137.5%, price per unit 0.0%; pricing Standard \u2192 Standard; quantity reached its new level after 9 day(s)\nSUMMARY {\"avg_cost_before\": 3.74, \"avg_cost_after\": 8.88, \"avg_quantity_before\": 83.13, \"avg_quantity_after\": 197.41, \"unit_price_before\": 0.045, \"unit_price_after\": 0.045, \"pricing_before\": \"Standard\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-05-10,4.14,91.91,GB,0.045,Standard,\n2026-05-11,3.79,84.24,GB,0.045,Standard,\n2026-05-12,4.48,99.65,GB,0.045,Standard,\n2026-05-13,4.87,108.2,GB,0.045,Standard,\n2026-05-14,6,133.3,GB,0.045,Standard,\n2026-05-15,6.48,143.9,GB,0.045,Standard,\n2026-05-16,7.74,171.9,GB,0.045,Standard,\n2026-05-17,8.64,191.9,GB,0.045,Standard,\n2026-05-18,7.64,169.8,GB,0.045,Standard,\n2026-05-19,7.89,175.3,GB,0.045,Standard,\n2026-05-20,7.98,177.3,GB,0.045,Standard,\n2026-05-21,9.92,220.4,GB,0.045,Standard,\n2026-05-22,9.83,218.5,GB,0.045,Standard,\n2026-05-23,11.33,251.7,GB,0.045,Standard,\n2026-05-24,12.26,272.5,GB,0.045,Standard,\n2026-05-25,10.5,233.4,GB,0.045,Standard,\n2026-05-26,10.84,240.9,GB,0.045,Standard,\n2026-05-27,11.35,252.2,GB,0.045,Standard,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 5.2,
+      "raw": "{\"thought\": \"The cost and quantity have increased gradually over the past 14 days, with the increase starting on 2026-05-13. There is no approved change ticket for this increase.\", \"tool\": \"commitment_status\", \"args\": {\"resource\": \"plat-nat-traffic\"}}",
+      "thought": "The cost and quantity have increased gradually over the past 14 days, with the increase starting on 2026-05-13. There is no approved change ticket for this increase.",
+      "tool": "commitment_status",
+      "args": {
+        "resource": "plat-nat-traffic"
+      },
+      "result": "No Savings Plan covers this resource."
+    },
+    {
+      "step": 4,
+      "seconds": 5.3,
+      "raw": "{\"thought\": \"The resource is not covered by a Savings Plan, and there is no approved change ticket. The cost increase is likely due to legitimate usage.\", \"final\": {\n     \"type\": \"no_issue\",\n     \"owner_team\": \"platform\",\n     \"action\": \"no_action\",\n     \"start_date\": \"2026-05-13\",\n     \"confidence\": 0.9,\n     \"explanation\": \"The cost increase is gradual and not covered by a Savings Plan, indicating legitimate usage.\",\n     \"evidence\": [\"The cost increased gradually over 14 days.\", \"No Savings Plan covers the resource.\", \"No approved change ticket.\"],\n     \"owner_message\": \"\"\n}}",
+      "thought": "The resource is not covered by a Savings Plan, and there is no approved change ticket. The cost increase is likely due to legitimate usage.",
+      "final": {
+        "type": "no_issue",
+        "owner_team": "platform",
+        "action": "no_action",
+        "start_date": "2026-05-13",
+        "confidence": 0.9,
+        "explanation": "The cost increase is gradual and not covered by a Savings Plan, indicating legitimate usage.",
+        "evidence": [
+          "The cost increased gradually over 14 days.",
+          "No Savings Plan covers the resource.",
+          "No approved change ticket."
+        ],
+        "owner_message": ""
+      }
+    }
+  ]
+}

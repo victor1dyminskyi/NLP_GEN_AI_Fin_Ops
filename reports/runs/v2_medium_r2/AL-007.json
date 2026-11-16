@@ -1,0 +1,118 @@
+{
+  "alert": {
+    "alert_id": "AL-007",
+    "resource": "bi-egress",
+    "account": "analytics-prod",
+    "rule": "usage",
+    "start_date": "2026-06-29 00:00:00",
+    "score": 5.0,
+    "normal_usd_day": 0.73,
+    "current_usd_day": 1.6,
+    "extra_usd_day": 0.88,
+    "usage_effect": 0.88,
+    "price_effect": -0.0,
+    "related": NaN
+  },
+  "resource": "bi-egress",
+  "form": {
+    "type": "transfer_spike",
+    "owner_team": "analytics",
+    "action": "notify_owner_open_ticket",
+    "start_date": "2026-06-29",
+    "confidence": 0.9,
+    "explanation": "The cost increased sharply on 2026-06-29, and there are no change events or Savings Plans covering the resource.",
+    "evidence": [
+      "The cost increased from $0.73 to $1.6 on 2026-06-29.",
+      "No Savings Plan covers this resource.",
+      "No change events were recorded."
+    ]
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "auto_executed (simulated)"
+  },
+  "model": "finops-agent",
+  "llm_calls": 6,
+  "tool_calls": 5,
+  "form_fixes": 0,
+  "seconds": 19.3,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 1.9,
+      "raw": "{\"thought\": \"Investigate the resource 'bi-egress' in the 'analytics-prod' account.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"bi-egress\"}}",
+      "thought": "Investigate the resource 'bi-egress' in the 'analytics-prod' account.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "bi-egress"
+      },
+      "result": "{\"ResourceName\": \"bi-egress\", \"ResourceId\": \"bi-egress-e5e7ea94\", \"account\": \"analytics-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.090 per GB - first 10 TB / month data transfer out beyond the global free tier\", \"tags\": \"{\\\"team\\\": \\\"analytics\\\", \\\"application\\\": \\\"dashboards\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 0.63, \"account_team\": \"analytics\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"Check the change events for 'bi-egress' to see if there were any changes that could explain the cost increase.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"bi-egress\"}}",
+      "thought": "Check the change events for 'bi-egress' to see if there were any changes that could explain the cost increase.",
+      "tool": "change_events",
+      "args": {
+        "resource": "bi-egress"
+      },
+      "result": "(no create/delete/ticket events)"
+    },
+    {
+      "step": 3,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"Examine the cost history around the alert date to see if there were any changes in quantity or price per unit.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"bi-egress\", \"around_date\": \"2026-06-29\"}}",
+      "thought": "Examine the cost history around the alert date to see if there were any changes in quantity or price per unit.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "bi-egress",
+        "around_date": "2026-06-29"
+      },
+      "result": "SUMMARY {\"avg_cost_before\": 0.73, \"avg_cost_after\": 0.86, \"avg_quantity_before\": 8.15, \"avg_quantity_after\": 9.51, \"unit_price_before\": 0.09, \"unit_price_after\": 0.09, \"pricing_before\": \"Standard\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-06-26,2.38,26.4,GB,0.09,Standard,\n2026-06-27,0.71,7.9,GB,0.09,Standard,\n2026-06-28,0.97,10.72,GB,0.09,Standard,\n2026-06-29,1.6,17.81,GB,0.09,Standard,\n2026-06-30,1.94,21.53,GB,0.09,Standard,\n2026-07-01,2.01,22.36,GB,0.09,Standard,\n2026-07-02,1.7,18.92,GB,0.09,Standard,\n2026-07-03,0.6,6.63,GB,0.09,Standard,\n2026-07-04,0.21,2.34,GB,0.09,Standard,\n2026-07-05,0.2,2.25,GB,0.09,Standard,\n2026-07-06,0.62,6.94,GB,0.09,Standard,\n2026-07-07,0.69,7.66,GB,0.09,Standard,\n2026-07-08,0.71,7.86,GB,0.09,Standard,\n2026-07-09,0.65,7.19,GB,0.09,Standard,\n2026-07-10,0.59,6.53,GB,0.09,Standard,\n2026-07-11,0.28,3.14,GB,0.09,Standard,\n2026-07-12,0.25,2.76,GB,0.09,Standard,\n2026-07-13,0.79,8.8,GB,0.09,Standard,\n"
+    },
+    {
+      "step": 4,
+      "seconds": 4.5,
+      "raw": "{\"thought\": \"Check the usage for 'bi-egress' to see if it was busy on the alert date.\", \"tool\": \"usage\", \"args\": {\"resource\": \"bi-egress\", \"around_date\": \"2026-06-29\"}}",
+      "thought": "Check the usage for 'bi-egress' to see if it was busy on the alert date.",
+      "tool": "usage",
+      "args": {
+        "resource": "bi-egress",
+        "around_date": "2026-06-29"
+      },
+      "result": "(no usage metrics \u2014 not a server, or never running)"
+    },
+    {
+      "step": 5,
+      "seconds": 2.0,
+      "raw": "{\"thought\": \"The resource 'bi-egress' is not a server and has no usage metrics. This suggests it might be a data transfer or traffic cost.\", \"tool\": \"commitment_status\", \"args\": {\"resource\": \"bi-egress\"}}",
+      "thought": "The resource 'bi-egress' is not a server and has no usage metrics. This suggests it might be a data transfer or traffic cost.",
+      "tool": "commitment_status",
+      "args": {
+        "resource": "bi-egress"
+      },
+      "result": "No Savings Plan covers this resource."
+    },
+    {
+      "step": 6,
+      "seconds": 6.2,
+      "raw": "{\"thought\": \"The cost increase is not covered by a Savings Plan and there are no change events. This suggests it might be a data transfer or traffic cost.\", \"final\": {\n    \"type\": \"transfer_spike\",\n    \"owner_team\": \"analytics\",\n    \"action\": \"notify_owner_open_ticket\",\n    \"start_date\": \"2026-06-29\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The cost increased sharply on 2026-06-29, and there are no change events or Savings Plans covering the resource.\",\n    \"evidence\": [\"The cost increased from $0.73 to $1.6 on 2026-06-29.\", \"No Savings Plan covers this resource.\", \"No change events were recorded.\"]\n}}",
+      "thought": "The cost increase is not covered by a Savings Plan and there are no change events. This suggests it might be a data transfer or traffic cost.",
+      "final": {
+        "type": "transfer_spike",
+        "owner_team": "analytics",
+        "action": "notify_owner_open_ticket",
+        "start_date": "2026-06-29",
+        "confidence": 0.9,
+        "explanation": "The cost increased sharply on 2026-06-29, and there are no change events or Savings Plans covering the resource.",
+        "evidence": [
+          "The cost increased from $0.73 to $1.6 on 2026-06-29.",
+          "No Savings Plan covers this resource.",
+          "No change events were recorded."
+        ]
+      }
+    }
+  ]
+}

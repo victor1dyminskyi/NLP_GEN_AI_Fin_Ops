@@ -1,0 +1,96 @@
+{
+  "alert": {
+    "alert_id": "AL-001",
+    "resource": "bi-migration-48",
+    "account": "analytics-prod",
+    "rule": "new_resource",
+    "start_date": "2026-04-19 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 4.6,
+    "extra_usd_day": 4.6,
+    "usage_effect": 4.6,
+    "price_effect": 0.0,
+    "related": NaN,
+    "resource_kind": "server"
+  },
+  "resource": "bi-migration-48",
+  "form": {
+    "type": "no_issue",
+    "owner_team": "analytics",
+    "action": "no_action",
+    "start_date": "2026-04-19",
+    "confidence": 0.9,
+    "explanation": "The server was busy for 14 days after its creation, which explains the cost spike.",
+    "evidence": [
+      "The server was busy for 14 days after its creation.",
+      "There's no approved ticket for the cost increase."
+    ],
+    "owner_message": ""
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 13.1,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"The resource is a server with a significant cost spike. I need to determine if it's still running and if there's an approved ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"bi-migration-48\"}}",
+      "thought": "The resource is a server with a significant cost spike. I need to determine if it's still running and if there's an approved ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "bi-migration-48"
+      },
+      "result": "{\"ResourceName\": \"bi-migration-48\", \"ResourceId\": \"i-0ef5ea4349387b25a\", \"account\": \"analytics-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.192 per On Demand Linux m5.xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"analytics\\\", \\\"application\\\": \\\"migration\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-04-19\", \"last_billed\": \"2026-05-02\", \"avg_cost_per_day\": 4.6, \"account_team\": \"analytics\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.6,
+      "raw": "{\"thought\": \"The server is still running and has tags, so it's not untagged. I need to check if there's an approved ticket for the cost increase.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"bi-migration-48\"}}",
+      "thought": "The server is still running and has tags, so it's not untagged. I need to check if there's an approved ticket for the cost increase.",
+      "tool": "change_events",
+      "args": {
+        "resource": "bi-migration-48"
+      },
+      "result": "TICKETS: none\nevent_time,event_name,actor,ticket,details\n2026-04-19 11:00:00,RunInstances,sofia.rossi,,\n2026-05-02 18:00:00,TerminateInstances,sofia.rossi,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.7,
+      "raw": "{\"thought\": \"There's no approved ticket for the cost increase. The server was created and then terminated on the same day, which is unusual.\", \"tool\": \"usage\", \"args\": {\"resource\": \"bi-migration-48\", \"around_date\": \"2026-04-19\"}}",
+      "thought": "There's no approved ticket for the cost increase. The server was created and then terminated on the same day, which is unusual.",
+      "tool": "usage",
+      "args": {
+        "resource": "bi-migration-48",
+        "around_date": "2026-04-19"
+      },
+      "result": "CHANGE: CPU busy: n/a% before \u2192 23.4% after (14 days after)\nperiod,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nafter,14,23.4,,,1\n"
+    },
+    {
+      "step": 4,
+      "seconds": 5.5,
+      "raw": "{\"thought\": \"The server was busy for 14 days after its creation, which explains the cost spike. There's no need for an action.\", \"final\": {\n    \"type\": \"no_issue\",\n    \"owner_team\": \"analytics\",\n    \"action\": \"no_action\",\n    \"start_date\": \"2026-04-19\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The server was busy for 14 days after its creation, which explains the cost spike.\",\n    \"evidence\": [\"The server was busy for 14 days after its creation.\", \"There's no approved ticket for the cost increase.\"],\n    \"owner_message\": \"\"\n}}",
+      "thought": "The server was busy for 14 days after its creation, which explains the cost spike. There's no need for an action.",
+      "final": {
+        "type": "no_issue",
+        "owner_team": "analytics",
+        "action": "no_action",
+        "start_date": "2026-04-19",
+        "confidence": 0.9,
+        "explanation": "The server was busy for 14 days after its creation, which explains the cost spike.",
+        "evidence": [
+          "The server was busy for 14 days after its creation.",
+          "There's no approved ticket for the cost increase."
+        ],
+        "owner_message": ""
+      }
+    }
+  ]
+}

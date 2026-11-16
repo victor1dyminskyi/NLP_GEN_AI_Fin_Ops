@@ -1,0 +1,13 @@
+11 alerts on data/synthetic/medium/r2 · model finops-agent
+  AL-001 sf-search-10             → no_issue           storefront  no_action                    conf=1.0 [no_action] 2 tools, 10.5s
+  AL-002 data-migration-71        → no_issue           data        no_action                    conf=1.0 [no_action] 2 tools, 11.4s
+  AL-003 data-migration-71-vol    → orphaned_disk      data        snapshot_then_delete_volume  conf=0.9 [awaiting_approval] 2 tools, 13.2s
+  AL-004 plat-nat-traffic         → transfer_spike     platform    notify_owner_open_ticket     conf=0.9 [auto_executed (simulated)] 4 tools, 16.4s
+  AL-005 data-migration-71-vol    → orphaned_disk      data        snapshot_then_delete_volume  conf=1.0 [awaiting_approval] 4 tools, 14.7s
+  AL-006 sf-perf-test-45          → untagged_resource  storefront  tag_and_notify_owner         conf=0.9 [auto_executed (simulated)] 3 tools, 14.9s
+  AL-007 bi-egress                → other              analytics   no_action                    conf=0.8 [escalated_to_human] 3 tools, 12.0s
+  AL-008 plat-inter-az            → other              platform    no_action                    conf=0.8 [escalated_to_human] 10 tools, 34.1s
+  AL-009 data-etl-workers         → sp_expired         platform    recommend_sp_renewal         conf=0.9 [awaiting_approval] 4 tools, 17.5s
+  AL-010 sf-api-asg               → sp_expired         platform    recommend_sp_renewal         conf=0.9 [awaiting_approval] 5 tools, 21.2s
+  AL-011 sf-web-asg               → other              None        no_action                    conf=0.0 [escalated_to_human] 10 tools, 36.4s
+Saved reports/runs/medium_r2/

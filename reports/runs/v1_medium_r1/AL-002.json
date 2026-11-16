@@ -1,0 +1,93 @@
+{
+  "alert": {
+    "alert_id": "AL-002",
+    "resource": "sf-egress",
+    "account": "storefront-prod",
+    "rule": "usage",
+    "start_date": "2026-05-11 00:00:00",
+    "score": 9.4,
+    "normal_usd_day": 9.52,
+    "current_usd_day": 20.44,
+    "extra_usd_day": 10.92,
+    "usage_effect": 10.92,
+    "price_effect": 0.0,
+    "related": NaN
+  },
+  "resource": "sf-egress",
+  "form": {
+    "type": "planned_change",
+    "owner_team": "storefront",
+    "action": "no_action",
+    "start_date": "2026-05-11",
+    "confidence": 1.0,
+    "explanation": "The cost increase is due to a data transfer spike on 2026-05-11, which is covered by an approved change ticket (CHG-8828).",
+    "evidence": [
+      "2026-05-11, 20.44, 227.2, GB, 0.09, Standard, ",
+      "CHG-8828: marketing campaign, expect ~2.0\u00d7 web traffic for 4 days"
+    ]
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 16.5,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.0,
+      "raw": "{\"thought\": \"The resource 'sf-egress' has a significant increase in cost, which is not explained by normal usage.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"sf-egress\"}}",
+      "thought": "The resource 'sf-egress' has a significant increase in cost, which is not explained by normal usage.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "sf-egress"
+      },
+      "result": "{\"ResourceName\": \"sf-egress\", \"ResourceId\": \"sf-egress-1e55d6d5\", \"account\": \"storefront-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.090 per GB - first 10 TB / month data transfer out beyond the global free tier\", \"tags\": \"{\\\"team\\\": \\\"storefront\\\", \\\"application\\\": \\\"web\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 10.06, \"account_team\": \"storefront\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.9,
+      "raw": "{\"thought\": \"The resource is tagged and owned by the 'storefront' team. The cost increase is significant but within the expected range for data transfer.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"sf-egress\", \"around_date\": \"2026-05-11\"}}",
+      "thought": "The resource is tagged and owned by the 'storefront' team. The cost increase is significant but within the expected range for data transfer.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "sf-egress",
+        "around_date": "2026-05-11"
+      },
+      "result": "SUMMARY {\"avg_cost_before\": 10.03, \"avg_cost_after\": 12.71, \"avg_quantity_before\": 111.43, \"avg_quantity_after\": 141.23, \"unit_price_before\": 0.09, \"unit_price_after\": 0.09, \"pricing_before\": \"Standard\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-05-08,11.45,127.2,GB,0.09,Standard,\n2026-05-09,10.45,116.1,GB,0.09,Standard,\n2026-05-10,9.57,106.3,GB,0.09,Standard,\n2026-05-11,20.44,227.2,GB,0.09,Standard,\n2026-05-12,16.86,187.3,GB,0.09,Standard,\n2026-05-13,19.23,213.6,GB,0.09,Standard,\n2026-05-14,24.65,273.9,GB,0.09,Standard,\n2026-05-15,7.98,88.72,GB,0.09,Standard,\n2026-05-16,10.47,116.4,GB,0.09,Standard,\n2026-05-17,11.7,130.1,GB,0.09,Standard,\n2026-05-18,8.75,97.24,GB,0.09,Standard,\n2026-05-19,9.9,110,GB,0.09,Standard,\n2026-05-20,9.94,110.4,GB,0.09,Standard,\n2026-05-21,9.18,102,GB,0.09,Standard,\n2026-05-22,10.58,117.5,GB,0.09,Standard,\n2026-05-23,9.84,109.3,GB,0.09,Standard,\n2026-05-24,10.63,118.1,GB,0.09,Standard,\n2026-05-25,10.5,116.7,GB,0.09,Standard,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 4.6,
+      "raw": "{\"thought\": \"The cost increase is due to a sharp spike in data transfer on 2026-05-11, which is within the expected range for data transfer costs.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-egress\"}}",
+      "thought": "The cost increase is due to a sharp spike in data transfer on 2026-05-11, which is within the expected range for data transfer costs.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-egress"
+      },
+      "result": "event_time,event_name,actor,ticket,details\n2026-05-09 09:30:00,ChangeApproved,alex.moreno,CHG-8828,\"CHG-8828: marketing campaign, expect ~2.0\u00d7 web traffic for 4 days\"\n"
+    },
+    {
+      "step": 4,
+      "seconds": 7.0,
+      "raw": "{\"thought\": \"The cost increase is covered by an approved change ticket, so it is not a problem.\", \"final\": {\n    \"type\": \"planned_change\",\n    \"owner_team\": \"storefront\",\n    \"action\": \"no_action\",\n    \"start_date\": \"2026-05-11\",\n    \"confidence\": 1.0,\n    \"explanation\": \"The cost increase is due to a data transfer spike on 2026-05-11, which is covered by an approved change ticket (CHG-8828).\",\n    \"evidence\": [\"2026-05-11, 20.44, 227.2, GB, 0.09, Standard, \", \"CHG-8828: marketing campaign, expect ~2.0\u00d7 web traffic for 4 days\"]\n}}",
+      "thought": "The cost increase is covered by an approved change ticket, so it is not a problem.",
+      "final": {
+        "type": "planned_change",
+        "owner_team": "storefront",
+        "action": "no_action",
+        "start_date": "2026-05-11",
+        "confidence": 1.0,
+        "explanation": "The cost increase is due to a data transfer spike on 2026-05-11, which is covered by an approved change ticket (CHG-8828).",
+        "evidence": [
+          "2026-05-11, 20.44, 227.2, GB, 0.09, Standard, ",
+          "CHG-8828: marketing campaign, expect ~2.0\u00d7 web traffic for 4 days"
+        ]
+      }
+    }
+  ]
+}

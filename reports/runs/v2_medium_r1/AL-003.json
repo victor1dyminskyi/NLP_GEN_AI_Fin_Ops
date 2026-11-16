@@ -1,0 +1,125 @@
+{
+  "alert": {
+    "alert_id": "AL-003",
+    "resource": "sf-perf-test-53",
+    "account": "storefront-dev",
+    "rule": "new_resource",
+    "start_date": "2026-05-22 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 32.52,
+    "extra_usd_day": 32.52,
+    "usage_effect": 32.52,
+    "price_effect": 0.0,
+    "related": NaN
+  },
+  "resource": "sf-perf-test-53",
+  "form": {
+    "type": "no_issue",
+    "owner_team": "storefront",
+    "action": "no_action",
+    "start_date": "2026-05-22",
+    "confidence": 0.9,
+    "explanation": "The resource has been running for 102 days with low CPU usage and no GPU usage, indicating normal operation.",
+    "evidence": [
+      "The resource has been running for 102 days.",
+      "Average CPU usage is 3.7%.",
+      "No GPU usage."
+    ]
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 7,
+  "tool_calls": 5,
+  "form_fixes": 1,
+  "seconds": 24.6,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.1,
+      "raw": "{\"thought\": \"Investigate the new resource 'sf-perf-test-53' in the 'storefront-dev' account.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"sf-perf-test-53\"}}",
+      "thought": "Investigate the new resource 'sf-perf-test-53' in the 'storefront-dev' account.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "sf-perf-test-53"
+      },
+      "result": "{\"ResourceName\": \"sf-perf-test-53\", \"ResourceId\": \"i-0bbb0c79424ad58a0\", \"account\": \"storefront-dev\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.68 per On Demand Linux c5.4xlarge Instance Hour\", \"tags\": \"NONE (untagged)\", \"first_billed\": \"2026-05-22\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 32.51, \"account_team\": \"storefront\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The resource 'sf-perf-test-53' is untagged and has a high daily cost of $32.51.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-perf-test-53\"}}",
+      "thought": "The resource 'sf-perf-test-53' is untagged and has a high daily cost of $32.51.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-perf-test-53"
+      },
+      "result": "event_time,event_name,actor,ticket,details\n2026-05-22 10:00:00,RunInstances,alex.moreno,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 1.9,
+      "raw": "{\"thought\": \"The resource was created by 'alex.moreno' on 2026-05-22 without an approved ticket.\", \"tool\": \"get_owner\", \"args\": {\"account\": \"storefront-dev\"}}",
+      "thought": "The resource was created by 'alex.moreno' on 2026-05-22 without an approved ticket.",
+      "tool": "get_owner",
+      "args": {
+        "account": "storefront-dev"
+      },
+      "result": "team,owner,email,slack\nstorefront,Alex Moreno,storefront-team@demoshop.example,#team-storefront\n"
+    },
+    {
+      "step": 4,
+      "seconds": 5.3,
+      "raw": "{\"thought\": \"The untagged resource 'sf-perf-test-53' was created by Alex Moreno and should be tagged.\", \"final\": {\n    \"type\": \"untagged_resource\",\n    \"owner_team\": \"storefront\",\n    \"action\": \"tag_and_notify_owner\",\n    \"start_date\": \"2026-05-22\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The resource is untagged and has a high daily cost of $32.51. It was created by Alex Moreno without an approved ticket.\",\n    \"evidence\": [\"The resource is untagged.\", \"Alex Moreno created the resource without an approved ticket.\"]\n}}",
+      "thought": "The untagged resource 'sf-perf-test-53' was created by Alex Moreno and should be tagged.",
+      "error": "before the final answer you must also call: cost_history, usage"
+    },
+    {
+      "step": 5,
+      "seconds": 2.5,
+      "raw": "{\"thought\": \"Investigate the cost history and usage of the resource 'sf-perf-test-53' to confirm the high cost.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"sf-perf-test-53\", \"around_date\": \"2026-05-22\"}}",
+      "thought": "Investigate the cost history and usage of the resource 'sf-perf-test-53' to confirm the high cost.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "sf-perf-test-53",
+        "around_date": "2026-05-22"
+      },
+      "result": "SUMMARY {\"avg_cost_before\": null, \"avg_cost_after\": 32.55, \"avg_quantity_before\": null, \"avg_quantity_after\": 47.86, \"unit_price_before\": null, \"unit_price_after\": 0.68, \"pricing_before\": null, \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-05-22,32.39,47.64,Hours,0.68,Standard,\n2026-05-23,32.64,48,Hours,0.68,Standard,\n2026-05-24,32.64,48,Hours,0.68,Standard,\n2026-05-25,32.64,48,Hours,0.68,Standard,\n2026-05-26,31.98,47.03,Hours,0.68,Standard,\n2026-05-27,32.53,47.84,Hours,0.68,Standard,\n2026-05-28,32.62,47.97,Hours,0.68,Standard,\n2026-05-29,32.64,48,Hours,0.68,Standard,\n2026-05-30,32.62,47.97,Hours,0.68,Standard,\n2026-05-31,32.3,47.5,Hours,0.68,Standard,\n2026-06-01,32.64,48,Hours,0.68,Standard,\n2026-06-02,32.64,48,Hours,0.68,Standard,\n2026-06-03,32.64,48,Hours,0.68,Standard,\n2026-06-04,32.64,48,Hours,0.68,Standard,\n2026-06-05,32.64,48,Hours,0.68,Standard,\n"
+    },
+    {
+      "step": 6,
+      "seconds": 4.5,
+      "raw": "{\"thought\": \"Investigate the usage of the resource 'sf-perf-test-53' to confirm if it is idle or busy.\", \"tool\": \"usage\", \"args\": {\"resource\": \"sf-perf-test-53\", \"around_date\": \"2026-05-22\"}}",
+      "thought": "Investigate the usage of the resource 'sf-perf-test-53' to confirm if it is idle or busy.",
+      "tool": "usage",
+      "args": {
+        "resource": "sf-perf-test-53",
+        "around_date": "2026-05-22"
+      },
+      "result": "period,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nafter,102,3.7,,,2\n"
+    },
+    {
+      "step": 7,
+      "seconds": 5.8,
+      "raw": "{\"thought\": \"The resource 'sf-perf-test-53' has been running for 102 days with an average CPU usage of 3.7% and no GPU usage.\", \"final\": {\n    \"type\": \"no_issue\",\n    \"owner_team\": \"storefront\",\n    \"action\": \"no_action\",\n    \"start_date\": \"2026-05-22\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The resource has been running for 102 days with low CPU usage and no GPU usage, indicating normal operation.\",\n    \"evidence\": [\"The resource has been running for 102 days.\", \"Average CPU usage is 3.7%.\", \"No GPU usage.\"]\n}}",
+      "thought": "The resource 'sf-perf-test-53' has been running for 102 days with an average CPU usage of 3.7% and no GPU usage.",
+      "final": {
+        "type": "no_issue",
+        "owner_team": "storefront",
+        "action": "no_action",
+        "start_date": "2026-05-22",
+        "confidence": 0.9,
+        "explanation": "The resource has been running for 102 days with low CPU usage and no GPU usage, indicating normal operation.",
+        "evidence": [
+          "The resource has been running for 102 days.",
+          "Average CPU usage is 3.7%.",
+          "No GPU usage."
+        ]
+      }
+    }
+  ]
+}

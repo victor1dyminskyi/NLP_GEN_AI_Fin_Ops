@@ -1,0 +1,46 @@
+# Model-selection benchmark: 20 questions the agent will need to answer with SQL on ONE dataset.
+# Dataset: data/synthetic/medium/r1 (dev replica — the test replicas are never used for choices).
+# Each `gold` query is the reference answer; a model is correct if ITS query returns the same rows
+# (execution accuracy, the standard text-to-SQL metric). Resource names below exist in medium/r1.
+dataset: data/synthetic/medium/r1
+questions:
+  - q: What was the total EffectiveCost of the whole company on 2026-07-01?
+    gold: SELECT SUM(EffectiveCost) FROM billing WHERE ChargePeriodStart = DATE '2026-07-01'
+  - q: Show the daily EffectiveCost of resource 'sf-web-asg' from 2026-06-28 to 2026-07-03 (date and cost).
+    gold: SELECT ChargePeriodStart, EffectiveCost FROM billing WHERE ResourceName='sf-web-asg' AND ChargePeriodStart BETWEEN DATE '2026-06-28' AND DATE '2026-07-03'
+  - q: Which 5 resources had the highest total EffectiveCost in June 2026? Return resource name and total.
+    gold: SELECT ResourceName, SUM(EffectiveCost) t FROM billing WHERE ChargePeriodStart >= DATE '2026-06-01' AND ChargePeriodStart < DATE '2026-07-01' GROUP BY 1 ORDER BY t DESC LIMIT 5
+  - q: What was the unit price (ContractedUnitPrice) of 'sf-api-asg' on 2026-06-30 and on 2026-07-01? Return date and price.
+    gold: SELECT ChargePeriodStart, ContractedUnitPrice FROM billing WHERE ResourceName='sf-api-asg' AND ChargePeriodStart IN (DATE '2026-06-30', DATE '2026-07-01')
+  - q: List all resources that have no tags (Tags is null), with the first date they appear in the bill.
+    gold: SELECT ResourceName, MIN(ChargePeriodStart) FROM billing WHERE Tags IS NULL GROUP BY 1
+  - q: Who (actor) created the resource 'sf-perf-test-53', according to the change log?
+    gold: SELECT actor FROM change_log WHERE ResourceName='sf-perf-test-53' AND event_name='RunInstances'
+  - q: What is the owner email of the team that owns the AWS account 'storefront-dev'? The owners table lists each team's accounts as a comma-separated string.
+    gold: SELECT email FROM owners WHERE accounts LIKE '%storefront-dev%'
+  - q: What was the average GPU utilisation (gpu_pct) of 'ml-train-72' on days after 2026-07-10?
+    gold: SELECT AVG(gpu_pct) FROM usage_metrics WHERE ResourceName='ml-train-72' AND date > DATE '2026-07-10'
+  - q: When does the Savings Plan 'sp-compute-2025' end, and which resources does it cover?
+    gold: SELECT "end", covers FROM commitments WHERE commitment_id='sp-compute-2025'
+  - q: Count the change-log events per event_name.
+    gold: SELECT event_name, COUNT(*) FROM change_log GROUP BY 1
+  - q: Which resources first appear in the bill after 2026-04-15? Return name and first date.
+    gold: SELECT ResourceName, MIN(ChargePeriodStart) f FROM billing GROUP BY 1 HAVING MIN(ChargePeriodStart) > DATE '2026-04-15'
+  - q: Total EffectiveCost per AWS account (SubAccountName) on 2026-07-01.
+    gold: SELECT SubAccountName, SUM(EffectiveCost) FROM billing WHERE ChargePeriodStart = DATE '2026-07-01' GROUP BY 1
+  - q: What was the average daily EffectiveCost of 'bi-egress' in May 2026 and in June 2026? Return month and average.
+    gold: SELECT date_trunc('month', ChargePeriodStart) m, AVG(EffectiveCost) FROM billing WHERE ResourceName='bi-egress' AND ChargePeriodStart >= DATE '2026-05-01' AND ChargePeriodStart < DATE '2026-07-01' GROUP BY 1
+  - q: List change-log events that have a ticket (resource name, event name, ticket).
+    gold: SELECT ResourceName, event_name, ticket FROM change_log WHERE ticket IS NOT NULL
+  - q: Which resources were terminated (event TerminateInstances) and when? Return resource name and event time.
+    gold: SELECT ResourceName, event_time FROM change_log WHERE event_name='TerminateInstances'
+  - q: According to the change log, which server was the volume 'data-migration-45-vol' attached to? Return the details text.
+    gold: SELECT details FROM change_log WHERE ResourceName='data-migration-45-vol' AND event_name='AttachVolume'
+  - q: Total EffectiveCost per ServiceName for July 2026, highest first.
+    gold: SELECT ServiceName, SUM(EffectiveCost) t FROM billing WHERE ChargePeriodStart >= DATE '2026-07-01' AND ChargePeriodStart < DATE '2026-08-01' GROUP BY 1 ORDER BY t DESC
+  - q: On which days did 'sf-egress' cost more than 15 dollars? Return the dates.
+    gold: SELECT ChargePeriodStart FROM billing WHERE ResourceName='sf-egress' AND EffectiveCost > 15
+  - q: Which team owns the account in which 'ml-train-72' runs? Use billing.SubAccountName and owners.accounts (comma-separated).
+    gold: SELECT DISTINCT o.team FROM billing b JOIN owners o ON o.accounts LIKE '%' || b.SubAccountName || '%' WHERE b.ResourceName='ml-train-72'
+  - q: What was the median daily EffectiveCost of 'sf-web-asg' over the 28 days before 2026-07-01 (2026-06-03 to 2026-06-30)?
+    gold: SELECT MEDIAN(EffectiveCost) FROM billing WHERE ResourceName='sf-web-asg' AND ChargePeriodStart BETWEEN DATE '2026-06-03' AND DATE '2026-06-30'

@@ -1,0 +1,1136 @@
+[
+  {
+    "model": "qwen3:8b@direct",
+    "valid_%": 95,
+    "first_try_%": 60,
+    "with_retry_%": 75,
+    "median_s": 3.0,
+    "details": [
+      {
+        "q": "What was the total EffectiveCost of the whole company on 2026-07-01?",
+        "sql": "SELECT SUM(EffectiveCost) AS TotalEffectiveCost\nFROM billing\nWHERE ChargePeriodStart::DATE = '2026-07-01'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 4.8,
+        "error": null
+      },
+      {
+        "q": "Show the daily EffectiveCost of resource 'sf-web-asg' from 2026-06-28 to 2026-07-03 (date and cost).",
+        "sql": "SELECT \n    ChargePeriodStart::DATE AS date, \n    EffectiveCost\nFROM \n    billing\nWHERE \n    ResourceName = 'sf-web-asg'\n    AND ChargePeriodStart::DATE BETWEEN '2026-06-28' AND '2026-07-03'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.7,
+        "error": null
+      },
+      {
+        "q": "Which 5 resources had the highest total EffectiveCost in June 2026? Return resource name and total.",
+        "sql": "SELECT \n    ResourceName, \n    SUM(EffectiveCost) AS TotalEffectiveCost\nFROM \n    billing\nWHERE \n    ChargePeriodStart >= DATE '2026-06-01' \n    AND ChargePeriodStart < DATE '2026-07-01'\nGROUP BY \n    ResourceName\nORDER BY \n    TotalEffectiveCost DESC\nLIMIT 5",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 3.3,
+        "error": null
+      },
+      {
+        "q": "What was the unit price (ContractedUnitPrice) of 'sf-api-asg' on 2026-06-30 and on 2026-07-01? Return date and price.",
+        "sql": "SELECT \n    ChargePeriodStart AS date,\n    ContractedUnitPrice\nFROM \n    billing\nWHERE \n    ResourceName = 'sf-api-asg'\n    AND ChargePeriodStart IN (DATE '2026-06-30', DATE '2026-07-01')",
+        "valid": true,
+        "first_ok": false,
+        "ok": true,
+        "seconds": 5.8,
+        "error": null
+      },
+      {
+        "q": "List all resources that have no tags (Tags is null), with the first date they appear in the bill.",
+        "sql": "SELECT \n    ResourceName, \n    MIN(ChargePeriodStart::DATE) AS FirstDateInBill\nFROM \n    billing\nWHERE \n    Tags IS NULL\nGROUP BY \n    ResourceName",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.9,
+        "error": null
+      },
+      {
+        "q": "Who (actor) created the resource 'sf-perf-test-53', according to the change log?",
+        "sql": "SELECT DISTINCT cl.actor\nFROM change_log cl\nWHERE cl.event_name = 'RunInstances'\n  AND cl.ResourceName = 'sf-perf-test-53'\n  AND cl.event_source = 'ec2'\n  AND cl.ResourceId = (\n    SELECT ResourceId\n    FROM billing\n    WHERE ResourceName = 'sf-perf-test-53'\n    LIMIT 1\n  )",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 5.4,
+        "error": null
+      },
+      {
+        "q": "What is the owner email of the team that owns the AWS account 'storefront-dev'? The owners table lists each team's accounts as a comma-separated string.",
+        "sql": "SELECT email\nFROM owners\nWHERE accounts LIKE '%storefront-dev%'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 0.9,
+        "error": null
+      },
+      {
+        "q": "What was the average GPU utilisation (gpu_pct) of 'ml-train-72' on days after 2026-07-10?",
+        "sql": "SELECT AVG(gpu_pct)\nFROM usage_metrics\nWHERE ResourceName = 'ml-train-72'\nAND date > DATE '2026-07-10'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.8,
+        "error": null
+      },
+      {
+        "q": "When does the Savings Plan 'sp-compute-2025' end, and which resources does it cover?",
+        "sql": "SELECT \"end\", covers\nFROM commitments\nWHERE commitment_id = 'sp-compute-2025'",
+        "valid": true,
+        "first_ok": false,
+        "ok": true,
+        "seconds": 2.5,
+        "error": null
+      },
+      {
+        "q": "Count the change-log events per event_name.",
+        "sql": "SELECT event_name, COUNT(*) AS event_count\nFROM change_log\nGROUP BY event_name",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.0,
+        "error": null
+      },
+      {
+        "q": "Which resources first appear in the bill after 2026-04-15? Return name and first date.",
+        "sql": "SELECT \n    ResourceName, \n    MIN(ChargePeriodStart) AS first_date\nFROM \n    billing\nWHERE \n    ChargePeriodStart > DATE '2026-04-15'\n    AND ResourceName IS NOT NULL\nGROUP BY \n    ResourceName\nORDER BY \n    first_date",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 5.5,
+        "error": null
+      },
+      {
+        "q": "Total EffectiveCost per AWS account (SubAccountName) on 2026-07-01.",
+        "sql": "SELECT \n    SubAccountName, \n    SUM(EffectiveCost) AS TotalEffectiveCost\nFROM \n    billing\nWHERE \n    ChargePeriodStart::DATE = '2026-07-01'\nGROUP BY \n    SubAccountName",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.3,
+        "error": null
+      },
+      {
+        "q": "What was the average daily EffectiveCost of 'bi-egress' in May 2026 and in June 2026? Return month and average.",
+        "sql": "SELECT \n  EXTRACT(MONTH FROM ChargePeriodStart) AS month,\n  AVG(EffectiveCost) AS average_daily_effective_cost\nFROM \n  billing\nWHERE \n  ResourceName = 'bi-egress'\n  AND ChargePeriodStart >= DATE '2026-05-01'\n  AND Charge",
+        "valid": false,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 7.3,
+        "error": "Binder Error: Referenced column \"Charge\" not found in FROM clause!"
+      },
+      {
+        "q": "List change-log events that have a ticket (resource name, event name, ticket).",
+        "sql": "SELECT \n    ResourceName, \n    event_name, \n    ticket\nFROM \n    change_log\nWHERE \n    ticket IS NOT NULL",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.3,
+        "error": null
+      },
+      {
+        "q": "Which resources were terminated (event TerminateInstances) and when? Return resource name and event time.",
+        "sql": "SELECT \n    ResourceName, \n    event_time\nFROM \n    change_log\nWHERE \n    event_name = 'TerminateInstances'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.4,
+        "error": null
+      },
+      {
+        "q": "According to the change log, which server was the volume 'data-migration-45-vol' attached to? Return the details text.",
+        "sql": "SELECT details\nFROM change_log\nWHERE event_name = 'AttachVolume'\n  AND ResourceId = 'data-migration-45-vol'",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 3.1,
+        "error": null
+      },
+      {
+        "q": "Total EffectiveCost per ServiceName for July 2026, highest first.",
+        "sql": "SELECT \n    ServiceName, \n    SUM(EffectiveCost) AS TotalEffectiveCost\nFROM \n    billing\nWHERE \n    ChargePeriodStart >= DATE '2026-07-01' \n    AND ChargePeriodStart < DATE '2026-08-01'\nGROUP BY \n    ServiceName\nORDER BY \n    TotalEffectiveCost DESC",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 3.1,
+        "error": null
+      },
+      {
+        "q": "On which days did 'sf-egress' cost more than 15 dollars? Return the dates.",
+        "sql": "SELECT DISTINCT ChargePeriodStart AS date\nFROM billing\nWHERE ResourceName = 'sf-egress' AND EffectiveCost > 15",
+        "valid": true,
+        "first_ok": false,
+        "ok": true,
+        "seconds": 3.0,
+        "error": null
+      },
+      {
+        "q": "Which team owns the account in which 'ml-train-72' runs? Use billing.SubAccountName and owners.accounts (comma-separated).",
+        "sql": "SELECT owners.team\nFROM owners\nJOIN (\n    SELECT DISTINCT SubAccountName\n    FROM billing\n    WHERE ResourceName = 'ml-train-72'\n) AS subaccount\nON ',' || owners.accounts || ',' LIKE '%,' || subaccount.SubAccountName || ',%'",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 4.5,
+        "error": null
+      },
+      {
+        "q": "What was the median daily EffectiveCost of 'sf-web-asg' over the 28 days before 2026-07-01 (2026-06-03 to 2026-06-30)?",
+        "sql": "SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY EffectiveCost) AS median_effective_cost\nFROM billing\nWHERE ResourceName = 'sf-web-asg'\n  AND ChargePeriodStart BETWEEN DATE '2026-06-03' AND DATE '2026-06-30'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 3.1,
+        "error": null
+      }
+    ]
+  },
+  {
+    "model": "qwen2.5-coder:7b@direct",
+    "valid_%": 95,
+    "first_try_%": 75,
+    "with_retry_%": 80,
+    "median_s": 2.2,
+    "details": [
+      {
+        "q": "What was the total EffectiveCost of the whole company on 2026-07-01?",
+        "sql": "SELECT SUM(EffectiveCost) AS TotalEffectiveCost\nFROM billing\nWHERE ChargePeriodStart = DATE '2026-07-01'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 7.2,
+        "error": null
+      },
+      {
+        "q": "Show the daily EffectiveCost of resource 'sf-web-asg' from 2026-06-28 to 2026-07-03 (date and cost).",
+        "sql": "SELECT ChargePeriodStart AS date, EffectiveCost\nFROM billing\nWHERE ResourceName = 'sf-web-asg'\n  AND ChargePeriodStart BETWEEN '2026-06-28' AND '2026-07-03'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.1,
+        "error": null
+      },
+      {
+        "q": "Which 5 resources had the highest total EffectiveCost in June 2026? Return resource name and total.",
+        "sql": "SELECT ResourceName, SUM(EffectiveCost) AS TotalEffectiveCost\nFROM billing\nWHERE ChargePeriodStart BETWEEN '2026-06-01' AND '2026-06-30'\nGROUP BY ResourceName\nORDER BY TotalEffectiveCost DESC\nLIMIT 5",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.3,
+        "error": null
+      },
+      {
+        "q": "What was the unit price (ContractedUnitPrice) of 'sf-api-asg' on 2026-06-30 and on 2026-07-01? Return date and price.",
+        "sql": "SELECT \n    ChargePeriodStart AS date, \n    ContractedUnitPrice \nFROM \n    billing \nWHERE \n    ResourceName = 'sf-api-asg' \n    AND ChargePeriodStart IN ('2026-06-30', '2026-07-01')",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.4,
+        "error": null
+      },
+      {
+        "q": "List all resources that have no tags (Tags is null), with the first date they appear in the bill.",
+        "sql": "SELECT ResourceId, MIN(ChargePeriodStart) AS first_date\nFROM billing\nWHERE Tags IS NULL\nGROUP BY ResourceId",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 2.3,
+        "error": null
+      },
+      {
+        "q": "Who (actor) created the resource 'sf-perf-test-53', according to the change log?",
+        "sql": "SELECT actor\nFROM change_log\nWHERE ResourceName = 'sf-perf-test-53' AND event_name = 'RunInstances'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.2,
+        "error": null
+      },
+      {
+        "q": "What is the owner email of the team that owns the AWS account 'storefront-dev'? The owners table lists each team's accounts as a comma-separated string.",
+        "sql": "SELECT email\nFROM owners\nWHERE accounts LIKE '%storefront-dev%'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 0.8,
+        "error": null
+      },
+      {
+        "q": "What was the average GPU utilisation (gpu_pct) of 'ml-train-72' on days after 2026-07-10?",
+        "sql": "SELECT AVG(gpu_pct) AS avg_gpu_utilization\nFROM usage_metrics\nWHERE ResourceName = 'ml-train-72' AND date > DATE '2026-07-10'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.8,
+        "error": null
+      },
+      {
+        "q": "When does the Savings Plan 'sp-compute-2025' end, and which resources does it cover?",
+        "sql": "SELECT \"end\", covers\nFROM commitments\nWHERE commitment_id = 'sp-compute-2025'",
+        "valid": true,
+        "first_ok": false,
+        "ok": true,
+        "seconds": 2.0,
+        "error": null
+      },
+      {
+        "q": "Count the change-log events per event_name.",
+        "sql": "SELECT event_name, COUNT(*) AS event_count\nFROM change_log\nGROUP BY event_name",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 0.9,
+        "error": null
+      },
+      {
+        "q": "Which resources first appear in the bill after 2026-04-15? Return name and first date.",
+        "sql": "SELECT ResourceName, MIN(ChargePeriodStart) AS FirstDate\nFROM billing\nWHERE ChargePeriodStart > '2026-04-15'\nGROUP BY ResourceName\nORDER BY FirstDate ASC\nLIMIT 1",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 3.7,
+        "error": null
+      },
+      {
+        "q": "Total EffectiveCost per AWS account (SubAccountName) on 2026-07-01.",
+        "sql": "SELECT SubAccountName, SUM(EffectiveCost) AS TotalEffectiveCost\nFROM billing\nWHERE ChargePeriodStart = DATE '2026-07-01'\nGROUP BY SubAccountName",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.7,
+        "error": null
+      },
+      {
+        "q": "What was the average daily EffectiveCost of 'bi-egress' in May 2026 and in June 2026? Return month and average.",
+        "sql": "SELECT \n    DATE_TRUNC('month', ChargePeriodStart) AS month,\n    AVG(EffectiveCost) AS avg_effective_cost\nFROM \n    billing\nWHERE \n    ResourceName = 'bi-egress'\n    AND ChargePeriodStart BETWEEN '2026-05-01' AND '2026-06-30'\nGROUP BY \n    month\nORDER BY \n    month",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 3.2,
+        "error": null
+      },
+      {
+        "q": "List change-log events that have a ticket (resource name, event name, ticket).",
+        "sql": "SELECT ResourceName, event_name, ticket\nFROM change_log\nWHERE ticket IS NOT NULL",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 0.9,
+        "error": null
+      },
+      {
+        "q": "Which resources were terminated (event TerminateInstances) and when? Return resource name and event time.",
+        "sql": "SELECT ResourceName, event_time\nFROM change_log\nWHERE event_name = 'TerminateInstances'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 0.9,
+        "error": null
+      },
+      {
+        "q": "According to the change log, which server was the volume 'data-migration-45-vol' attached to? Return the details text.",
+        "sql": "SELECT details\nFROM change_log\nWHERE event_name = 'AttachVolume'\n  AND details LIKE '%data-migration-45-vol%'",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 2.6,
+        "error": null
+      },
+      {
+        "q": "Total EffectiveCost per ServiceName for July 2026, highest first.",
+        "sql": "SELECT ServiceName, SUM(EffectiveCost) AS TotalEffectiveCost\nFROM billing\nWHERE ChargePeriodStart BETWEEN '2026-07-01' AND '2026-07-31'\nGROUP BY ServiceName\nORDER BY TotalEffectiveCost DESC",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.2,
+        "error": null
+      },
+      {
+        "q": "On which days did 'sf-egress' cost more than 15 dollars? Return the dates.",
+        "sql": "SELECT ChargePeriodStart\nFROM billing\nWHERE ResourceName = 'sf-egress' AND EffectiveCost > 15",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.1,
+        "error": null
+      },
+      {
+        "q": "Which team owns the account in which 'ml-train-72' runs? Use billing.SubAccountName and owners.accounts (comma-separated).",
+        "sql": "SELECT o.team\nFROM owners o\nWHERE 'ml-train-72' IN (SELECT TRIM(SUBSTRING(SUBSTRING(o.accounts, 1, LOCATE(',', o.accounts) - 1), -1)) AS account\n                      FROM owners o\n                      UNION ALL\n                      SELECT TRIM(SUBSTRING(SUBSTRING(o.accounts, LOCATE(',', o.accounts) + 1, LOCATE(',', o.accounts, LOCATE(',', o.accounts) + 1) - LOCATE(',', o.accounts) - 1), -1)) AS account\n                      FROM owners o\n                      UNION ALL\n                      SELECT TRIM(SUBSTRING(SUBSTRING(o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts) + 1) + 1, LOCATE(',', o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts) + 1) + 1) - LOCATE(',', o.accounts, LOCATE(',', o.accounts) + 1) - 1), -1)) AS account\n                      FROM owners o\n                      UNION ALL\n                      SELECT TRIM(SUBSTRING(SUBSTRING(o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts) + 1) + 1) + 1, LOCATE(',', o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts) + 1) + 1) + 1) - LOCATE(',', o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts) + 1) + 1) - 1), -1)) AS account\n                      FROM owners o\n                      UNION ALL\n                      SELECT TRIM(SUBSTRING(SUBSTRING(o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts) + 1) + 1) + 1) + 1, LENGTH(o.accounts) - LOCATE(',', o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts, LOCATE(',', o.accounts) + 1) + 1) + 1) - 1), -1)) AS account\n                      FROM owners o)",
+        "valid": false,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 19.1,
+        "error": "Parser Error: syntax error at or near \"AS\""
+      },
+      {
+        "q": "What was the median daily EffectiveCost of 'sf-web-asg' over the 28 days before 2026-07-01 (2026-06-03 to 2026-06-30)?",
+        "sql": "SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY EffectiveCost) AS median_effective_cost\nFROM billing\nWHERE ResourceName = 'sf-web-asg'\n  AND ChargePeriodStart BETWEEN DATE '2026-06-03' AND DATE '2026-06-30'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.7,
+        "error": null
+      }
+    ]
+  },
+  {
+    "model": "llama3.1:8b@direct",
+    "valid_%": 90,
+    "first_try_%": 60,
+    "with_retry_%": 70,
+    "median_s": 2.5,
+    "details": [
+      {
+        "q": "What was the total EffectiveCost of the whole company on 2026-07-01?",
+        "sql": "SELECT SUM(EffectiveCost) AS TotalEffectiveCost\nFROM billing\nWHERE ChargePeriodStart = DATE '2026-07-01'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 7.4,
+        "error": null
+      },
+      {
+        "q": "Show the daily EffectiveCost of resource 'sf-web-asg' from 2026-06-28 to 2026-07-03 (date and cost).",
+        "sql": "SELECT \n  ChargePeriodStart AS date, \n  EffectiveCost AS cost\nFROM \n  billing\nWHERE \n  ResourceName = 'sf-web-asg' \n  AND ChargePeriodStart BETWEEN DATE '2026-06-28' AND DATE '2026-07-03'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.4,
+        "error": null
+      },
+      {
+        "q": "Which 5 resources had the highest total EffectiveCost in June 2026? Return resource name and total.",
+        "sql": "SELECT \n  ResourceName, \n  SUM(EffectiveCost) AS TotalCost\nFROM \n  billing\nWHERE \n  ChargePeriodStart >= DATE '2026-06-01' \n  AND ChargePeriodStart < DATE '2026-07-01'\nGROUP BY \n  ResourceName\nORDER BY \n  TotalCost DESC\nLIMIT 5",
+        "valid": true,
+        "first_ok": false,
+        "ok": true,
+        "seconds": 5.7,
+        "error": null
+      },
+      {
+        "q": "What was the unit price (ContractedUnitPrice) of 'sf-api-asg' on 2026-06-30 and on 2026-07-01? Return date and price.",
+        "sql": "SELECT \n  ChargePeriodStart AS date, \n  ContractedUnitPrice \nFROM \n  billing \nWHERE \n  ResourceName = 'sf-api-asg' \n  AND ChargePeriodStart IN ('2026-06-30', '2026-07-01')",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.3,
+        "error": null
+      },
+      {
+        "q": "List all resources that have no tags (Tags is null), with the first date they appear in the bill.",
+        "sql": "SELECT \n  ResourceId, \n  ResourceName, \n  MIN(ChargePeriodStart) AS FirstAppearance\nFROM \n  billing\nWHERE \n  Tags IS NULL\nGROUP BY \n  ResourceId, ResourceName\nHAVING \n  MIN(ChargePeriodStart) = MIN(ChargePeriodStart) OVER (PARTITION BY ResourceId, ResourceName)",
+        "valid": false,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 4.8,
+        "error": "Binder Error: HAVING clause cannot contain window functions!"
+      },
+      {
+        "q": "Who (actor) created the resource 'sf-perf-test-53', according to the change log?",
+        "sql": "SELECT actor FROM change_log WHERE event_name IN ('RunInstances', 'CreateDBInstance', 'CreateSnapshot', 'CreateNatGateway', 'CreateLoadBalancer') AND ResourceName = 'sf-perf-test-53'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.8,
+        "error": null
+      },
+      {
+        "q": "What is the owner email of the team that owns the AWS account 'storefront-dev'? The owners table lists each team's accounts as a comma-separated string.",
+        "sql": "SELECT o.email\nFROM owners o\nWHERE 'storefront-dev' = ANY (string_to_array(accounts, ','))",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 3.3,
+        "error": null
+      },
+      {
+        "q": "What was the average GPU utilisation (gpu_pct) of 'ml-train-72' on days after 2026-07-10?",
+        "sql": "SELECT AVG(gpu_pct) \nFROM usage_metrics \nWHERE date > '2026-07-10' AND ResourceName = 'ml-train-72'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.5,
+        "error": null
+      },
+      {
+        "q": "When does the Savings Plan 'sp-compute-2025' end, and which resources does it cover?",
+        "sql": "SELECT start, covers \nFROM commitments \nWHERE commitment_id = 'sp-compute-2025' AND end IS NOT NULL",
+        "valid": false,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 2.1,
+        "error": "Parser Error: syntax error at or near \"end\""
+      },
+      {
+        "q": "Count the change-log events per event_name.",
+        "sql": "SELECT \n  event_name, \n  COUNT(*) as count\nFROM \n  change_log\nGROUP BY \n  event_name\nORDER BY \n  count DESC",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.4,
+        "error": null
+      },
+      {
+        "q": "Which resources first appear in the bill after 2026-04-15? Return name and first date.",
+        "sql": "SELECT \n  ResourceName, \n  MIN(ChargePeriodStart) AS FirstDate\nFROM \n  billing\nWHERE \n  ChargePeriodStart >= '2026-04-15'\nGROUP BY \n  ResourceName",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 3.6,
+        "error": null
+      },
+      {
+        "q": "Total EffectiveCost per AWS account (SubAccountName) on 2026-07-01.",
+        "sql": "SELECT \n  SUM(EffectiveCost) AS TotalEffectiveCost, \n  SubAccountName\nFROM \n  billing\nWHERE \n  ChargePeriodStart = DATE '2026-07-01'\nGROUP BY \n  SubAccountName\nORDER BY \n  TotalEffectiveCost DESC",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.2,
+        "error": null
+      },
+      {
+        "q": "What was the average daily EffectiveCost of 'bi-egress' in May 2026 and in June 2026? Return month and average.",
+        "sql": "SELECT \n  EXTRACT(MONTH FROM ChargePeriodStart) AS month,\n  AVG(EffectiveCost) AS average\nFROM billing\nWHERE ResourceName = 'bi-egress'\n  AND EXTRACT(YEAR FROM ChargePeriodStart) = 2026\n  AND EXTRACT(MONTH FROM ChargePeriodStart) IN (5, 6)\nGROUP BY EXTRACT(MONTH FROM ChargePeriodStart)\nORDER BY month",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 6.3,
+        "error": null
+      },
+      {
+        "q": "List change-log events that have a ticket (resource name, event name, ticket).",
+        "sql": "SELECT ResourceName, event_name, ticket\nFROM change_log\nWHERE ticket IS NOT NULL",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 0.9,
+        "error": null
+      },
+      {
+        "q": "Which resources were terminated (event TerminateInstances) and when? Return resource name and event time.",
+        "sql": "SELECT \n  ResourceName, \n  event_time AS TerminationTime\nFROM \n  change_log\nWHERE \n  event_name = 'TerminateInstances'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.3,
+        "error": null
+      },
+      {
+        "q": "According to the change log, which server was the volume 'data-migration-45-vol' attached to? Return the details text.",
+        "sql": "SELECT details \nFROM change_log \nWHERE event_name = 'AttachVolume' AND details LIKE '%data-migration-45-vol%'",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 4.7,
+        "error": null
+      },
+      {
+        "q": "Total EffectiveCost per ServiceName for July 2026, highest first.",
+        "sql": "SELECT \n  ServiceName, \n  SUM(EffectiveCost) AS TotalEffectiveCost\nFROM \n  billing\nWHERE \n  ChargePeriodStart >= DATE '2026-07-01' \n  AND ChargePeriodStart < DATE '2026-08-01'\nGROUP BY \n  ServiceName\nORDER BY \n  TotalEffectiveCost DESC",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.7,
+        "error": null
+      },
+      {
+        "q": "On which days did 'sf-egress' cost more than 15 dollars? Return the dates.",
+        "sql": "SELECT ChargePeriodStart\nFROM billing\nWHERE ResourceName = 'sf-egress' AND EffectiveCost > 15",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 1.1,
+        "error": null
+      },
+      {
+        "q": "Which team owns the account in which 'ml-train-72' runs? Use billing.SubAccountName and owners.accounts (comma-separated).",
+        "sql": "SELECT o.team\nFROM owners o\nJOIN billing b ON o.accounts LIKE '%' || b.SubAccountName || '%'\nWHERE b.ResourceName = 'ml-train-72'\nGROUP BY o.team\nORDER BY COUNT(*) DESC\nLIMIT 1",
+        "valid": true,
+        "first_ok": false,
+        "ok": true,
+        "seconds": 3.6,
+        "error": null
+      },
+      {
+        "q": "What was the median daily EffectiveCost of 'sf-web-asg' over the 28 days before 2026-07-01 (2026-06-03 to 2026-06-30)?",
+        "sql": "SELECT \n  PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY EffectiveCost) AS median_daily_cost\nFROM \n  billing\nWHERE \n  ResourceName = 'sf-web-asg' AND \n  ChargePeriodStart >= DATE '2026-06-03' AND \n  ChargePeriodStart <= DATE '2026-06-30'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.9,
+        "error": null
+      }
+    ]
+  },
+  {
+    "model": "qwen2.5-coder:7b@cot",
+    "valid_%": 95,
+    "first_try_%": 75,
+    "with_retry_%": 80,
+    "median_s": 5.7,
+    "details": [
+      {
+        "q": "What was the total EffectiveCost of the whole company on 2026-07-01?",
+        "sql": "SELECT SUM(EffectiveCost) AS TotalEffectiveCost\nFROM billing\nWHERE ChargePeriodStart = DATE '2026-07-01'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 9.6,
+        "error": null
+      },
+      {
+        "q": "Show the daily EffectiveCost of resource 'sf-web-asg' from 2026-06-28 to 2026-07-03 (date and cost).",
+        "sql": "SELECT \n    ChargePeriodStart AS date, \n    EffectiveCost \nFROM \n    billing \nWHERE \n    ResourceName = 'sf-web-asg' \n    AND ChargePeriodStart BETWEEN '2026-06-28' AND '2026-07-03'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 4.9,
+        "error": null
+      },
+      {
+        "q": "Which 5 resources had the highest total EffectiveCost in June 2026? Return resource name and total.",
+        "sql": "SELECT \n    ResourceName, \n    SUM(EffectiveCost) AS TotalEffectiveCost\nFROM \n    billing\nWHERE \n    ChargePeriodStart BETWEEN '2026-06-01' AND '2026-06-30'\nGROUP BY \n    ResourceName\nORDER BY \n    TotalEffectiveCost DESC\nLIMIT 5",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 6.0,
+        "error": null
+      },
+      {
+        "q": "What was the unit price (ContractedUnitPrice) of 'sf-api-asg' on 2026-06-30 and on 2026-07-01? Return date and price.",
+        "sql": "SELECT ChargePeriodStart, ContractedUnitPrice\nFROM billing\nWHERE ResourceName = 'sf-api-asg'\n  AND ChargePeriodStart IN ('2026-06-30', '2026-07-01')",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 7.3,
+        "error": null
+      },
+      {
+        "q": "List all resources that have no tags (Tags is null), with the first date they appear in the bill.",
+        "sql": "SELECT \n    ResourceId, \n    MIN(ChargePeriodStart) AS first_date\nFROM \n    billing\nWHERE \n    Tags IS NULL\nGROUP BY \n    ResourceId",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 8.6,
+        "error": null
+      },
+      {
+        "q": "Who (actor) created the resource 'sf-perf-test-53', according to the change log?",
+        "sql": "SELECT actor\nFROM change_log\nWHERE ResourceName = 'sf-perf-test-53' AND event_name = 'RunInstances'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 4.1,
+        "error": null
+      },
+      {
+        "q": "What is the owner email of the team that owns the AWS account 'storefront-dev'? The owners table lists each team's accounts as a comma-separated string.",
+        "sql": "SELECT email\nFROM owners\nWHERE accounts LIKE '%storefront-dev%'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 3.1,
+        "error": null
+      },
+      {
+        "q": "What was the average GPU utilisation (gpu_pct) of 'ml-train-72' on days after 2026-07-10?",
+        "sql": "SELECT AVG(gpu_pct) AS avg_gpu_utilization\nFROM usage_metrics\nWHERE ResourceName = 'ml-train-72' AND date > '2026-07-10'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 5.4,
+        "error": null
+      },
+      {
+        "q": "When does the Savings Plan 'sp-compute-2025' end, and which resources does it cover?",
+        "sql": "SELECT \"end\", covers\nFROM commitments\nWHERE commitment_id = 'sp-compute-2025'",
+        "valid": true,
+        "first_ok": false,
+        "ok": true,
+        "seconds": 8.5,
+        "error": null
+      },
+      {
+        "q": "Count the change-log events per event_name.",
+        "sql": "SELECT event_name, COUNT(*) AS event_count\nFROM change_log\nGROUP BY event_name",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 3.1,
+        "error": null
+      },
+      {
+        "q": "Which resources first appear in the bill after 2026-04-15? Return name and first date.",
+        "sql": "SELECT ResourceName, ChargePeriodStart AS FirstDate\nFROM (\n    SELECT ResourceName, ChargePeriodStart,\n           ROW_NUMBER() OVER (PARTITION BY ResourceName ORDER BY ChargePeriodStart) AS rn\n    FROM billing\n    WHERE ChargePeriodStart > '2026-04-15'\n) subquery\nWHERE rn = 1",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 8.9,
+        "error": null
+      },
+      {
+        "q": "Total EffectiveCost per AWS account (SubAccountName) on 2026-07-01.",
+        "sql": "SELECT \n    SubAccountName, \n    SUM(EffectiveCost) AS TotalEffectiveCost\nFROM \n    billing\nWHERE \n    ChargePeriodStart = DATE '2026-07-01'\nGROUP BY \n    SubAccountName",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 7.1,
+        "error": null
+      },
+      {
+        "q": "What was the average daily EffectiveCost of 'bi-egress' in May 2026 and in June 2026? Return month and average.",
+        "sql": "SELECT \n    DATE_TRUNC('month', ChargePeriodStart) AS month,\n    AVG(EffectiveCost) AS average_cost\nFROM \n    billing\nWHERE \n    ResourceName = 'bi-egress'\n    AND ChargePeriodStart BETWEEN '2026-05-01' AND '2026-06-30'\nGROUP BY \n    month\nORDER BY \n    month",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 5.4,
+        "error": null
+      },
+      {
+        "q": "List change-log events that have a ticket (resource name, event name, ticket).",
+        "sql": "SELECT ResourceName, event_name, ticket\nFROM change_log\nWHERE ticket IS NOT NULL",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.6,
+        "error": null
+      },
+      {
+        "q": "Which resources were terminated (event TerminateInstances) and when? Return resource name and event time.",
+        "sql": "SELECT ResourceName, event_time\nFROM change_log\nWHERE event_name = 'TerminateInstances'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.5,
+        "error": null
+      },
+      {
+        "q": "According to the change log, which server was the volume 'data-migration-45-vol' attached to? Return the details text.",
+        "sql": "SELECT details\nFROM change_log\nWHERE event_name = 'AttachVolume'\n  AND details LIKE '%data-migration-45-vol%'",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 7.9,
+        "error": null
+      },
+      {
+        "q": "Total EffectiveCost per ServiceName for July 2026, highest first.",
+        "sql": "SELECT \n    ServiceName, \n    SUM(EffectiveCost) AS TotalEffectiveCost\nFROM \n    billing\nWHERE \n    ChargePeriodStart BETWEEN '2026-07-01' AND '2026-07-31'\nGROUP BY \n    ServiceName\nORDER BY \n    TotalEffectiveCost DESC",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 5.1,
+        "error": null
+      },
+      {
+        "q": "On which days did 'sf-egress' cost more than 15 dollars? Return the dates.",
+        "sql": "SELECT ChargePeriodStart AS date\nFROM billing\nWHERE ResourceName = 'sf-egress' AND EffectiveCost > 15",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 3.5,
+        "error": null
+      },
+      {
+        "q": "Which team owns the account in which 'ml-train-72' runs? Use billing.SubAccountName and owners.accounts (comma-separated).",
+        "sql": "SELECT o.team\nFROM billing b\nJOIN owners o ON b.SubAccountName IN (SELECT TRIM(SUBSTRING(SUBSTRING_INDEX(o.accounts, ',', numbers.n), LENGTH(SUBSTRING_INDEX(o.accounts, ',', numbers.n - 1)) + 1)) AS account\n                                      FROM (SELECT 1 n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5) numbers\n                                      WHERE numbers.n <= 1 + (LENGTH(o.accounts) - LENGTH(REPLACE(o.accounts, ',', ''))))\n                                      HAVING account IS NOT NULL)\nWHERE b.SubAccountName LIKE '%ml-train-72%'",
+        "valid": false,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 12.1,
+        "error": "Parser Error: syntax error at or near \")\""
+      },
+      {
+        "q": "What was the median daily EffectiveCost of 'sf-web-asg' over the 28 days before 2026-07-01 (2026-06-03 to 2026-06-30)?",
+        "sql": "WITH filtered_billing AS (\n    SELECT EffectiveCost\n    FROM billing\n    WHERE ResourceName = 'sf-web-asg'\n      AND ChargePeriodStart BETWEEN DATE '2026-06-03' AND DATE '2026-06-30'\n)\nSELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY EffectiveCost) AS median_effective_cost\nFROM filtered_billing",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 7.7,
+        "error": null
+      }
+    ]
+  },
+  {
+    "model": "llama3.1:8b@cot",
+    "valid_%": 90,
+    "first_try_%": 65,
+    "with_retry_%": 70,
+    "median_s": 4.8,
+    "details": [
+      {
+        "q": "What was the total EffectiveCost of the whole company on 2026-07-01?",
+        "sql": "SELECT SUM(EffectiveCost) AS TotalCost\nFROM billing\nWHERE ChargePeriodStart = DATE '2026-07-01'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 10.7,
+        "error": null
+      },
+      {
+        "q": "Show the daily EffectiveCost of resource 'sf-web-asg' from 2026-06-28 to 2026-07-03 (date and cost).",
+        "sql": "SELECT ChargePeriodStart, EffectiveCost\nFROM billing\nWHERE ResourceName = 'sf-web-asg'\n  AND ChargePeriodStart >= DATE '2026-06-28'\n  AND ChargePeriodStart < DATE '2026-07-04'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 4.8,
+        "error": null
+      },
+      {
+        "q": "Which 5 resources had the highest total EffectiveCost in June 2026? Return resource name and total.",
+        "sql": "SELECT \n  ResourceName, \n  SUM(EffectiveCost) AS TotalCost\nFROM \n  billing\nWHERE \n  BillingPeriodStart >= DATE '2026-06-01' AND BillingPeriodStart < DATE '2026-07-01'\nGROUP BY \n  ResourceName\nORDER BY \n  TotalCost DESC\nLIMIT 5",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 4.6,
+        "error": null
+      },
+      {
+        "q": "What was the unit price (ContractedUnitPrice) of 'sf-api-asg' on 2026-06-30 and on 2026-07-01? Return date and price.",
+        "sql": "SELECT \n  ChargePeriodStart AS date,\n  ContractedUnitPrice AS price\nFROM \n  billing\nWHERE \n  ResourceName = 'sf-api-asg'\n  AND ChargePeriodStart IN ('2026-06-30', '2026-07-01')",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 5.9,
+        "error": null
+      },
+      {
+        "q": "List all resources that have no tags (Tags is null), with the first date they appear in the bill.",
+        "sql": "SELECT ResourceId, ResourceName, MIN(ChargePeriodStart) AS FirstDate\nFROM billing\nWHERE Tags IS NULL\nGROUP BY ResourceId, ResourceName\nHAVING COUNT(DISTINCT ChargePeriodStart) = 1",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 8.6,
+        "error": null
+      },
+      {
+        "q": "Who (actor) created the resource 'sf-perf-test-53', according to the change log?",
+        "sql": "SELECT actor\nFROM change_log\nWHERE ResourceName = 'sf-perf-test-53'\n  AND event_name = 'RunInstances'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 3.6,
+        "error": null
+      },
+      {
+        "q": "What is the owner email of the team that owns the AWS account 'storefront-dev'? The owners table lists each team's accounts as a comma-separated string.",
+        "sql": "SELECT o.email\nFROM owners o\nJOIN (\n  SELECT team\n  FROM owners\n  WHERE accounts LIKE '%storefront-dev%'\n) AS team_owners ON o.team = team_owners.team",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 4.0,
+        "error": null
+      },
+      {
+        "q": "What was the average GPU utilisation (gpu_pct) of 'ml-train-72' on days after 2026-07-10?",
+        "sql": "SELECT AVG(gpu_pct) AS avg_gpu_pct\nFROM usage_metrics\nWHERE date > DATE '2026-07-10'\nAND ResourceName = 'ml-train-72'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 4.9,
+        "error": null
+      },
+      {
+        "q": "When does the Savings Plan 'sp-compute-2025' end, and which resources does it cover?",
+        "sql": "SELECT `end`, covers\nFROM commitments\nWHERE commitment_id = 'sp-compute-2025'",
+        "valid": true,
+        "first_ok": false,
+        "ok": true,
+        "seconds": 5.0,
+        "error": null
+      },
+      {
+        "q": "Count the change-log events per event_name.",
+        "sql": "SELECT \n  event_name, \n  COUNT(*) as count\nFROM \n  change_log\nGROUP BY \n  event_name",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 3.0,
+        "error": null
+      },
+      {
+        "q": "Which resources first appear in the bill after 2026-04-15? Return name and first date.",
+        "sql": "SELECT ResourceName, ChargePeriodStart AS FirstDate\nFROM billing\nWHERE ChargePeriodStart > DATE '2026-04-15'\nAND (ResourceName, ChargePeriodStart) IN (\n  SELECT ResourceName, MIN(ChargePeriodStart)\n  FROM billing\n  WHERE ChargePeriodStart > DATE '2026-04-15'\n  GROUP BY ResourceName\n)",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 15.0,
+        "error": null
+      },
+      {
+        "q": "Total EffectiveCost per AWS account (SubAccountName) on 2026-07-01.",
+        "sql": "SELECT \n  SubAccountName, \n  SUM(EffectiveCost) AS TotalEffectiveCost\nFROM \n  billing\nWHERE \n  ChargePeriodStart = DATE '2026-07-01'\nGROUP BY \n  SubAccountName",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 4.4,
+        "error": null
+      },
+      {
+        "q": "What was the average daily EffectiveCost of 'bi-egress' in May 2026 and in June 2026? Return month and average.",
+        "sql": "SELECT \n  EXTRACT(MONTH FROM ChargePeriodStart) AS month,\n  AVG(EffectiveCost) AS average\nFROM billing\nWHERE ResourceName = 'bi-egress'\nGROUP BY EXTRACT(MONTH FROM ChargePeriodStart)\nHAVING \n  (EXTRACT(MONTH FROM ChargePeriodStart) = 5 AND EXTRACT(YEAR FROM ChargePeriodStart) = 2026) \n  OR (EXTRACT(MONTH FROM ChargePeriodStart) = 6 AND EXTRACT(YEAR FROM ChargePeriodStart) = 2026)",
+        "valid": false,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 17.8,
+        "error": "Binder Error: column \"ChargePeriodStart\" must appear in the GROUP BY clause or be used in an aggregate function"
+      },
+      {
+        "q": "List change-log events that have a ticket (resource name, event name, ticket).",
+        "sql": "SELECT ResourceName, event_name, ticket\nFROM change_log\nWHERE ticket IS NOT NULL",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 3.7,
+        "error": null
+      },
+      {
+        "q": "Which resources were terminated (event TerminateInstances) and when? Return resource name and event time.",
+        "sql": "SELECT ResourceName, event_time\nFROM change_log\nWHERE event_name = 'TerminateInstances'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 2.9,
+        "error": null
+      },
+      {
+        "q": "According to the change log, which server was the volume 'data-migration-45-vol' attached to? Return the details text.",
+        "sql": "SELECT details\nFROM change_log\nWHERE event_name = 'AttachVolume' AND details LIKE '%data-migration-45-vol attached to %'",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 8.0,
+        "error": null
+      },
+      {
+        "q": "Total EffectiveCost per ServiceName for July 2026, highest first.",
+        "sql": "SELECT \n  ServiceName, \n  SUM(EffectiveCost) AS TotalEffectiveCost\nFROM \n  billing\nWHERE \n  ChargePeriodStart >= DATE '2026-07-01' AND ChargePeriodStart < DATE '2026-08-01'\nGROUP BY \n  ServiceName\nORDER BY \n  TotalEffectiveCost DESC",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 4.0,
+        "error": null
+      },
+      {
+        "q": "On which days did 'sf-egress' cost more than 15 dollars? Return the dates.",
+        "sql": "SELECT ChargePeriodStart\nFROM billing\nWHERE ResourceName = 'sf-egress' AND EffectiveCost > 15",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 3.8,
+        "error": null
+      },
+      {
+        "q": "Which team owns the account in which 'ml-train-72' runs? Use billing.SubAccountName and owners.accounts (comma-separated).",
+        "sql": "SELECT o.team\nFROM billing b\nJOIN owners o ON FIND_IN_SET(b.SubAccountName, o.accounts) > 0\nWHERE b.ResourceName = 'ml-train-72'",
+        "valid": false,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 6.4,
+        "error": "Catalog Error: Scalar Function with name find_in_set does not exist!"
+      },
+      {
+        "q": "What was the median daily EffectiveCost of 'sf-web-asg' over the 28 days before 2026-07-01 (2026-06-03 to 2026-06-30)?",
+        "sql": "SELECT \n  ChargePeriodStart,\n  EffectiveCost\nFROM \n  billing\nWHERE \n  ChargePeriodStart >= DATE '2026-06-03' AND ChargePeriodStart <= DATE '2026-06-30'\n  AND ResourceName = 'sf-web-asg'\nORDER BY \n  ChargePeriodStart\nLIMIT 28",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 14.7,
+        "error": null
+      }
+    ]
+  },
+  {
+    "model": "qwen3:8b@think",
+    "valid_%": 95,
+    "first_try_%": 75,
+    "with_retry_%": 80,
+    "median_s": 21.1,
+    "details": [
+      {
+        "q": "What was the total EffectiveCost of the whole company on 2026-07-01?",
+        "sql": "SELECT SUM(EffectiveCost) AS total_effective_cost\nFROM billing\nWHERE DATE(ChargePeriodStart) = '2026-07-01'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 30.8,
+        "error": null
+      },
+      {
+        "q": "Show the daily EffectiveCost of resource 'sf-web-asg' from 2026-06-28 to 2026-07-03 (date and cost).",
+        "sql": "SELECT \n    ChargePeriodStart AS date,\n    EffectiveCost AS cost\nFROM \n    billing\nWHERE \n    ResourceName = 'sf-web-asg'\n    AND ChargePeriodStart >= DATE '2026-06-28'\n    AND ChargePeriodStart <= DATE '2026-07-03'\nORDER BY \n    ChargePeriodStart",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 23.4,
+        "error": null
+      },
+      {
+        "q": "Which 5 resources had the highest total EffectiveCost in June 2026? Return resource name and total.",
+        "sql": "SELECT ResourceName, SUM(EffectiveCost) AS total_cost\nFROM billing\nWHERE ChargePeriodStart >= DATE '2026-06-01'\nAND ChargePeriodStart < DATE '2026-07-01'\nGROUP BY ResourceName\nORDER BY total_cost DESC\nLIMIT 5",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 26.6,
+        "error": null
+      },
+      {
+        "q": "What was the unit price (ContractedUnitPrice) of 'sf-api-asg' on 2026-06-30 and on 2026-07-01? Return date and price.",
+        "sql": "SELECT ChargePeriodStart AS date, ContractedUnitPrice\nFROM billing\nWHERE ResourceName = 'sf-api-asg'\n  AND ChargePeriodStart IN (DATE '2026-06-30', DATE '2026-07-01')\nORDER BY ChargePeriodStart",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 19.6,
+        "error": null
+      },
+      {
+        "q": "List all resources that have no tags (Tags is null), with the first date they appear in the bill.",
+        "sql": "SELECT ResourceId, ResourceName, MIN(ChargePeriodStart) AS first_date\nFROM billing\nWHERE Tags IS NULL OR Tags = '{}'\nGROUP BY ResourceId, ResourceName",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 101.7,
+        "error": null
+      },
+      {
+        "q": "Who (actor) created the resource 'sf-perf-test-53', according to the change log?",
+        "sql": "SELECT actor \nFROM change_log \nWHERE ResourceName = 'sf-perf-test-53' \n  AND event_name = 'RunInstances'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 16.2,
+        "error": null
+      },
+      {
+        "q": "What is the owner email of the team that owns the AWS account 'storefront-dev'? The owners table lists each team's accounts as a comma-separated string.",
+        "sql": "SELECT email FROM owners WHERE accounts LIKE '%storefront-dev%'",
+        "valid": true,
+        "first_ok": false,
+        "ok": true,
+        "seconds": 27.4,
+        "error": null
+      },
+      {
+        "q": "What was the average GPU utilisation (gpu_pct) of 'ml-train-72' on days after 2026-07-10?",
+        "sql": "SELECT AVG(gpu_pct) \nFROM usage_metrics \nWHERE ResourceName = 'ml-train-72' \n  AND date > DATE '2026-07-10'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 17.1,
+        "error": null
+      },
+      {
+        "q": "When does the Savings Plan 'sp-compute-2025' end, and which resources does it cover?",
+        "sql": "SELECT \"end\", covers \nFROM commitments \nWHERE commitment_id = 'sp-compute-2025'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 13.3,
+        "error": null
+      },
+      {
+        "q": "Count the change-log events per event_name.",
+        "sql": "SELECT event_name, COUNT(*) AS event_count\nFROM change_log\nGROUP BY event_name",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 6.8,
+        "error": null
+      },
+      {
+        "q": "Which resources first appear in the bill after 2026-04-15? Return name and first date.",
+        "sql": "SELECT ResourceName, MIN(ChargePeriodStart) AS first_date\nFROM billing\nWHERE ChargePeriodStart >= DATE '2026-04-15'\nGROUP BY ResourceName\nORDER BY first_date",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 95.8,
+        "error": null
+      },
+      {
+        "q": "Total EffectiveCost per AWS account (SubAccountName) on 2026-07-01.",
+        "sql": "SELECT SubAccountName, SUM(EffectiveCost) AS TotalEffectiveCost\nFROM billing\nWHERE DATE(ChargePeriodStart) = '2026-07-01'\nGROUP BY SubAccountName",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 23.8,
+        "error": null
+      },
+      {
+        "q": "What was the average daily EffectiveCost of 'bi-egress' in May 2026 and in June 2026? Return month and average.",
+        "sql": "SELECT \n    'May 2026' AS month,\n    AVG(EffectiveCost) AS average_daily_cost\nFROM \n    billing_table\nWHERE \n    ChargePeriodStart >= DATE '2026-05-01'\n    AND ChargePeriodStart < DATE '2026-06-01'\n    AND ResourceName = 'bi-egress'\n\nUNION ALL\n\nSELECT \n    'June 2026' AS month,\n    AVG(EffectiveCost) AS average_daily_cost\nFROM \n    billing_table\nWHERE \n    ChargePeriodStart >= DATE '2026-06-01'\n    AND ChargePeriodStart < DATE '2026-07-01'\n    AND ResourceName = 'bi-egress'",
+        "valid": false,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 224.3,
+        "error": "Catalog Error: Table with name billing_table does not exist!"
+      },
+      {
+        "q": "List change-log events that have a ticket (resource name, event name, ticket).",
+        "sql": "SELECT ResourceName, event_name, ticket\nFROM change_log\nWHERE ticket IS NOT NULL",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 15.4,
+        "error": null
+      },
+      {
+        "q": "Which resources were terminated (event TerminateInstances) and when? Return resource name and event time.",
+        "sql": "SELECT ResourceName, event_time\nFROM change_log\nWHERE event_name = 'TerminateInstances'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 9.3,
+        "error": null
+      },
+      {
+        "q": "According to the change log, which server was the volume 'data-migration-45-vol' attached to? Return the details text.",
+        "sql": "SELECT details\nFROM change_log\nWHERE event_name = 'AttachVolume'\n  AND ResourceName = 'data-migration-45-vol'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 17.6,
+        "error": null
+      },
+      {
+        "q": "Total EffectiveCost per ServiceName for July 2026, highest first.",
+        "sql": "SELECT ServiceName, SUM(EffectiveCost) AS TotalCost\nFROM billing\nWHERE ChargePeriodStart >= DATE '2026-07-01' AND ChargePeriodStart < DATE '2026-08-01'\nGROUP BY ServiceName\nORDER BY TotalCost DESC",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 20.1,
+        "error": null
+      },
+      {
+        "q": "On which days did 'sf-egress' cost more than 15 dollars? Return the dates.",
+        "sql": "SELECT ChargePeriodStart::DATE AS date\nFROM billing\nWHERE ResourceName = 'sf-egress' AND EffectiveCost > 15",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 14.4,
+        "error": null
+      },
+      {
+        "q": "Which team owns the account in which 'ml-train-72' runs? Use billing.SubAccountName and owners.accounts (comma-separated).",
+        "sql": "SELECT DISTINCT owners.team\nFROM billing\nJOIN owners\n  ON owners.accounts LIKE '%,' || billing.SubAccountName || ',%'\n  OR owners.accounts LIKE billing.SubAccountName || ',%'\n  OR owners.accounts LIKE '%,' || billing.SubAccountName\nWHERE billing.ResourceName = 'ml-train-72'",
+        "valid": true,
+        "first_ok": false,
+        "ok": false,
+        "seconds": 228.3,
+        "error": null
+      },
+      {
+        "q": "What was the median daily EffectiveCost of 'sf-web-asg' over the 28 days before 2026-07-01 (2026-06-03 to 2026-06-30)?",
+        "sql": "SELECT MEDIAN(EffectiveCost) AS median_cost\nFROM billing\nWHERE ResourceName = 'sf-web-asg'\n  AND ChargePeriodStart BETWEEN DATE '2026-06-03' AND DATE '2026-06-30'",
+        "valid": true,
+        "first_ok": true,
+        "ok": true,
+        "seconds": 22.1,
+        "error": null
+      }
+    ]
+  }
+]

@@ -1,0 +1,92 @@
+{
+  "alert": {
+    "alert_id": "AL-001",
+    "resource": "sf-perf-test-24",
+    "account": "storefront-dev",
+    "rule": "new_resource",
+    "start_date": "2026-04-14 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 32.64,
+    "extra_usd_day": 32.64,
+    "usage_effect": 32.64,
+    "price_effect": 0.0,
+    "related": NaN
+  },
+  "resource": "sf-perf-test-24",
+  "form": {
+    "type": "untagged_resource",
+    "owner_team": "storefront",
+    "action": "tag_and_notify_owner",
+    "start_date": "2026-04-14",
+    "confidence": 1.0,
+    "explanation": "The resource was created by Alex Moreno and owned by the storefront team. It is untagged and has a significant cost spike.",
+    "evidence": [
+      "The resource was created by 'alex.moreno' without a ticket.",
+      "The resource is owned by the 'storefront' team."
+    ]
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "auto_executed (simulated)"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 17.1,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 7.8,
+      "raw": "{\"thought\": \"The resource is new and has a significant cost spike. I need to determine if it's untagged or if there's an approved change.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"sf-perf-test-24\"}}",
+      "thought": "The resource is new and has a significant cost spike. I need to determine if it's untagged or if there's an approved change.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "sf-perf-test-24"
+      },
+      "result": "{\"ResourceName\": \"sf-perf-test-24\", \"ResourceId\": \"i-092bf097a660bb5af\", \"account\": \"storefront-dev\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.68 per On Demand Linux c5.4xlarge Instance Hour\", \"tags\": \"NONE (untagged)\", \"first_billed\": \"2026-04-14\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 32.52, \"account_team\": \"storefront\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"The resource is untagged and has a significant cost spike. I need to find out who created it.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-perf-test-24\"}}",
+      "thought": "The resource is untagged and has a significant cost spike. I need to find out who created it.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-perf-test-24"
+      },
+      "result": "event_time,event_name,actor,ticket,details\n2026-04-14 11:00:00,RunInstances,alex.moreno,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 1.7,
+      "raw": "{\"thought\": \"The resource was created by 'alex.moreno' without a ticket. This is an untagged resource.\", \"tool\": \"get_owner\", \"args\": {\"account\": \"storefront-dev\"}}",
+      "thought": "The resource was created by 'alex.moreno' without a ticket. This is an untagged resource.",
+      "tool": "get_owner",
+      "args": {
+        "account": "storefront-dev"
+      },
+      "result": "team,owner,email,slack\nstorefront,Alex Moreno,storefront-team@demoshop.example,#team-storefront\n"
+    },
+    {
+      "step": 4,
+      "seconds": 5.4,
+      "raw": "{\"thought\": \"The untagged resource was created by Alex Moreno and owned by the storefront team. I need to tag the resource and notify the owner.\", \"final\": {\n    \"type\": \"untagged_resource\",\n    \"owner_team\": \"storefront\",\n    \"action\": \"tag_and_notify_owner\",\n    \"start_date\": \"2026-04-14\",\n    \"confidence\": 1.0,\n    \"explanation\": \"The resource was created by Alex Moreno and owned by the storefront team. It is untagged and has a significant cost spike.\",\n    \"evidence\": [\"The resource was created by 'alex.moreno' without a ticket.\", \"The resource is owned by the 'storefront' team.\"]\n}}",
+      "thought": "The untagged resource was created by Alex Moreno and owned by the storefront team. I need to tag the resource and notify the owner.",
+      "final": {
+        "type": "untagged_resource",
+        "owner_team": "storefront",
+        "action": "tag_and_notify_owner",
+        "start_date": "2026-04-14",
+        "confidence": 1.0,
+        "explanation": "The resource was created by Alex Moreno and owned by the storefront team. It is untagged and has a significant cost spike.",
+        "evidence": [
+          "The resource was created by 'alex.moreno' without a ticket.",
+          "The resource is owned by the 'storefront' team."
+        ]
+      }
+    }
+  ]
+}

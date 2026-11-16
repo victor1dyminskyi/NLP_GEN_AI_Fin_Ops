@@ -1,0 +1,95 @@
+{
+  "alert": {
+    "alert_id": "AL-009",
+    "resource": "ml-train-17",
+    "account": "ml-dev",
+    "rule": "new_resource",
+    "start_date": "2026-06-26 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 136.13,
+    "extra_usd_day": 136.13,
+    "usage_effect": 136.13,
+    "price_effect": 0.0,
+    "resource_kind": "gpu_server"
+  },
+  "resource": "ml-train-17",
+  "form": {
+    "type": "idle_gpu",
+    "owner_team": "ml",
+    "action": "stop_instance",
+    "start_date": "2026-06-26",
+    "confidence": 0.9,
+    "explanation": "The GPU server is now busy (4.2% GPU usage), but there's no approved ticket. The cost spike is likely due to an idle GPU.",
+    "evidence": [
+      "The GPU server is now busy (4.2% GPU usage)",
+      "No approved ticket"
+    ],
+    "owner_message": "The GPU server ml-train-17 is now busy. Please review and stop the instance if it's no longer needed."
+  },
+  "gate": {
+    "needs_approval": true,
+    "escalated": false,
+    "status": "awaiting_approval"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 13.5,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"ml-train-17\"}}",
+      "thought": "The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "ml-train-17"
+      },
+      "result": "{\"ResourceName\": \"ml-train-17\", \"ResourceId\": \"i-096b719ea87cfc145\", \"account\": \"ml-dev\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$5.672 per On Demand Linux g5.12xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"ml\\\", \\\"application\\\": \\\"training\\\", \\\"environment\\\": \\\"dev\\\"}\", \"first_billed\": \"2026-06-26\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 135.55, \"account_team\": \"ml\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 3.0,
+      "raw": "{\"thought\": \"The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.\", \"tool\": \"usage\", \"args\": {\"resource\": \"ml-train-17\", \"around_date\": \"2026-06-26\"}}",
+      "thought": "The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.",
+      "tool": "usage",
+      "args": {
+        "resource": "ml-train-17",
+        "around_date": "2026-06-26"
+      },
+      "result": "CHANGE: GPU busy: n/a% before \u2192 4.2% after (67 days after); CPU busy: n/a% before \u2192 1.9% after (67 days after)\nperiod,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nafter,67,1.9,4.2,88.7,1\n"
+    },
+    {
+      "step": 3,
+      "seconds": 1.9,
+      "raw": "{\"thought\": \"The GPU server is now busy, but there's no approved ticket. This is an idle GPU.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"ml-train-17\"}}",
+      "thought": "The GPU server is now busy, but there's no approved ticket. This is an idle GPU.",
+      "tool": "change_events",
+      "args": {
+        "resource": "ml-train-17"
+      },
+      "result": "TICKETS: none\nevent_time,event_name,actor,ticket,details\n2026-06-26 09:00:00,RunInstances,omar.haddad,,\n"
+    },
+    {
+      "step": 4,
+      "seconds": 6.2,
+      "raw": "{\"thought\": \"The GPU server is now busy, but there's no approved ticket. This is an idle GPU.\", \"final\": {\n    \"type\": \"idle_gpu\",\n    \"owner_team\": \"ml\",\n    \"action\": \"stop_instance\",\n    \"start_date\": \"2026-06-26\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The GPU server is now busy (4.2% GPU usage), but there's no approved ticket. The cost spike is likely due to an idle GPU.\",\n    \"evidence\": [\"The GPU server is now busy (4.2% GPU usage)\", \"No approved ticket\"],\n    \"owner_message\": \"The GPU server ml-train-17 is now busy. Please review and stop the instance if it's no longer needed.\"\n}}",
+      "thought": "The GPU server is now busy, but there's no approved ticket. This is an idle GPU.",
+      "final": {
+        "type": "idle_gpu",
+        "owner_team": "ml",
+        "action": "stop_instance",
+        "start_date": "2026-06-26",
+        "confidence": 0.9,
+        "explanation": "The GPU server is now busy (4.2% GPU usage), but there's no approved ticket. The cost spike is likely due to an idle GPU.",
+        "evidence": [
+          "The GPU server is now busy (4.2% GPU usage)",
+          "No approved ticket"
+        ],
+        "owner_message": "The GPU server ml-train-17 is now busy. Please review and stop the instance if it's no longer needed."
+      }
+    }
+  ]
+}

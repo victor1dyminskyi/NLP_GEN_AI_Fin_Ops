@@ -1,0 +1,95 @@
+{
+  "alert": {
+    "alert_id": "AL-001",
+    "resource": "plat-inter-az",
+    "account": "platform-shared",
+    "rule": "usage",
+    "start_date": "2026-04-25 00:00:00",
+    "score": 12.6,
+    "normal_usd_day": 5.96,
+    "current_usd_day": 17.62,
+    "extra_usd_day": 11.66,
+    "usage_effect": 11.66,
+    "price_effect": 0.0,
+    "resource_kind": "data_transfer"
+  },
+  "resource": "plat-inter-az",
+  "form": {
+    "type": "no_issue",
+    "owner_team": "platform",
+    "action": "no_action",
+    "start_date": "2026-04-25",
+    "confidence": 0.9,
+    "explanation": "The cost increase is gradual and matches the usage increase. There's no approved ticket, but the cost is legitimate.",
+    "evidence": [
+      "The cost increased from 11.46 USD on 2026-04-22 to 17.62 USD on 2026-04-25.",
+      "The usage increased from 1146 GB on 2026-04-22 to 1762 GB on 2026-04-25."
+    ],
+    "owner_message": ""
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 17.0,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The resource is a data transfer, which is unusual for a server. Let's check if it's a disk or a network transfer.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"plat-inter-az\"}}",
+      "thought": "The resource is a data transfer, which is unusual for a server. Let's check if it's a disk or a network transfer.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "plat-inter-az"
+      },
+      "result": "{\"ResourceName\": \"plat-inter-az\", \"ResourceId\": \"plat-inter-az-acc41810\", \"account\": \"platform-shared\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.010 per GB - regional data transfer - in/out/between EC2 AZs or using elastic IPs or ELB\", \"tags\": \"{\\\"team\\\": \\\"platform\\\", \\\"application\\\": \\\"network\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 13.35, \"account_team\": \"platform\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The resource is a network data transfer, not a server. Let's check if there's an approved ticket for this increase.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"plat-inter-az\"}}",
+      "thought": "The resource is a network data transfer, not a server. Let's check if there's an approved ticket for this increase.",
+      "tool": "change_events",
+      "args": {
+        "resource": "plat-inter-az"
+      },
+      "result": "TICKETS: none\n(no create/delete/ticket events)"
+    },
+    {
+      "step": 3,
+      "seconds": 2.1,
+      "raw": "{\"thought\": \"There's no approved ticket for this increase. Let's check if the cost is legitimate.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"plat-inter-az\", \"around_date\": \"2026-04-25\"}}",
+      "thought": "There's no approved ticket for this increase. Let's check if the cost is legitimate.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "plat-inter-az",
+        "around_date": "2026-04-25"
+      },
+      "result": "CHANGE from 2026-04-25: cost 102.2%, quantity 102.1%, price per unit 0.0%; pricing Standard \u2192 Standard; quantity reached its new level after 1 day(s)\nSUMMARY {\"avg_cost_before\": 8.07, \"avg_cost_after\": 16.32, \"avg_quantity_before\": 807.34, \"avg_quantity_after\": 1631.68, \"unit_price_before\": 0.01, \"unit_price_after\": 0.01, \"pricing_before\": \"Standard\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-04-22,11.46,1146,GB,0.01,Standard,\n2026-04-23,13.16,1316,GB,0.01,Standard,\n2026-04-24,14.78,1478,GB,0.01,Standard,\n2026-04-25,17.62,1762,GB,0.01,Standard,\n2026-04-26,17.32,1732,GB,0.01,Standard,\n2026-04-27,13.79,1379,GB,0.01,Standard,\n2026-04-28,16.36,1636,GB,0.01,Standard,\n2026-04-29,14.04,1404,GB,0.01,Standard,\n2026-04-30,16.73,1673,GB,0.01,Standard,\n2026-05-01,16.04,1604,GB,0.01,Standard,\n2026-05-02,18.72,1872,GB,0.01,Standard,\n2026-05-03,19.99,1999,GB,0.01,Standard,\n2026-05-04,14.55,1455,GB,0.01,Standard,\n2026-05-05,14.87,1487,GB,0.01,Standard,\n2026-05-06,14.88,1488,GB,0.01,Standard,\n2026-05-07,15.3,1530,GB,0.01,Standard,\n2026-05-08,18.04,1804,GB,0.01,Standard,\n2026-05-09,16.51,1651,GB,0.01,Standard,\n"
+    },
+    {
+      "step": 4,
+      "seconds": 10.1,
+      "raw": "{\"thought\": \"The cost increase is gradual and matches the usage increase. There's no approved ticket, but the cost is legitimate.\", \"final\": {\n     \"type\": \"no_issue\",\n     \"owner_team\": \"platform\",\n     \"action\": \"no_action\",\n     \"start_date\": \"2026-04-25\",\n     \"confidence\": 0.9,\n     \"explanation\": \"The cost increase is gradual and matches the usage increase. There's no approved ticket, but the cost is legitimate.\",\n     \"evidence\": [\"The cost increased from 11.46 USD on 2026-04-22 to 17.62 USD on 2026-04-25.\", \"The usage increased from 1146 GB on 2026-04-22 to 1762 GB on 2026-04-25.\"],\n     \"owner_message\": \"\"\n}}",
+      "thought": "The cost increase is gradual and matches the usage increase. There's no approved ticket, but the cost is legitimate.",
+      "final": {
+        "type": "no_issue",
+        "owner_team": "platform",
+        "action": "no_action",
+        "start_date": "2026-04-25",
+        "confidence": 0.9,
+        "explanation": "The cost increase is gradual and matches the usage increase. There's no approved ticket, but the cost is legitimate.",
+        "evidence": [
+          "The cost increased from 11.46 USD on 2026-04-22 to 17.62 USD on 2026-04-25.",
+          "The usage increased from 1146 GB on 2026-04-22 to 1762 GB on 2026-04-25."
+        ],
+        "owner_message": ""
+      }
+    }
+  ]
+}

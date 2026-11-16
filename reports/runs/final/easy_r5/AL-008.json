@@ -1,0 +1,98 @@
+{
+  "alert": {
+    "alert_id": "AL-008",
+    "resource": "bi-egress",
+    "account": "analytics-prod",
+    "rule": "usage",
+    "start_date": "2026-05-12 00:00:00",
+    "score": 119.2,
+    "normal_usd_day": 0.7,
+    "current_usd_day": 7.43,
+    "extra_usd_day": 6.73,
+    "usage_effect": 6.73,
+    "price_effect": 0.0,
+    "related": NaN,
+    "resource_kind": "data_transfer"
+  },
+  "resource": "bi-egress",
+  "form": {
+    "type": "transfer_spike",
+    "owner_team": "analytics",
+    "action": "notify_owner_open_ticket",
+    "start_date": "2026-05-12",
+    "confidence": 0.9,
+    "explanation": "The cost increased by 439.7% on 2026-05-12, matching a 440.2% increase in usage. There is no approved change ticket.",
+    "evidence": [
+      "cost 439.7% on 2026-05-12",
+      "quantity 440.2% on 2026-05-12",
+      "no approved change ticket"
+    ],
+    "owner_message": "The cost for bi-egress on 2026-05-12 has increased significantly. Please review and open a ticket if this was an intentional change."
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "auto_executed (simulated)"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 17.6,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"The resource is a data transfer resource with a significant spike in cost. I need to investigate if this is a planned change or an anomaly.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"bi-egress\"}}",
+      "thought": "The resource is a data transfer resource with a significant spike in cost. I need to investigate if this is a planned change or an anomaly.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "bi-egress"
+      },
+      "result": "{\"ResourceName\": \"bi-egress\", \"ResourceId\": \"bi-egress-e5e7ea94\", \"account\": \"analytics-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.090 per GB - first 10 TB / month data transfer out beyond the global free tier\", \"tags\": \"{\\\"team\\\": \\\"analytics\\\", \\\"application\\\": \\\"dashboards\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 0.79, \"account_team\": \"analytics\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.9,
+      "raw": "{\"thought\": \"The resource is a data transfer resource with a significant spike in cost. I need to investigate if this is a planned change or an anomaly.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"bi-egress\", \"around_date\": \"2026-05-12\"}}",
+      "thought": "The resource is a data transfer resource with a significant spike in cost. I need to investigate if this is a planned change or an anomaly.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "bi-egress",
+        "around_date": "2026-05-12"
+      },
+      "result": "CHANGE from 2026-05-12: cost 439.7%, quantity 440.2%, price per unit 0.0%; pricing Standard \u2192 Standard; quantity reached its new level after 1 day(s)\nSUMMARY {\"avg_cost_before\": 0.58, \"avg_cost_after\": 3.13, \"avg_quantity_before\": 6.44, \"avg_quantity_after\": 34.79, \"unit_price_before\": 0.09, \"unit_price_after\": 0.09, \"pricing_before\": \"Standard\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-05-09,0.25,2.82,GB,0.09,Standard,\n2026-05-10,0.25,2.78,GB,0.09,Standard,\n2026-05-11,0.74,8.21,GB,0.09,Standard,\n2026-05-12,7.43,82.53,GB,0.09,Standard,\n2026-05-13,6.84,75.99,GB,0.09,Standard,\n2026-05-14,7.42,82.5,GB,0.09,Standard,\n2026-05-15,7.39,82.09,GB,0.09,Standard,\n2026-05-16,2.59,28.79,GB,0.09,Standard,\n2026-05-17,2.7,29.95,GB,0.09,Standard,\n2026-05-18,7.72,85.81,GB,0.09,Standard,\n2026-05-19,0.73,8.08,GB,0.09,Standard,\n2026-05-20,0.73,8.15,GB,0.09,Standard,\n2026-05-21,0.72,8.05,GB,0.09,Standard,\n2026-05-22,0.74,8.17,GB,0.09,Standard,\n2026-05-23,0.25,2.75,GB,0.09,Standard,\n2026-05-24,0.25,2.77,GB,0.09,Standard,\n2026-05-25,0.72,7.97,GB,0.09,Standard,\n2026-05-26,0.75,8.3,GB,0.09,Standard,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 4.1,
+      "raw": "{\"thought\": \"The cost spike is significant and matches the usage increase. There is no approved change ticket.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"bi-egress\"}}",
+      "thought": "The cost spike is significant and matches the usage increase. There is no approved change ticket.",
+      "tool": "change_events",
+      "args": {
+        "resource": "bi-egress"
+      },
+      "result": "TICKETS: none\n(no create/delete/ticket events)"
+    },
+    {
+      "step": 4,
+      "seconds": 8.2,
+      "raw": "{\"thought\": \"The cost spike is significant and matches the usage increase. There is no approved change ticket. This is likely an anomaly.\", \"final\": {\n     \"type\": \"transfer_spike\",\n     \"owner_team\": \"analytics\",\n     \"action\": \"notify_owner_open_ticket\",\n     \"start_date\": \"2026-05-12\",\n     \"confidence\": 0.9,\n     \"explanation\": \"The cost increased by 439.7% on 2026-05-12, matching a 440.2% increase in usage. There is no approved change ticket.\",\n     \"evidence\": [\"cost 439.7% on 2026-05-12\", \"quantity 440.2% on 2026-05-12\", \"no approved change ticket\"],\n     \"owner_message\": \"The cost for bi-egress on 2026-05-12 has increased significantly. Please review and open a ticket if this was an intentional change.\"\n}}",
+      "thought": "The cost spike is significant and matches the usage increase. There is no approved change ticket. This is likely an anomaly.",
+      "final": {
+        "type": "transfer_spike",
+        "owner_team": "analytics",
+        "action": "notify_owner_open_ticket",
+        "start_date": "2026-05-12",
+        "confidence": 0.9,
+        "explanation": "The cost increased by 439.7% on 2026-05-12, matching a 440.2% increase in usage. There is no approved change ticket.",
+        "evidence": [
+          "cost 439.7% on 2026-05-12",
+          "quantity 440.2% on 2026-05-12",
+          "no approved change ticket"
+        ],
+        "owner_message": "The cost for bi-egress on 2026-05-12 has increased significantly. Please review and open a ticket if this was an intentional change."
+      }
+    }
+  ]
+}

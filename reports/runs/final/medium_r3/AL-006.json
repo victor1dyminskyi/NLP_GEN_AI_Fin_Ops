@@ -1,0 +1,106 @@
+{
+  "alert": {
+    "alert_id": "AL-006",
+    "resource": "data-etl-workers",
+    "account": "data-prod",
+    "rule": "price+usage",
+    "start_date": "2026-06-15 00:00:00",
+    "score": 41.1,
+    "normal_usd_day": 54.86,
+    "current_usd_day": 77.44,
+    "extra_usd_day": 22.57,
+    "usage_effect": -0.66,
+    "price_effect": 23.23,
+    "resource_kind": "server"
+  },
+  "resource": "data-etl-workers",
+  "form": {
+    "type": "sp_expired",
+    "owner_team": "platform",
+    "action": "recommend_sp_renewal",
+    "start_date": "2026-06-15",
+    "confidence": 0.9,
+    "explanation": "The server is covered by a Savings Plan ending on 2026-06-15, but the cost is rising. The current cost is $77.44 per day, which is $22.57 more than the normal cost of $54.86 per day.",
+    "evidence": [
+      "The server is covered by a Savings Plan ending on 2026-06-15.",
+      "The current cost is $77.44 per day, which is $22.57 more than the normal cost of $54.86 per day."
+    ],
+    "owner_message": "The cost of the data-etl-workers server has increased significantly due to the end of the Savings Plan. We recommend renewing the Savings Plan to avoid further cost increases."
+  },
+  "gate": {
+    "needs_approval": true,
+    "escalated": false,
+    "status": "awaiting_approval"
+  },
+  "model": "finops-agent",
+  "llm_calls": 5,
+  "tool_calls": 4,
+  "form_fixes": 0,
+  "seconds": 20.7,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.5,
+      "raw": "{\"thought\": \"The resource is a server, and its cost has increased significantly. I need to determine if this is due to an approved change or if it's an issue that requires attention.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"data-etl-workers\"}}",
+      "thought": "The resource is a server, and its cost has increased significantly. I need to determine if this is due to an approved change or if it's an issue that requires attention.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "data-etl-workers"
+      },
+      "result": "{\"ResourceName\": \"data-etl-workers\", \"ResourceId\": \"i-09223657f9dcb7d34\", \"account\": \"data-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.252 per On Demand Linux r5.xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"data\\\", \\\"application\\\": \\\"etl\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 64.74, \"account_team\": \"data\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.7,
+      "raw": "{\"thought\": \"The server is tagged with the 'data' team, so the accountable owner is the 'data' team. I need to check if there's an approved change ticket for this increase.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"data-etl-workers\"}}",
+      "thought": "The server is tagged with the 'data' team, so the accountable owner is the 'data' team. I need to check if there's an approved change ticket for this increase.",
+      "tool": "change_events",
+      "args": {
+        "resource": "data-etl-workers"
+      },
+      "result": "TICKETS: none\nevent_time,event_name,actor,ticket,details\n2025-12-23 17:24:00,RunInstances,mei.lin,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.8,
+      "raw": "{\"thought\": \"There are no approved change tickets for this server. The cost increase is not covered by an approved change. I need to check if the server is still running and if it's busy.\", \"tool\": \"usage\", \"args\": {\"resource\": \"data-etl-workers\", \"around_date\": \"2026-06-15\"}}",
+      "thought": "There are no approved change tickets for this server. The cost increase is not covered by an approved change. I need to check if the server is still running and if it's busy.",
+      "tool": "usage",
+      "args": {
+        "resource": "data-etl-workers",
+        "around_date": "2026-06-15"
+      },
+      "result": "CHANGE: CPU busy: 6.2% before \u2192 6.2% after (78 days after)\nperiod,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nbefore,106,6.2,,,12.9\nafter,78,6.2,,,12.9\n"
+    },
+    {
+      "step": 4,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The server is still running and is busy, but the cost increase is not explained by the usage. I need to check if the server is covered by a Savings Plan.\", \"tool\": \"commitment_status\", \"args\": {\"resource\": \"data-etl-workers\"}}",
+      "thought": "The server is still running and is busy, but the cost increase is not explained by the usage. I need to check if the server is covered by a Savings Plan.",
+      "tool": "commitment_status",
+      "args": {
+        "resource": "data-etl-workers"
+      },
+      "result": "commitment_id,type,discount,start,end,managed_by\nsp-compute-2025,Savings Plan,0.3,2025-09-01,2026-06-15,platform\n"
+    },
+    {
+      "step": 5,
+      "seconds": 10.3,
+      "raw": "{\"thought\": \"The server is covered by a Savings Plan, but the cost increase is not covered by the plan. The Savings Plan is ending soon, and the cost is rising. This is an issue that requires attention.\", \"final\": {\n     \"type\": \"sp_expired\",\n     \"owner_team\": \"platform\",\n     \"action\": \"recommend_sp_renewal\",\n     \"start_date\": \"2026-06-15\",\n     \"confidence\": 0.9,\n     \"explanation\": \"The server is covered by a Savings Plan ending on 2026-06-15, but the cost is rising. The current cost is $77.44 per day, which is $22.57 more than the normal cost of $54.86 per day.\",\n     \"evidence\": [\"The server is covered by a Savings Plan ending on 2026-06-15.\", \"The current cost is $77.44 per day, which is $22.57 more than the normal cost of $54.86 per day.\"],\n     \"owner_message\": \"The cost of the data-etl-workers server has increased significantly due to the end of the Savings Plan. We recommend renewing the Savings Plan to avoid further cost increases.\"\n}}",
+      "thought": "The server is covered by a Savings Plan, but the cost increase is not covered by the plan. The Savings Plan is ending soon, and the cost is rising. This is an issue that requires attention.",
+      "final": {
+        "type": "sp_expired",
+        "owner_team": "platform",
+        "action": "recommend_sp_renewal",
+        "start_date": "2026-06-15",
+        "confidence": 0.9,
+        "explanation": "The server is covered by a Savings Plan ending on 2026-06-15, but the cost is rising. The current cost is $77.44 per day, which is $22.57 more than the normal cost of $54.86 per day.",
+        "evidence": [
+          "The server is covered by a Savings Plan ending on 2026-06-15.",
+          "The current cost is $77.44 per day, which is $22.57 more than the normal cost of $54.86 per day."
+        ],
+        "owner_message": "The cost of the data-etl-workers server has increased significantly due to the end of the Savings Plan. We recommend renewing the Savings Plan to avoid further cost increases."
+      }
+    }
+  ]
+}

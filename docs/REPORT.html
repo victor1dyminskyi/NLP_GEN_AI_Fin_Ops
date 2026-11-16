@@ -1,0 +1,266 @@
+<!doctype html><html><head><meta charset='utf-8'><style>body{font-family:-apple-system,Helvetica,Arial,sans-serif;font-size:10.5pt;line-height:1.4;color:#1f2a44;margin:0}
+h1{font-size:20pt;margin:0 0 6px} h2{font-size:13.5pt;margin:16px 0 6px;border-bottom:1px solid #dde3ee;padding-bottom:3px}
+table{border-collapse:collapse;width:100%;margin:6px 0 10px;font-size:9.3pt} th,td{border:1px solid #d6dcea;padding:3px 6px;text-align:left;vertical-align:top}
+th{background:#eef2f9} code{background:#f2f4f8;padding:0 3px;border-radius:3px;font-size:9pt} img{width:100%;margin:6px 0}
+li{margin:2px 0} @page{size:A4;margin:14mm}</style></head><body><h1>FinOps Anomaly Agent — Report</h1>
+<p>An AI assistant that watches a company's daily cloud bill, finds unexpected costs, works out why they happened and
+which team is responsible, and prepares the fix for a human to approve. Built and evaluated following CRISP-DM.
+Full working log with every decision: <a href="CRISP_DM.md">CRISP_DM.md</a> · how to run: <a href="../README.md">README</a>.</p>
+<h2>1. Business understanding</h2>
+<p><strong>Problem.</strong> Cloud-cost anomalies (an idle GPU at ~$136/day, an expired discount, a forgotten disk) are often noticed
+only on the monthly invoice, and investigating them is manual. AI tools for this exist — AWS Cost Anomaly Detection +
+Amazon Q and the AWS FinOps Agent (Jun 2026, report only), Finout Agents (Jun 2026, detect → investigate → fix with
+approval) — but none publishes how accurate it is, and lack of trust in automated outputs was the most-cited barrier
+in a July 2026 study of 28 FinOps practitioners. <strong>Our angle: build such an assistant and measure how far it can be trusted.</strong></p>
+<p><strong>Requirements chosen for the scope</strong></p>
+<table>
+<thead>
+<tr>
+<th>The system must…</th>
+<th>Checked by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>find anomalies in a daily FOCUS-format bill</td>
+<td>detector catch rate, false alarms</td>
+</tr>
+<tr>
+<td>explain each one: cause, responsible team, fix</td>
+<td>agent accuracy vs answer key</td>
+</tr>
+<tr>
+<td>never take a risky action without a human</td>
+<td>risky actions without approval = 0</td>
+</tr>
+<tr>
+<td>ignore planned, approved cost increases</td>
+<td>decoys dismissed</td>
+</tr>
+<tr>
+<td>take every number from the data, not from the AI</td>
+<td>tools compute numbers; AI quotes them</td>
+</tr>
+<tr>
+<td>be free and run on a laptop; give the same answer twice</td>
+<td>local model, fixed seed, reproducibility check</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Out of scope:</strong> real changes to AWS (all actions simulated), optimising the whole account, non-FOCUS formats.
+<strong>Runs on:</strong> Mac with Apple Silicon, 16 GB RAM, ~5 GB disk, Ollama + Python; $0, no API key.</p>
+<h2>2. Data</h2>
+<p>No public dataset has months of one company's bill with labelled anomalies, so we built a realistic company from real ingredients:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Gave us</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FOCUS Sample Data (FinOps Foundation, Sep 2024 bill, CC BY 4.0)</td>
+<td>21 real prices; the real <strong>spending mix</strong> (CPU servers 63.7%, GPU 23.0%, disks 4.8%, data transfer 3.0% …)</td>
+</tr>
+<tr>
+<td>Azure VM trace 2019 (Microsoft, 2.7 M servers)</td>
+<td>how busy normal servers are (median ~6% CPU)</td>
+</tr>
+<tr>
+<td>3 GPU-cluster papers (ATC'23, NSDI'24, OSDI'26)</td>
+<td>how busy normal AI-serving GPUs are: 25% / 20% / 6%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>DemoShop</strong> — online shop with an AI recommendation engine: 6 teams, 8 AWS accounts, 38 resources, Mar–Aug 2026.</p>
+<ol>
+<li><strong>Calibration.</strong> First guesses were 4× off (too much storage and traffic). Databases + gateways (whole machines)
+   cost $860/month = 4.3% of a real bill → total ≈ $20,300/month. Each group then gets its real share:
+   <code>amount = real share × total ÷ real price</code>; rounding to whole servers gives 64.2% CPU instead of 63.7%.</li>
+<li><strong>Daily bills:</strong> <code>quantity = base × weekday pattern × growth × noise</code>, <code>cost = quantity × real price</code>.</li>
+<li><strong>Five tables</strong>, all derived from one daily state so they always agree: bill (FOCUS), usage metrics (CPU/GPU %),
+   change log (who created what, tickets), owners, Savings Plans.</li>
+<li><strong>Planted items:</strong> idle GPU, data-transfer spike, data-transfer drift, untagged resource, expired Savings Plan,
+   orphaned disk — plus <strong>decoys</strong> (planned increases with a ticket). Exact extra cost = cost with item − cost without
+   item (same random noise).</li>
+<li><strong>Difficulty</strong> (things real data can't tell us are tested at three levels): normal GPU load 25 / 20 / 6%,
+   noise ×0.33 / ×1 / ×2, spike ×10 / ×3 / ×1.5.</li>
+<li><strong>15 datasets</strong> = 3 difficulties × 5 scenarios (7–12 items each, varying on purpose), 147 labelled items.
+   Scenarios 1–2 = practice; 3–5 = <strong>sealed final exam</strong>. Automatic tests prove the agent never reads the answer key.</li>
+</ol>
+<h2>3. System</h2>
+<p><img alt="How one anomaly travels through the system" src="../reports/figures/how_it_works.png" /></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+<th>Input → output</th>
+<th>Model / tool calls</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① Detector</td>
+<td>find suspicious resources</td>
+<td>5 tables → alerts</td>
+<td>none — statistics</td>
+</tr>
+<tr>
+<td>② Agent</td>
+<td>investigate one alert</td>
+<td>alert + tools → incident form</td>
+<td>local LLM (qwen2.5-coder 7B) + 8 read-only tools</td>
+</tr>
+<tr>
+<td>③ Action gate</td>
+<td>keep risky actions under human control</td>
+<td>form → status</td>
+<td>none — plain code</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Detector</strong> — per resource, per day: <code>normal = median of last 28 days</code>, <code>spread = 1.4826 × median distance from
+normal</code>, alert if <code>(today − normal) / spread &gt; 3</code> for 2 days and the extra cost ≥ $0.50/day (Z, K, $min tuned on
+practice data). Extra rules: price per unit +5% (expired discount), new resource, disk whose server was deleted.</p>
+<p><strong>Agent</strong> — for each alert it decides which tool to call (resource info, cost history, usage, change log, owner,
+Savings Plans, attached server, free read-only SQL), reads the result, repeats, then fills a fixed form: type ·
+owner team · action · confidence · explanation · evidence · message to the owner. Its instructions: data
+dictionary + FinOps playbook. It never sees the answers and never acts itself.</p>
+<p><strong>Gate</strong> — confidence &lt; 0.6 or type "other" → human; stop / delete / renew → waits for Approve; notify / tag → automatic (simulated).</p>
+<p><strong>Example (expired Savings Plan):</strong> detector: web servers' price $0.238 → $0.340/h on 1 July, hours unchanged →
+agent: price +42.9%, plan ended 1 July, managed by platform, no ticket → form: <code>sp_expired</code>, platform,
+<code>recommend_sp_renewal</code> → gate: waits for approval.</p>
+<h2>4. Modeling decisions</h2>
+<p><strong>Model choice</strong> (20 SQL questions on practice data; correct = same rows as the reference query):</p>
+<table>
+<thead>
+<tr>
+<th>Model (maker)</th>
+<th>Schema only</th>
+<th>+ data dictionary</th>
+<th>Seconds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>qwen2.5-coder 7B (Alibaba)</strong></td>
+<td>40%</td>
+<td><strong>80%</strong></td>
+<td><strong>2.2</strong></td>
+</tr>
+<tr>
+<td>qwen3 8B (Alibaba), thinking</td>
+<td>75%</td>
+<td>80%</td>
+<td>21.1</td>
+</tr>
+<tr>
+<td>llama3.1 8B (Meta)</td>
+<td>40%</td>
+<td>70%</td>
+<td>2.5</td>
+</tr>
+</tbody>
+</table>
+<p>Describing each column in one line doubled accuracy; step-by-step reasoning didn't help. Chosen: qwen2.5-coder (best and fastest).</p>
+<p><strong>Agent versions</strong> (practice data, same detector): v1 free choice of tools → 67% fully right; v2 code-forced checklist
+→ 33% (more evidence confused the small model); <strong>v3</strong> free choice + tools that state changes plainly ("GPU 86% → 0.5%")
++ resource kind in the alert → best on average (64%), frozen. Seed fixed so the same alert gives the same answer.</p>
+<h2>5. Evaluation — final exam (sealed scenarios 3–5, run once)</h2>
+<table>
+<thead>
+<tr>
+<th>(19 anomalies + ~10 decoys per difficulty)</th>
+<th>Easy</th>
+<th>Medium</th>
+<th>Hard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Did it <strong>find</strong> the anomaly?</td>
+<td>18 / 19</td>
+<td>18 / 19</td>
+<td>12 / 19</td>
+</tr>
+<tr>
+<td>Did it <strong>fully understand</strong> it? (right cause + team + fix)</td>
+<td>14 / 19</td>
+<td>12 / 19</td>
+<td>11 / 19</td>
+</tr>
+<tr>
+<td>Did it leave <strong>harmless</strong> changes alone?</td>
+<td>13 / 18</td>
+<td>14 / 18</td>
+<td>13 / 18</td>
+</tr>
+<tr>
+<td>Risky actions <strong>without a human</strong></td>
+<td><strong>0</strong></td>
+<td><strong>0</strong></td>
+<td><strong>0</strong></td>
+</tr>
+<tr>
+<td>Agent "real problem or not?": precision / recall / F1</td>
+<td>0.79 / 0.86 / 0.83</td>
+<td>0.83 / 0.91 / 0.87</td>
+<td>0.74 / 0.88 / 0.80</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why the scores aren't higher</strong></p>
+<ul>
+<li><em>Detector misses</em> only on hard data: data-transfer changes of $0.3–1.3/day hidden in ±30% noise (below the $0.50 line by design).</li>
+<li><em>Agent mistakes:</em> spike vs drift confused; legitimate new servers without a ticket sometimes called a problem;
+  once it reasoned backwards ("finished earlier than the ticket said → unusual").</li>
+<li><em>Confidence is not trustworthy:</em> wrong answers often came with 0.9–1.0 — so the decision to act is made by code.</li>
+<li><em>Small sample:</em> 19 anomalies per difficulty; one anomaly ≈ 5 points.</li>
+</ul>
+<p><strong>Trust conclusion.</strong> With a free local 7B model the assistant is reliable enough to <strong>find, explain and route</strong>
+anomalies and to run <strong>low-risk</strong> actions alone. <strong>Risky actions must stay behind human approval.</strong></p>
+<p><strong>Integrity:</strong> detector, model and agent were developed on practice data only (checked by code before the final run);
+results carry a SHA-256 fingerprint of the frozen code; re-running investigations reproduced them exactly (3/3).</p>
+<p><strong>Not yet evaluated / next steps:</strong> quality of the written explanations (LLM judge calibrated on hand labels);
+the "just ask the LLM, no detector" baseline; a larger model; fixed command templates for real execution.</p>
+<h2>6. CRISP-DM and the AI coding assistant</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>What happened</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Business understanding</td>
+<td>problem, market scan, requirements, metrics</td>
+</tr>
+<tr>
+<td>Data understanding</td>
+<td>FOCUS sample + Azure trace + GPU papers; gaps found</td>
+</tr>
+<tr>
+<td>Data preparation</td>
+<td>calibrated synthetic company, 5 tables, 15 labelled datasets, validation</td>
+</tr>
+<tr>
+<td>Modeling</td>
+<td>detector (tuned), model benchmark (2 rounds), agent v1 → v3, gate</td>
+</tr>
+<tr>
+<td>Evaluation</td>
+<td>per-component metrics on practice data, final exam once</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Streamlit app (presentation + live demo with trace and Approve/Reject), README</td>
+</tr>
+</tbody>
+</table>
+<p>Built with <strong>Claude Code</strong>, steered by files rather than chat alone: <code>CLAUDE.md</code> (rules loaded every session:
+CRISP-DM order, stop for approval, every number needs a source, the agent never sees answers), two skills
+(<code>add-data-step</code>, <code>evaluate-component</code>), automatic leak tests, and this log as the single source of truth.
+Each rule came from a real mistake (e.g. guessed traffic amounts were 4× off → "every number needs a source").</p></body></html>

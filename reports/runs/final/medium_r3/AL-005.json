@@ -1,0 +1,95 @@
+{
+  "alert": {
+    "alert_id": "AL-005",
+    "resource": "ml-train-63",
+    "account": "ml-dev",
+    "rule": "new_resource",
+    "start_date": "2026-06-05 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 136.13,
+    "extra_usd_day": 136.13,
+    "usage_effect": 136.13,
+    "price_effect": 0.0,
+    "resource_kind": "gpu_server"
+  },
+  "resource": "ml-train-63",
+  "form": {
+    "type": "planned_change",
+    "owner_team": "ml",
+    "action": "no_action",
+    "start_date": "2026-06-05",
+    "confidence": 1.0,
+    "explanation": "The resource was running for 3 days as part of an approved training run, which explains the cost spike. The resource was terminated after the training run.",
+    "evidence": [
+      "The resource was running for 3 days as part of an approved training run.",
+      "The resource was terminated after the training run."
+    ],
+    "owner_message": ""
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 13.9,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"ml-train-63\"}}",
+      "thought": "The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "ml-train-63"
+      },
+      "result": "{\"ResourceName\": \"ml-train-63\", \"ResourceId\": \"i-021019416ab429ad0\", \"account\": \"ml-dev\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$5.672 per On Demand Linux g5.12xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"ml\\\", \\\"application\\\": \\\"training\\\", \\\"environment\\\": \\\"dev\\\"}\", \"first_billed\": \"2026-06-05\", \"last_billed\": \"2026-06-07\", \"avg_cost_per_day\": 136.13, \"account_team\": \"ml\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 3.0,
+      "raw": "{\"thought\": \"The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.\", \"tool\": \"usage\", \"args\": {\"resource\": \"ml-train-63\", \"around_date\": \"2026-06-07\"}}",
+      "thought": "The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.",
+      "tool": "usage",
+      "args": {
+        "resource": "ml-train-63",
+        "around_date": "2026-06-07"
+      },
+      "result": "CHANGE: GPU busy: 84.9% before \u2192 74.7% after (1 days after); CPU busy: 31.5% before \u2192 26.5% after (1 days after)\nperiod,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nbefore,2,31.5,84.9,89.3,1\nafter,1,26.5,74.7,74.7,1\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"The GPU server is still busy, but the cost spike is not explained by increased usage. I need to check for an approved ticket.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"ml-train-63\"}}",
+      "thought": "The GPU server is still busy, but the cost spike is not explained by increased usage. I need to check for an approved ticket.",
+      "tool": "change_events",
+      "args": {
+        "resource": "ml-train-63"
+      },
+      "result": "TICKETS: CHG-5425: approved training run, 3 days\nevent_time,event_name,actor,ticket,details\n2026-06-05 09:00:00,RunInstances,omar.haddad,\"CHG-5425: approved training run, 3 days\",\n2026-06-07 18:00:00,TerminateInstances,omar.haddad,\"CHG-5425: approved training run, 3 days\",\n"
+    },
+    {
+      "step": 4,
+      "seconds": 6.2,
+      "raw": "{\"thought\": \"The cost spike is explained by an approved training run. The resource is no longer running.\", \"final\": {\n    \"type\": \"planned_change\",\n    \"owner_team\": \"ml\",\n    \"action\": \"no_action\",\n    \"start_date\": \"2026-06-05\",\n    \"confidence\": 1.0,\n    \"explanation\": \"The resource was running for 3 days as part of an approved training run, which explains the cost spike. The resource was terminated after the training run.\",\n    \"evidence\": [\"The resource was running for 3 days as part of an approved training run.\", \"The resource was terminated after the training run.\"],\n    \"owner_message\": \"\"\n}}",
+      "thought": "The cost spike is explained by an approved training run. The resource is no longer running.",
+      "final": {
+        "type": "planned_change",
+        "owner_team": "ml",
+        "action": "no_action",
+        "start_date": "2026-06-05",
+        "confidence": 1.0,
+        "explanation": "The resource was running for 3 days as part of an approved training run, which explains the cost spike. The resource was terminated after the training run.",
+        "evidence": [
+          "The resource was running for 3 days as part of an approved training run.",
+          "The resource was terminated after the training run."
+        ],
+        "owner_message": ""
+      }
+    }
+  ]
+}

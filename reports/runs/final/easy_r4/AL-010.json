@@ -1,0 +1,96 @@
+{
+  "alert": {
+    "alert_id": "AL-010",
+    "resource": "bi-egress",
+    "account": "analytics-prod",
+    "rule": "usage",
+    "start_date": "2026-06-21 00:00:00",
+    "score": 32.7,
+    "normal_usd_day": 0.71,
+    "current_usd_day": 2.34,
+    "extra_usd_day": 1.63,
+    "usage_effect": 1.63,
+    "price_effect": 0.0,
+    "related": NaN,
+    "resource_kind": "data_transfer"
+  },
+  "resource": "bi-egress",
+  "form": {
+    "type": "other",
+    "owner_team": "analytics",
+    "action": "no_action",
+    "start_date": "2026-06-21",
+    "confidence": 0.8,
+    "explanation": "The resource has no usage metrics, indicating it might be a billing anomaly.",
+    "evidence": [
+      "no usage metrics",
+      "significant increase in cost"
+    ],
+    "owner_message": ""
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": true,
+    "status": "escalated_to_human"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 12.0,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.5,
+      "raw": "{\"thought\": \"The resource is a data transfer resource with a significant increase in cost. I need to check if there's an approved ticket or if the server is still running.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"bi-egress\"}}",
+      "thought": "The resource is a data transfer resource with a significant increase in cost. I need to check if there's an approved ticket or if the server is still running.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "bi-egress"
+      },
+      "result": "{\"ResourceName\": \"bi-egress\", \"ResourceId\": \"bi-egress-e5e7ea94\", \"account\": \"analytics-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.090 per GB - first 10 TB / month data transfer out beyond the global free tier\", \"tags\": \"{\\\"team\\\": \\\"analytics\\\", \\\"application\\\": \\\"dashboards\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 0.79, \"account_team\": \"analytics\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.6,
+      "raw": "{\"thought\": \"The resource is a data transfer resource with a significant increase in cost. I need to check if there's an approved ticket or if the server is still running.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"bi-egress\"}}",
+      "thought": "The resource is a data transfer resource with a significant increase in cost. I need to check if there's an approved ticket or if the server is still running.",
+      "tool": "change_events",
+      "args": {
+        "resource": "bi-egress"
+      },
+      "result": "TICKETS: none\n(no create/delete/ticket events)"
+    },
+    {
+      "step": 3,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"There is no approved ticket for the increase in cost. I need to check if the server is still running.\", \"tool\": \"usage\", \"args\": {\"resource\": \"bi-egress\", \"around_date\": \"2026-06-21\"}}",
+      "thought": "There is no approved ticket for the increase in cost. I need to check if the server is still running.",
+      "tool": "usage",
+      "args": {
+        "resource": "bi-egress",
+        "around_date": "2026-06-21"
+      },
+      "result": "(no usage metrics \u2014 not a server, or never running)"
+    },
+    {
+      "step": 4,
+      "seconds": 4.7,
+      "raw": "{\"thought\": \"The resource is a data transfer resource with a significant increase in cost, but there are no usage metrics indicating it's running. This suggests it might be a billing anomaly.\", \"final\": {\n    \"type\": \"other\",\n    \"owner_team\": \"analytics\",\n    \"action\": \"no_action\",\n    \"start_date\": \"2026-06-21\",\n    \"confidence\": 0.8,\n    \"explanation\": \"The resource has no usage metrics, indicating it might be a billing anomaly.\",\n    \"evidence\": [\"no usage metrics\", \"significant increase in cost\"],\n    \"owner_message\": \"\"\n}}",
+      "thought": "The resource is a data transfer resource with a significant increase in cost, but there are no usage metrics indicating it's running. This suggests it might be a billing anomaly.",
+      "final": {
+        "type": "other",
+        "owner_team": "analytics",
+        "action": "no_action",
+        "start_date": "2026-06-21",
+        "confidence": 0.8,
+        "explanation": "The resource has no usage metrics, indicating it might be a billing anomaly.",
+        "evidence": [
+          "no usage metrics",
+          "significant increase in cost"
+        ],
+        "owner_message": ""
+      }
+    }
+  ]
+}

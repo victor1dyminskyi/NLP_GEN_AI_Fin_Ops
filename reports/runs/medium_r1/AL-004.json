@@ -1,0 +1,107 @@
+{
+  "alert": {
+    "alert_id": "AL-004",
+    "resource": "ml-train-37",
+    "account": "ml-dev",
+    "rule": "new_resource",
+    "start_date": "2026-06-06 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 135.97,
+    "extra_usd_day": 135.97,
+    "usage_effect": 135.97,
+    "price_effect": 0.0,
+    "related": NaN,
+    "resource_kind": "gpu_server"
+  },
+  "resource": "ml-train-37",
+  "form": {
+    "type": "other",
+    "owner_team": "ml",
+    "action": "no_action",
+    "start_date": "2026-06-06",
+    "confidence": 0.9,
+    "explanation": "The server was terminated before the end of the approved training run, which is unusual.",
+    "evidence": [
+      "The server was terminated on 2026-06-08",
+      "The training run was approved for 3 days"
+    ],
+    "owner_message": ""
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": true,
+    "status": "escalated_to_human"
+  },
+  "model": "finops-agent",
+  "llm_calls": 5,
+  "tool_calls": 4,
+  "form_fixes": 0,
+  "seconds": 15.3,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"ml-train-37\"}}",
+      "thought": "The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "ml-train-37"
+      },
+      "result": "{\"ResourceName\": \"ml-train-37\", \"ResourceId\": \"i-0fcb04fe2454ba87f\", \"account\": \"ml-dev\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$5.672 per On Demand Linux g5.12xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"ml\\\", \\\"application\\\": \\\"training\\\", \\\"environment\\\": \\\"dev\\\"}\", \"first_billed\": \"2026-06-06\", \"last_billed\": \"2026-06-08\", \"avg_cost_per_day\": 135.83, \"account_team\": \"ml\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 3.0,
+      "raw": "{\"thought\": \"The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.\", \"tool\": \"usage\", \"args\": {\"resource\": \"ml-train-37\", \"around_date\": \"2026-06-08\"}}",
+      "thought": "The resource is a GPU server with a significant cost spike. I need to determine if it's still busy and if there's an approved ticket.",
+      "tool": "usage",
+      "args": {
+        "resource": "ml-train-37",
+        "around_date": "2026-06-08"
+      },
+      "result": "CHANGE: GPU busy: 86.7% before \u2192 64.0% after (1 days after); CPU busy: 25.3% before \u2192 36.6% after (1 days after)\nperiod,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nbefore,2,25.3,86.7,87.8,1\nafter,1,36.6,64,64,1\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"The GPU server is still busy, but the cost spike is not explained by increased usage. I need to check for an approved ticket.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"ml-train-37\"}}",
+      "thought": "The GPU server is still busy, but the cost spike is not explained by increased usage. I need to check for an approved ticket.",
+      "tool": "change_events",
+      "args": {
+        "resource": "ml-train-37"
+      },
+      "result": "TICKETS: CHG-5835: approved training run, 3 days\nevent_time,event_name,actor,ticket,details\n2026-06-06 09:00:00,RunInstances,omar.haddad,\"CHG-5835: approved training run, 3 days\",\n2026-06-08 18:00:00,TerminateInstances,omar.haddad,\"CHG-5835: approved training run, 3 days\",\n"
+    },
+    {
+      "step": 4,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"The cost spike is explained by an approved training run, but the server was terminated before the end of the run. This is unusual.\", \"tool\": \"get_owner\", \"args\": {\"account\": \"ml-dev\"}}",
+      "thought": "The cost spike is explained by an approved training run, but the server was terminated before the end of the run. This is unusual.",
+      "tool": "get_owner",
+      "args": {
+        "account": "ml-dev"
+      },
+      "result": "team,owner,email,slack\nml,Omar Haddad,ml-team@demoshop.example,#team-ml\n"
+    },
+    {
+      "step": 5,
+      "seconds": 5.3,
+      "raw": "{\"thought\": \"The cost spike is explained by an approved training run, but the server was terminated before the end of the run. This is unusual.\", \"final\": {\n     \"type\": \"other\",\n     \"owner_team\": \"ml\",\n     \"action\": \"no_action\",\n     \"start_date\": \"2026-06-06\",\n     \"confidence\": 0.9,\n     \"explanation\": \"The server was terminated before the end of the approved training run, which is unusual.\",\n     \"evidence\": [\"The server was terminated on 2026-06-08\", \"The training run was approved for 3 days\"],\n     \"owner_message\": \"\"\n}}",
+      "thought": "The cost spike is explained by an approved training run, but the server was terminated before the end of the run. This is unusual.",
+      "final": {
+        "type": "other",
+        "owner_team": "ml",
+        "action": "no_action",
+        "start_date": "2026-06-06",
+        "confidence": 0.9,
+        "explanation": "The server was terminated before the end of the approved training run, which is unusual.",
+        "evidence": [
+          "The server was terminated on 2026-06-08",
+          "The training run was approved for 3 days"
+        ],
+        "owner_message": ""
+      }
+    }
+  ]
+}

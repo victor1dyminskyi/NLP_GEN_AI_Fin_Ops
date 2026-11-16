@@ -1,0 +1,418 @@
+# GENERATED — do not edit. Source: world.yaml + real spending mix.
+company:
+  name: DemoShop
+  billing_account_id: '900000000001'
+  currency: USD
+period:
+  start: 2026-03-01
+  end: 2026-08-31
+  seed: 42
+weekday_profiles:
+  flat:
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  shop_traffic:
+  - 0.95
+  - 0.95
+  - 0.95
+  - 1.0
+  - 1.05
+  - 1.15
+  - 1.15
+  office_hours:
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 1.0
+  - 0.35
+  - 0.35
+noise_defaults:
+  hourly: 0.01
+  storage: 0.005
+  transfer: 0.15
+teams:
+  storefront:
+    owner: Alex Moreno
+    email: storefront-team@demoshop.example
+    slack: '#team-storefront'
+  payments:
+    owner: Priya Nair
+    email: payments-team@demoshop.example
+    slack: '#team-payments'
+  platform:
+    owner: Jonas Weber
+    email: platform-team@demoshop.example
+    slack: '#team-platform'
+  data:
+    owner: Mei Lin
+    email: data-team@demoshop.example
+    slack: '#team-data'
+  ml:
+    owner: Omar Haddad
+    email: ml-team@demoshop.example
+    slack: '#team-ml'
+  analytics:
+    owner: Sofia Rossi
+    email: analytics-team@demoshop.example
+    slack: '#team-analytics'
+accounts:
+  storefront-prod:
+    id: '900000000101'
+    team: storefront
+    env: prod
+  storefront-dev:
+    id: '900000000102'
+    team: storefront
+    env: dev
+  payments-prod:
+    id: '900000000201'
+    team: payments
+    env: prod
+  platform-shared:
+    id: '900000000301'
+    team: platform
+    env: prod
+  data-prod:
+    id: '900000000401'
+    team: data
+    env: prod
+  ml-prod:
+    id: '900000000501'
+    team: ml
+    env: prod
+  ml-dev:
+    id: '900000000502'
+    team: ml
+    env: dev
+  analytics-prod:
+    id: '900000000601'
+    team: analytics
+    env: prod
+resources:
+- id: sf-web-asg
+  account: storefront-prod
+  sku: ec2_c5_2xlarge
+  base_qty: 24
+  count: 20
+  profile: flat
+  noise: 0.05
+  app: web
+  bucket: compute_cpu
+- id: sf-api-asg
+  account: storefront-prod
+  sku: ec2_m5_xlarge
+  base_qty: 24
+  count: 13
+  profile: flat
+  noise: 0.05
+  app: api
+  bucket: compute_cpu
+- id: sf-cache
+  account: storefront-prod
+  sku: ec2_r5_xlarge
+  base_qty: 24
+  count: 7
+  profile: flat
+  app: cache
+  bucket: compute_cpu
+- id: sf-alb
+  account: storefront-prod
+  sku: alb_hours
+  base_qty: 24
+  profile: flat
+  app: web
+  bucket: network_fixed
+- id: sf-ebs
+  account: storefront-prod
+  sku: ebs_gp3
+  base_qty: 2489.31
+  profile: flat
+  app: web
+  bucket: block_storage
+- id: sf-egress
+  account: storefront-prod
+  sku: dt_out_internet
+  base_qty: 105.71
+  profile: shop_traffic
+  app: web
+  bucket: data_transfer
+- id: sf-logs
+  account: storefront-prod
+  sku: cw_logs_ingest
+  base_qty: 8.89
+  profile: shop_traffic
+  app: web
+  bucket: logs
+- id: sf-dev-web
+  account: storefront-dev
+  sku: ec2_t3_medium
+  base_qty: 24
+  count: 13
+  profile: office_hours
+  app: web
+  bucket: compute_cpu
+- id: sf-dev-db
+  account: storefront-dev
+  sku: rds_m5_large_pg
+  base_qty: 24
+  profile: flat
+  app: web
+  bucket: databases
+- id: pay-api
+  account: payments-prod
+  sku: ec2_m5_large
+  base_qty: 24
+  count: 13
+  profile: flat
+  app: checkout
+  bucket: compute_cpu
+- id: pay-alb
+  account: payments-prod
+  sku: alb_hours
+  base_qty: 24
+  profile: flat
+  app: checkout
+  bucket: network_fixed
+- id: pay-db
+  account: payments-prod
+  sku: rds_m5_large_multiaz_mysql
+  base_qty: 24
+  profile: flat
+  app: checkout
+  bucket: databases
+- id: pay-db-snap
+  account: payments-prod
+  sku: ebs_snapshot
+  base_qty: 622.33
+  growth_per_month: 0.03
+  profile: flat
+  app: checkout
+  bucket: block_storage
+- id: pay-logs
+  account: payments-prod
+  sku: cw_logs_ingest
+  base_qty: 2.22
+  profile: shop_traffic
+  app: checkout
+  bucket: logs
+- id: plat-nat-a
+  account: platform-shared
+  sku: nat_hours
+  base_qty: 24
+  profile: flat
+  app: network
+  bucket: network_fixed
+- id: plat-nat-b
+  account: platform-shared
+  sku: nat_hours
+  base_qty: 24
+  profile: flat
+  app: network
+  bucket: network_fixed
+- id: plat-nat-traffic
+  account: platform-shared
+  sku: nat_gb
+  base_qty: 79.28
+  profile: shop_traffic
+  app: network
+  bucket: data_transfer
+- id: plat-inter-az
+  account: platform-shared
+  sku: dt_inter_az
+  base_qty: 528.56
+  profile: shop_traffic
+  app: network
+  bucket: data_transfer
+- id: plat-bastion
+  account: platform-shared
+  sku: ec2_t3_medium
+  base_qty: 24
+  profile: flat
+  app: access
+  bucket: compute_cpu
+- id: plat-monitoring
+  account: platform-shared
+  sku: ec2_m5_large
+  base_qty: 24
+  count: 7
+  profile: flat
+  app: monitoring
+  bucket: compute_cpu
+- id: plat-log-archive
+  account: platform-shared
+  sku: s3_standard
+  base_qty: 187.05
+  growth_per_month: 0.05
+  profile: flat
+  app: logging
+  bucket: object_storage
+- id: data-etl-workers
+  account: data-prod
+  sku: ec2_r5_xlarge
+  base_qty: 24
+  count: 13
+  profile: flat
+  app: etl
+  workload: batch
+  bucket: compute_cpu
+- id: data-warehouse
+  account: data-prod
+  sku: rds_m5_large_pg
+  base_qty: 24
+  count: 2
+  profile: flat
+  app: warehouse
+  bucket: databases
+- id: data-lake
+  account: data-prod
+  sku: s3_standard
+  base_qty: 997.61
+  growth_per_month: 0.04
+  profile: flat
+  app: lake
+  bucket: object_storage
+- id: data-replication
+  account: data-prod
+  sku: dt_inter_region
+  base_qty: 39.64
+  profile: flat
+  noise: 0.1
+  app: lake
+  bucket: data_transfer
+- id: data-ebs
+  account: data-prod
+  sku: ebs_gp3
+  base_qty: 4978.62
+  profile: flat
+  app: etl
+  bucket: block_storage
+- id: ml-inference
+  account: ml-prod
+  sku: ec2_g5_4xlarge
+  base_qty: 24
+  count: 4
+  profile: flat
+  app: recommender
+  bucket: compute_gpu
+- id: ml-feature-store
+  account: ml-prod
+  sku: ec2_r5_xlarge
+  base_qty: 24
+  count: 7
+  profile: flat
+  app: recommender
+  bucket: compute_cpu
+- id: ml-models-s3
+  account: ml-prod
+  sku: s3_standard
+  base_qty: 62.35
+  growth_per_month: 0.06
+  profile: flat
+  app: recommender
+  bucket: object_storage
+- id: ml-inference-logs
+  account: ml-prod
+  sku: cw_logs_ingest
+  base_qty: 3.56
+  profile: shop_traffic
+  app: recommender
+  bucket: logs
+- id: ml-notebooks
+  account: ml-dev
+  sku: ec2_m5_2xlarge
+  base_qty: 24
+  count: 7
+  profile: office_hours
+  app: research
+  bucket: compute_cpu
+- id: ml-dev-ebs
+  account: ml-dev
+  sku: ebs_gp3
+  base_qty: 1866.98
+  profile: flat
+  app: research
+  bucket: block_storage
+- id: bi-server
+  account: analytics-prod
+  sku: ec2_m5_xlarge
+  base_qty: 24
+  count: 7
+  profile: flat
+  app: dashboards
+  bucket: compute_cpu
+- id: bi-db
+  account: analytics-prod
+  sku: rds_m5_large_pg
+  base_qty: 24
+  profile: flat
+  app: dashboards
+  bucket: databases
+- id: bi-extracts
+  account: analytics-prod
+  sku: s3_standard
+  base_qty: 37.41
+  growth_per_month: 0.02
+  profile: flat
+  app: dashboards
+  bucket: object_storage
+- id: bi-egress
+  account: analytics-prod
+  sku: dt_out_internet
+  base_qty: 7.93
+  profile: office_hours
+  app: dashboards
+  bucket: data_transfer
+- id: legacy-ftp
+  account: platform-shared
+  sku: ec2_t3_medium
+  base_qty: 24
+  profile: flat
+  tags: false
+  bucket: compute_cpu
+- id: old-snapshots
+  account: data-prod
+  sku: ebs_snapshot
+  base_qty: 3733.96
+  profile: flat
+  tags: false
+  bucket: block_storage
+commitments:
+- id: sp-compute-2025
+  type: Savings Plan
+  discount: 0.3
+  covers:
+  - sf-web-asg
+  - sf-api-asg
+  - data-etl-workers
+  start: 2025-09-01
+  managed_by: platform
+  end: 2026-09-01
+utilization:
+  gpu_inference_median: 20
+  daily_noise: 0.15
+change_log:
+  history_days_before_start: 365
+  legacy_actor: legacy-admin
+  scheduler_actor: instance-scheduler
+calibration:
+  source: data/raw/focus_sample_100000.csv.gz (AWS usage rows, modeled groups only)
+  target_shares:
+    compute_cpu: 0.6367
+    compute_gpu: 0.2296
+    block_storage: 0.0476
+    data_transfer: 0.0304
+    databases: 0.0216
+    network_fixed: 0.0212
+    logs: 0.0113
+    object_storage: 0.0015
+  implied_total_monthly_usd: 20271.0
+  compute_fleet_factor_k:
+    compute_cpu: 3.256
+    compute_gpu: 1.962
+  note: Generated by src/data_gen/calibrate_world.py — edit world.yaml, not this file.

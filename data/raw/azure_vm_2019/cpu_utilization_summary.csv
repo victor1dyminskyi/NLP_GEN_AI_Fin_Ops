@@ -1,0 +1,5 @@
+category,vms,avg_cpu_p25,avg_cpu_p50,avg_cpu_p75,p95max_cpu_p50
+ALL,237558,3.1,5.9,10.7,25.3
+Delay-insensitive,159098,2.8,5.7,10.1,27.6
+Interactive,78244,3.7,6.4,14.5,21.4
+Unknown,216,1.3,1.9,4.4,11.2

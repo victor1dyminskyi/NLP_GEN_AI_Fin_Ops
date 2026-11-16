@@ -1,0 +1,5 @@
+AL-001 plat-inter-az            form identical: True · every step identical: True
+AL-002 ml-train-72              form identical: True · every step identical: True
+AL-003 plat-nat-traffic         form identical: True · every step identical: True
+
+3/3 investigations reproduced exactly.

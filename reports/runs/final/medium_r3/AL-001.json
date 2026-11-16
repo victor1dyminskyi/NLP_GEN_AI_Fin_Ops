@@ -1,0 +1,106 @@
+{
+  "alert": {
+    "alert_id": "AL-001",
+    "resource": "plat-inter-az",
+    "account": "platform-shared",
+    "rule": "usage",
+    "start_date": "2026-04-25 00:00:00",
+    "score": 4.6,
+    "normal_usd_day": 5.94,
+    "current_usd_day": 12.24,
+    "extra_usd_day": 6.3,
+    "usage_effect": 6.3,
+    "price_effect": -0.0,
+    "resource_kind": "data_transfer"
+  },
+  "resource": "plat-inter-az",
+  "form": {
+    "type": "transfer_spike",
+    "owner_team": "platform",
+    "action": "notify_owner_open_ticket",
+    "start_date": "2026-04-25",
+    "confidence": 0.9,
+    "explanation": "The cost increased by 1224 GB on 2026-04-25, which is a significant spike. There's no approved ticket for this increase.",
+    "evidence": [
+      "The cost increased by 1224 GB on 2026-04-25.",
+      "No approved ticket for this increase."
+    ],
+    "owner_message": "The data transfer cost for plat-inter-az has increased sharply on 2026-04-25. Please review and open a ticket if this is an approved change."
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "auto_executed (simulated)"
+  },
+  "model": "finops-agent",
+  "llm_calls": 5,
+  "tool_calls": 4,
+  "form_fixes": 0,
+  "seconds": 19.2,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"The resource is a data transfer, which is unusual for a server. Let's check if it's a disk or a network transfer.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"plat-inter-az\"}}",
+      "thought": "The resource is a data transfer, which is unusual for a server. Let's check if it's a disk or a network transfer.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "plat-inter-az"
+      },
+      "result": "{\"ResourceName\": \"plat-inter-az\", \"ResourceId\": \"plat-inter-az-acc41810\", \"account\": \"platform-shared\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.010 per GB - regional data transfer - in/out/between EC2 AZs or using elastic IPs or ELB\", \"tags\": \"{\\\"team\\\": \\\"platform\\\", \\\"application\\\": \\\"network\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 9.31, \"account_team\": \"platform\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The resource is a network data transfer, not a server. Let's check if there's an approved ticket for this increase.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"plat-inter-az\"}}",
+      "thought": "The resource is a network data transfer, not a server. Let's check if there's an approved ticket for this increase.",
+      "tool": "change_events",
+      "args": {
+        "resource": "plat-inter-az"
+      },
+      "result": "TICKETS: none\n(no create/delete/ticket events)"
+    },
+    {
+      "step": 3,
+      "seconds": 1.7,
+      "raw": "{\"thought\": \"There's no approved ticket for this increase. Let's check if the server it's attached to is still running.\", \"tool\": \"attached_server\", \"args\": {\"volume\": \"plat-inter-az\"}}",
+      "thought": "There's no approved ticket for this increase. Let's check if the server it's attached to is still running.",
+      "tool": "attached_server",
+      "args": {
+        "volume": "plat-inter-az"
+      },
+      "result": "No AttachVolume event for this resource."
+    },
+    {
+      "step": 4,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"The resource is a network data transfer and there's no attached server. Let's check if it's still billed.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"plat-inter-az\", \"around_date\": \"2026-04-25\"}}",
+      "thought": "The resource is a network data transfer and there's no attached server. Let's check if it's still billed.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "plat-inter-az",
+        "around_date": "2026-04-25"
+      },
+      "result": "CHANGE from 2026-04-25: cost 70.6%, quantity 70.6%, price per unit 0.0%; pricing Standard \u2192 Standard; quantity reached its new level after 1 day(s)\nSUMMARY {\"avg_cost_before\": 6.33, \"avg_cost_after\": 10.8, \"avg_quantity_before\": 633.1, \"avg_quantity_after\": 1080.2, \"unit_price_before\": 0.01, \"unit_price_after\": 0.01, \"pricing_before\": \"Standard\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-04-22,7.03,703.1,GB,0.01,Standard,\n2026-04-23,8.53,853.3,GB,0.01,Standard,\n2026-04-24,9.72,972.4,GB,0.01,Standard,\n2026-04-25,12.24,1224,GB,0.01,Standard,\n2026-04-26,10.31,1031,GB,0.01,Standard,\n2026-04-27,7.48,747.8,GB,0.01,Standard,\n2026-04-28,12.65,1265,GB,0.01,Standard,\n2026-04-29,7.97,797.4,GB,0.01,Standard,\n2026-04-30,12.34,1234,GB,0.01,Standard,\n2026-05-01,9.87,986.9,GB,0.01,Standard,\n2026-05-02,13.14,1314,GB,0.01,Standard,\n2026-05-03,15.69,1569,GB,0.01,Standard,\n2026-05-04,9,900.2,GB,0.01,Standard,\n2026-05-05,9.65,964.5,GB,0.01,Standard,\n2026-05-06,9.66,966.3,GB,0.01,Standard,\n2026-05-07,9.44,944.5,GB,0.01,Standard,\n2026-05-08,13.9,1390,GB,0.01,Standard,\n2026-05-09,8.68,867.5,GB,0.01,Standard,\n"
+    },
+    {
+      "step": 5,
+      "seconds": 10.5,
+      "raw": "{\"thought\": \"The data transfer cost increased sharply on 2026-04-25 and has remained high since. There's no approved ticket for this increase.\", \"final\": {\n    \"type\": \"transfer_spike\",\n    \"owner_team\": \"platform\",\n    \"action\": \"notify_owner_open_ticket\",\n    \"start_date\": \"2026-04-25\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The cost increased by 1224 GB on 2026-04-25, which is a significant spike. There's no approved ticket for this increase.\",\n    \"evidence\": [\"The cost increased by 1224 GB on 2026-04-25.\", \"No approved ticket for this increase.\"],\n    \"owner_message\": \"The data transfer cost for plat-inter-az has increased sharply on 2026-04-25. Please review and open a ticket if this is an approved change.\"\n}}",
+      "thought": "The data transfer cost increased sharply on 2026-04-25 and has remained high since. There's no approved ticket for this increase.",
+      "final": {
+        "type": "transfer_spike",
+        "owner_team": "platform",
+        "action": "notify_owner_open_ticket",
+        "start_date": "2026-04-25",
+        "confidence": 0.9,
+        "explanation": "The cost increased by 1224 GB on 2026-04-25, which is a significant spike. There's no approved ticket for this increase.",
+        "evidence": [
+          "The cost increased by 1224 GB on 2026-04-25.",
+          "No approved ticket for this increase."
+        ],
+        "owner_message": "The data transfer cost for plat-inter-az has increased sharply on 2026-04-25. Please review and open a ticket if this is an approved change."
+      }
+    }
+  ]
+}

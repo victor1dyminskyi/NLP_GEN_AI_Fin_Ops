@@ -1,0 +1,122 @@
+{
+  "alert": {
+    "alert_id": "AL-010",
+    "resource": "sf-api-asg",
+    "account": "storefront-prod",
+    "rule": "price+usage",
+    "start_date": "2026-07-24 00:00:00",
+    "score": 9.2,
+    "normal_usd_day": 42.46,
+    "current_usd_day": 61.79,
+    "extra_usd_day": 19.33,
+    "usage_effect": 0.79,
+    "price_effect": 18.54,
+    "related": NaN
+  },
+  "resource": "sf-api-asg",
+  "form": {
+    "type": "sp_expired",
+    "owner_team": "platform",
+    "action": "recommend_sp_renewal",
+    "start_date": "2026-07-24",
+    "confidence": 0.9,
+    "explanation": "The price per unit increased from $0.1344 to $0.192 while usage remained at 313.6 hours. The Savings Plan 'sp-compute-2025' expired on 2026-07-24.",
+    "evidence": [
+      "unit_price_before: 0.1344",
+      "unit_price_after: 0.192",
+      "PricingCategory_before: Committed",
+      "PricingCategory_after: Standard",
+      "commitment_end: 2026-07-24"
+    ]
+  },
+  "gate": {
+    "needs_approval": true,
+    "escalated": false,
+    "status": "awaiting_approval"
+  },
+  "model": "finops-agent",
+  "llm_calls": 6,
+  "tool_calls": 5,
+  "form_fixes": 0,
+  "seconds": 21.6,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.0,
+      "raw": "{\"thought\": \"Investigate the resource 'sf-api-asg' in the 'storefront-prod' account.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"sf-api-asg\"}}",
+      "thought": "Investigate the resource 'sf-api-asg' in the 'storefront-prod' account.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "sf-api-asg"
+      },
+      "result": "{\"ResourceName\": \"sf-api-asg\", \"ResourceId\": \"i-05e3fdfbef0b29ce3\", \"account\": \"storefront-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.192 per On Demand Linux m5.xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"storefront\\\", \\\"application\\\": \\\"api\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 46.13, \"account_team\": \"storefront\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"Check the change events for 'sf-api-asg' to see if it was created or modified recently.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-api-asg\"}}",
+      "thought": "Check the change events for 'sf-api-asg' to see if it was created or modified recently.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-api-asg"
+      },
+      "result": "event_time,event_name,actor,ticket,details\n2025-10-30 18:32:00,RunInstances,alex.moreno,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"Check the cost history for 'sf-api-asg' around the alert date to see if there were any significant changes.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"sf-api-asg\", \"around_date\": \"2026-07-24\"}}",
+      "thought": "Check the cost history for 'sf-api-asg' around the alert date to see if there were any significant changes.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "sf-api-asg",
+        "around_date": "2026-07-24"
+      },
+      "result": "SUMMARY {\"avg_cost_before\": 42.11, \"avg_cost_after\": 60.21, \"avg_quantity_before\": 313.33, \"avg_quantity_after\": 313.6, \"unit_price_before\": 0.1344, \"unit_price_after\": 0.192, \"pricing_before\": \"Committed\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-07-21,42.99,319.8,Hours,0.1344,Committed,sp-compute-2025\n2026-07-22,42.29,314.6,Hours,0.1344,Committed,sp-compute-2025\n2026-07-23,41.96,312.2,Hours,0.1344,Committed,sp-compute-2025\n2026-07-24,61.79,321.9,Hours,0.192,Standard,\n2026-07-25,57.51,299.5,Hours,0.192,Standard,\n2026-07-26,60.26,313.8,Hours,0.192,Standard,\n2026-07-27,65.14,339.3,Hours,0.192,Standard,\n2026-07-28,62.28,324.4,Hours,0.192,Standard,\n2026-07-29,59.81,311.5,Hours,0.192,Standard,\n2026-07-30,53.9,280.7,Hours,0.192,Standard,\n2026-07-31,61.22,318.9,Hours,0.192,Standard,\n2026-08-01,59.94,312.2,Hours,0.192,Standard,\n2026-08-02,60.85,316.9,Hours,0.192,Standard,\n2026-08-03,56.63,294.9,Hours,0.192,Standard,\n2026-08-04,61.86,322.2,Hours,0.192,Standard,\n2026-08-05,62.5,325.5,Hours,0.192,Standard,\n2026-08-06,61.14,318.4,Hours,0.192,Standard,\n2026-08-07,58.32,303.8,Hours,0.192,Standard,\n"
+    },
+    {
+      "step": 4,
+      "seconds": 5.0,
+      "raw": "{\"thought\": \"Check the usage metrics for 'sf-api-asg' around the alert date to see if it was busy or idle.\", \"tool\": \"usage\", \"args\": {\"resource\": \"sf-api-asg\", \"around_date\": \"2026-07-24\"}}",
+      "thought": "Check the usage metrics for 'sf-api-asg' around the alert date to see if it was busy or idle.",
+      "tool": "usage",
+      "args": {
+        "resource": "sf-api-asg",
+        "around_date": "2026-07-24"
+      },
+      "result": "period,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nbefore,145,17.1,,,13.1\nafter,39,16.8,,,13.2\n"
+    },
+    {
+      "step": 5,
+      "seconds": 2.1,
+      "raw": "{\"thought\": \"Check the commitment status for 'sf-api-asg' to see if the price per unit changed due to a Savings Plan expiration.\", \"tool\": \"commitment_status\", \"args\": {\"resource\": \"sf-api-asg\"}}",
+      "thought": "Check the commitment status for 'sf-api-asg' to see if the price per unit changed due to a Savings Plan expiration.",
+      "tool": "commitment_status",
+      "args": {
+        "resource": "sf-api-asg"
+      },
+      "result": "commitment_id,type,discount,start,end,managed_by\nsp-compute-2025,Savings Plan,0.3,2025-09-01,2026-07-24,platform\n"
+    },
+    {
+      "step": 6,
+      "seconds": 7.9,
+      "raw": "{\"thought\": \"The price per unit increased while usage stayed the same, and the Savings Plan expired. This is a potential issue.\", \"final\": {\n    \"type\": \"sp_expired\",\n    \"owner_team\": \"platform\",\n    \"action\": \"recommend_sp_renewal\",\n    \"start_date\": \"2026-07-24\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The price per unit increased from $0.1344 to $0.192 while usage remained at 313.6 hours. The Savings Plan 'sp-compute-2025' expired on 2026-07-24.\",\n    \"evidence\": [\"unit_price_before: 0.1344\", \"unit_price_after: 0.192\", \"PricingCategory_before: Committed\", \"PricingCategory_after: Standard\", \"commitment_end: 2026-07-24\"]\n}}",
+      "thought": "The price per unit increased while usage stayed the same, and the Savings Plan expired. This is a potential issue.",
+      "final": {
+        "type": "sp_expired",
+        "owner_team": "platform",
+        "action": "recommend_sp_renewal",
+        "start_date": "2026-07-24",
+        "confidence": 0.9,
+        "explanation": "The price per unit increased from $0.1344 to $0.192 while usage remained at 313.6 hours. The Savings Plan 'sp-compute-2025' expired on 2026-07-24.",
+        "evidence": [
+          "unit_price_before: 0.1344",
+          "unit_price_after: 0.192",
+          "PricingCategory_before: Committed",
+          "PricingCategory_after: Standard",
+          "commitment_end: 2026-07-24"
+        ]
+      }
+    }
+  ]
+}

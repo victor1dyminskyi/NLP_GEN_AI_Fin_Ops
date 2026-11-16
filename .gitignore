@@ -1,0 +1,7 @@
+data/raw/azure_vm_2019/vmtable.csv.gz
+.venv/
+__pycache__/
+.pytest_cache/
+.DS_Store
+.env
+reports/app.log

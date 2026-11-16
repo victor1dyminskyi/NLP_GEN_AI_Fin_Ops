@@ -1,0 +1,122 @@
+{
+  "alert": {
+    "alert_id": "AL-009",
+    "resource": "data-etl-workers",
+    "account": "data-prod",
+    "rule": "price+usage",
+    "start_date": "2026-07-24 00:00:00",
+    "score": 42.9,
+    "normal_usd_day": 55.03,
+    "current_usd_day": 78.62,
+    "extra_usd_day": 23.59,
+    "usage_effect": 0.0,
+    "price_effect": 23.59,
+    "related": NaN
+  },
+  "resource": "data-etl-workers",
+  "form": {
+    "type": "sp_expired",
+    "owner_team": "platform",
+    "action": "recommend_sp_renewal",
+    "start_date": "2026-07-24",
+    "confidence": 0.9,
+    "explanation": "The price per unit increased from $0.1764 to $0.252 while usage remained at 312 hours. The Savings Plan expired on 2026-07-24.",
+    "evidence": [
+      "unit_price_before: 0.1764",
+      "unit_price_after: 0.252",
+      "PricingCategory_before: Committed",
+      "PricingCategory_after: Standard",
+      "commitment_end: 2026-07-24"
+    ]
+  },
+  "gate": {
+    "needs_approval": true,
+    "escalated": false,
+    "status": "awaiting_approval"
+  },
+  "model": "finops-agent",
+  "llm_calls": 6,
+  "tool_calls": 5,
+  "form_fixes": 0,
+  "seconds": 20.8,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.0,
+      "raw": "{\"thought\": \"Investigate the resource 'data-etl-workers' in the 'data-prod' account.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"data-etl-workers\"}}",
+      "thought": "Investigate the resource 'data-etl-workers' in the 'data-prod' account.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "data-etl-workers"
+      },
+      "result": "{\"ResourceName\": \"data-etl-workers\", \"ResourceId\": \"i-09223657f9dcb7d34\", \"account\": \"data-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.252 per On Demand Linux r5.xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"data\\\", \\\"application\\\": \\\"etl\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 59.76, \"account_team\": \"data\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"Check the change events for 'data-etl-workers' to see if it was created or modified recently.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"data-etl-workers\"}}",
+      "thought": "Check the change events for 'data-etl-workers' to see if it was created or modified recently.",
+      "tool": "change_events",
+      "args": {
+        "resource": "data-etl-workers"
+      },
+      "result": "event_time,event_name,actor,ticket,details\n2025-12-23 17:24:00,RunInstances,mei.lin,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"Check the cost history around the alert date to see if there was a change in quantity or price per unit.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"data-etl-workers\", \"around_date\": \"2026-07-24\"}}",
+      "thought": "Check the cost history around the alert date to see if there was a change in quantity or price per unit.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "data-etl-workers",
+        "around_date": "2026-07-24"
+      },
+      "result": "SUMMARY {\"avg_cost_before\": 54.78, \"avg_cost_after\": 78.2, \"avg_quantity_before\": 310.55, \"avg_quantity_after\": 310.34, \"unit_price_before\": 0.1764, \"unit_price_after\": 0.252, \"pricing_before\": \"Committed\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-07-21,53.97,306,Hours,0.1764,Committed,sp-compute-2025\n2026-07-22,55.04,312,Hours,0.1764,Committed,sp-compute-2025\n2026-07-23,55.04,312,Hours,0.1764,Committed,sp-compute-2025\n2026-07-24,78.62,312,Hours,0.252,Standard,\n2026-07-25,77.19,306.3,Hours,0.252,Standard,\n2026-07-26,78.45,311.3,Hours,0.252,Standard,\n2026-07-27,78.62,312,Hours,0.252,Standard,\n2026-07-28,78.62,312,Hours,0.252,Standard,\n2026-07-29,78.62,312,Hours,0.252,Standard,\n2026-07-30,78.62,312,Hours,0.252,Standard,\n2026-07-31,77.99,309.5,Hours,0.252,Standard,\n2026-08-01,77.76,308.6,Hours,0.252,Standard,\n2026-08-02,78.2,310.3,Hours,0.252,Standard,\n2026-08-03,77.43,307.2,Hours,0.252,Standard,\n2026-08-04,78.62,312,Hours,0.252,Standard,\n2026-08-05,78.19,310.3,Hours,0.252,Standard,\n2026-08-06,78.62,312,Hours,0.252,Standard,\n2026-08-07,77.52,307.6,Hours,0.252,Standard,\n"
+    },
+    {
+      "step": 4,
+      "seconds": 4.9,
+      "raw": "{\"thought\": \"Check the usage for 'data-etl-workers' to see if it was busy or idle on the alert date.\", \"tool\": \"usage\", \"args\": {\"resource\": \"data-etl-workers\", \"around_date\": \"2026-07-24\"}}",
+      "thought": "Check the usage for 'data-etl-workers' to see if it was busy or idle on the alert date.",
+      "tool": "usage",
+      "args": {
+        "resource": "data-etl-workers",
+        "around_date": "2026-07-24"
+      },
+      "result": "period,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nbefore,145,6.2,,,12.9\nafter,39,6.1,,,12.9\n"
+    },
+    {
+      "step": 5,
+      "seconds": 2.0,
+      "raw": "{\"thought\": \"Check the commitment status for 'data-etl-workers' to see if the price per unit changed due to a Savings Plan expiration.\", \"tool\": \"commitment_status\", \"args\": {\"resource\": \"data-etl-workers\"}}",
+      "thought": "Check the commitment status for 'data-etl-workers' to see if the price per unit changed due to a Savings Plan expiration.",
+      "tool": "commitment_status",
+      "args": {
+        "resource": "data-etl-workers"
+      },
+      "result": "commitment_id,type,discount,start,end,managed_by\nsp-compute-2025,Savings Plan,0.3,2025-09-01,2026-07-24,platform\n"
+    },
+    {
+      "step": 6,
+      "seconds": 7.4,
+      "raw": "{\"thought\": \"The price per unit increased while usage stayed the same, and the Savings Plan expired. This is a potential issue.\", \"final\": {\n    \"type\": \"sp_expired\",\n    \"owner_team\": \"platform\",\n    \"action\": \"recommend_sp_renewal\",\n    \"start_date\": \"2026-07-24\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The price per unit increased from $0.1764 to $0.252 while usage remained at 312 hours. The Savings Plan expired on 2026-07-24.\",\n    \"evidence\": [\"unit_price_before: 0.1764\", \"unit_price_after: 0.252\", \"PricingCategory_before: Committed\", \"PricingCategory_after: Standard\", \"commitment_end: 2026-07-24\"]\n}}",
+      "thought": "The price per unit increased while usage stayed the same, and the Savings Plan expired. This is a potential issue.",
+      "final": {
+        "type": "sp_expired",
+        "owner_team": "platform",
+        "action": "recommend_sp_renewal",
+        "start_date": "2026-07-24",
+        "confidence": 0.9,
+        "explanation": "The price per unit increased from $0.1764 to $0.252 while usage remained at 312 hours. The Savings Plan expired on 2026-07-24.",
+        "evidence": [
+          "unit_price_before: 0.1764",
+          "unit_price_after: 0.252",
+          "PricingCategory_before: Committed",
+          "PricingCategory_after: Standard",
+          "commitment_end: 2026-07-24"
+        ]
+      }
+    }
+  ]
+}

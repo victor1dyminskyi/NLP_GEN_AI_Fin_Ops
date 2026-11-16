@@ -1,0 +1,665 @@
+{
+  "params": {
+    "window_days": 28,
+    "price_change": 0.05,
+    "z": 3,
+    "k": 2,
+    "min_usd": 0.5,
+    "orphan_rule": true
+  },
+  "grid": [
+    {
+      "z": 3,
+      "k": 2,
+      "min_usd": 0.5,
+      "mean_f1": 0.847,
+      "mean_catch": 0.8796,
+      "alerts": 76
+    },
+    {
+      "z": 4,
+      "k": 2,
+      "min_usd": 0.1,
+      "mean_f1": 0.8238,
+      "mean_catch": 0.8333,
+      "alerts": 74
+    },
+    {
+      "z": 4,
+      "k": 2,
+      "min_usd": 0.25,
+      "mean_f1": 0.8238,
+      "mean_catch": 0.8333,
+      "alerts": 74
+    },
+    {
+      "z": 4,
+      "k": 2,
+      "min_usd": 0.5,
+      "mean_f1": 0.8238,
+      "mean_catch": 0.8333,
+      "alerts": 74
+    },
+    {
+      "z": 6,
+      "k": 1,
+      "min_usd": 0.1,
+      "mean_f1": 0.8238,
+      "mean_catch": 0.8333,
+      "alerts": 74
+    },
+    {
+      "z": 6,
+      "k": 1,
+      "min_usd": 0.25,
+      "mean_f1": 0.8238,
+      "mean_catch": 0.8333,
+      "alerts": 74
+    },
+    {
+      "z": 6,
+      "k": 1,
+      "min_usd": 0.5,
+      "mean_f1": 0.8238,
+      "mean_catch": 0.8333,
+      "alerts": 74
+    },
+    {
+      "z": 3,
+      "k": 3,
+      "min_usd": 0.5,
+      "mean_f1": 0.823,
+      "mean_catch": 0.8333,
+      "alerts": 73
+    },
+    {
+      "z": 3,
+      "k": 2,
+      "min_usd": 0.25,
+      "mean_f1": 0.8227,
+      "mean_catch": 0.8796,
+      "alerts": 80
+    },
+    {
+      "z": 5,
+      "k": 1,
+      "min_usd": 0.1,
+      "mean_f1": 0.8146,
+      "mean_catch": 0.8333,
+      "alerts": 76
+    },
+    {
+      "z": 5,
+      "k": 1,
+      "min_usd": 0.25,
+      "mean_f1": 0.8146,
+      "mean_catch": 0.8333,
+      "alerts": 76
+    },
+    {
+      "z": 5,
+      "k": 1,
+      "min_usd": 0.5,
+      "mean_f1": 0.8146,
+      "mean_catch": 0.8333,
+      "alerts": 76
+    },
+    {
+      "z": 4,
+      "k": 3,
+      "min_usd": 0.1,
+      "mean_f1": 0.8066,
+      "mean_catch": 0.8056,
+      "alerts": 72
+    },
+    {
+      "z": 4,
+      "k": 3,
+      "min_usd": 0.25,
+      "mean_f1": 0.8066,
+      "mean_catch": 0.8056,
+      "alerts": 72
+    },
+    {
+      "z": 4,
+      "k": 3,
+      "min_usd": 0.5,
+      "mean_f1": 0.8066,
+      "mean_catch": 0.8056,
+      "alerts": 72
+    },
+    {
+      "z": 5,
+      "k": 2,
+      "min_usd": 0.1,
+      "mean_f1": 0.8066,
+      "mean_catch": 0.8056,
+      "alerts": 72
+    },
+    {
+      "z": 5,
+      "k": 2,
+      "min_usd": 0.25,
+      "mean_f1": 0.8066,
+      "mean_catch": 0.8056,
+      "alerts": 72
+    },
+    {
+      "z": 5,
+      "k": 2,
+      "min_usd": 0.5,
+      "mean_f1": 0.8066,
+      "mean_catch": 0.8056,
+      "alerts": 72
+    },
+    {
+      "z": 5,
+      "k": 3,
+      "min_usd": 0.1,
+      "mean_f1": 0.8066,
+      "mean_catch": 0.8056,
+      "alerts": 72
+    },
+    {
+      "z": 5,
+      "k": 3,
+      "min_usd": 0.25,
+      "mean_f1": 0.8066,
+      "mean_catch": 0.8056,
+      "alerts": 72
+    },
+    {
+      "z": 5,
+      "k": 3,
+      "min_usd": 0.5,
+      "mean_f1": 0.8066,
+      "mean_catch": 0.8056,
+      "alerts": 72
+    },
+    {
+      "z": 6,
+      "k": 2,
+      "min_usd": 0.1,
+      "mean_f1": 0.8066,
+      "mean_catch": 0.8056,
+      "alerts": 72
+    },
+    {
+      "z": 6,
+      "k": 2,
+      "min_usd": 0.25,
+      "mean_f1": 0.8066,
+      "mean_catch": 0.8056,
+      "alerts": 72
+    },
+    {
+      "z": 6,
+      "k": 2,
+      "min_usd": 0.5,
+      "mean_f1": 0.8066,
+      "mean_catch": 0.8056,
+      "alerts": 72
+    },
+    {
+      "z": 4,
+      "k": 1,
+      "min_usd": 0.1,
+      "mean_f1": 0.8045,
+      "mean_catch": 0.8796,
+      "alerts": 83
+    },
+    {
+      "z": 4,
+      "k": 1,
+      "min_usd": 0.25,
+      "mean_f1": 0.8045,
+      "mean_catch": 0.8796,
+      "alerts": 83
+    },
+    {
+      "z": 4,
+      "k": 1,
+      "min_usd": 0.5,
+      "mean_f1": 0.8045,
+      "mean_catch": 0.8796,
+      "alerts": 83
+    },
+    {
+      "z": 3,
+      "k": 3,
+      "min_usd": 0.25,
+      "mean_f1": 0.7994,
+      "mean_catch": 0.8333,
+      "alerts": 77
+    },
+    {
+      "z": 6,
+      "k": 3,
+      "min_usd": 0.1,
+      "mean_f1": 0.7869,
+      "mean_catch": 0.7778,
+      "alerts": 71
+    },
+    {
+      "z": 6,
+      "k": 3,
+      "min_usd": 0.25,
+      "mean_f1": 0.7869,
+      "mean_catch": 0.7778,
+      "alerts": 71
+    },
+    {
+      "z": 6,
+      "k": 3,
+      "min_usd": 0.5,
+      "mean_f1": 0.7869,
+      "mean_catch": 0.7778,
+      "alerts": 71
+    },
+    {
+      "z": 3,
+      "k": 2,
+      "min_usd": 1.0,
+      "mean_f1": 0.7829,
+      "mean_catch": 0.7963,
+      "alerts": 72
+    },
+    {
+      "z": 4,
+      "k": 1,
+      "min_usd": 5.0,
+      "mean_f1": 0.7791,
+      "mean_catch": 0.75,
+      "alerts": 68
+    },
+    {
+      "z": 3,
+      "k": 1,
+      "min_usd": 5.0,
+      "mean_f1": 0.7719,
+      "mean_catch": 0.75,
+      "alerts": 69
+    },
+    {
+      "z": 3,
+      "k": 2,
+      "min_usd": 0.1,
+      "mean_f1": 0.77,
+      "mean_catch": 0.8796,
+      "alerts": 90
+    },
+    {
+      "z": 3,
+      "k": 3,
+      "min_usd": 0.1,
+      "mean_f1": 0.7683,
+      "mean_catch": 0.8333,
+      "alerts": 83
+    },
+    {
+      "z": 3,
+      "k": 2,
+      "min_usd": 5.0,
+      "mean_f1": 0.7642,
+      "mean_catch": 0.7037,
+      "alerts": 62
+    },
+    {
+      "z": 4,
+      "k": 2,
+      "min_usd": 1.0,
+      "mean_f1": 0.7596,
+      "mean_catch": 0.75,
+      "alerts": 70
+    },
+    {
+      "z": 6,
+      "k": 1,
+      "min_usd": 1.0,
+      "mean_f1": 0.7596,
+      "mean_catch": 0.75,
+      "alerts": 70
+    },
+    {
+      "z": 5,
+      "k": 1,
+      "min_usd": 5.0,
+      "mean_f1": 0.7574,
+      "mean_catch": 0.7037,
+      "alerts": 64
+    },
+    {
+      "z": 5,
+      "k": 1,
+      "min_usd": 1.0,
+      "mean_f1": 0.7534,
+      "mean_catch": 0.75,
+      "alerts": 72
+    },
+    {
+      "z": 4,
+      "k": 1,
+      "min_usd": 1.0,
+      "mean_f1": 0.746,
+      "mean_catch": 0.7963,
+      "alerts": 79
+    },
+    {
+      "z": 4,
+      "k": 2,
+      "min_usd": 5.0,
+      "mean_f1": 0.7433,
+      "mean_catch": 0.6759,
+      "alerts": 61
+    },
+    {
+      "z": 6,
+      "k": 1,
+      "min_usd": 5.0,
+      "mean_f1": 0.7433,
+      "mean_catch": 0.6759,
+      "alerts": 61
+    },
+    {
+      "z": 3,
+      "k": 3,
+      "min_usd": 5.0,
+      "mean_f1": 0.7429,
+      "mean_catch": 0.6759,
+      "alerts": 60
+    },
+    {
+      "z": 4,
+      "k": 3,
+      "min_usd": 5.0,
+      "mean_f1": 0.7429,
+      "mean_catch": 0.6759,
+      "alerts": 60
+    },
+    {
+      "z": 5,
+      "k": 2,
+      "min_usd": 5.0,
+      "mean_f1": 0.7429,
+      "mean_catch": 0.6759,
+      "alerts": 60
+    },
+    {
+      "z": 5,
+      "k": 3,
+      "min_usd": 5.0,
+      "mean_f1": 0.7429,
+      "mean_catch": 0.6759,
+      "alerts": 60
+    },
+    {
+      "z": 6,
+      "k": 2,
+      "min_usd": 5.0,
+      "mean_f1": 0.7429,
+      "mean_catch": 0.6759,
+      "alerts": 60
+    },
+    {
+      "z": 6,
+      "k": 3,
+      "min_usd": 5.0,
+      "mean_f1": 0.7429,
+      "mean_catch": 0.6759,
+      "alerts": 60
+    },
+    {
+      "z": 3,
+      "k": 3,
+      "min_usd": 1.0,
+      "mean_f1": 0.7425,
+      "mean_catch": 0.7222,
+      "alerts": 68
+    },
+    {
+      "z": 5,
+      "k": 2,
+      "min_usd": 1.0,
+      "mean_f1": 0.7425,
+      "mean_catch": 0.7222,
+      "alerts": 68
+    },
+    {
+      "z": 6,
+      "k": 2,
+      "min_usd": 1.0,
+      "mean_f1": 0.7425,
+      "mean_catch": 0.7222,
+      "alerts": 68
+    },
+    {
+      "z": 4,
+      "k": 3,
+      "min_usd": 1.0,
+      "mean_f1": 0.7228,
+      "mean_catch": 0.6944,
+      "alerts": 67
+    },
+    {
+      "z": 5,
+      "k": 3,
+      "min_usd": 1.0,
+      "mean_f1": 0.7228,
+      "mean_catch": 0.6944,
+      "alerts": 67
+    },
+    {
+      "z": 6,
+      "k": 3,
+      "min_usd": 1.0,
+      "mean_f1": 0.7228,
+      "mean_catch": 0.6944,
+      "alerts": 67
+    },
+    {
+      "z": 3,
+      "k": 1,
+      "min_usd": 1.0,
+      "mean_f1": 0.6912,
+      "mean_catch": 0.7963,
+      "alerts": 90
+    },
+    {
+      "z": 3,
+      "k": 1,
+      "min_usd": 0.5,
+      "mean_f1": 0.6839,
+      "mean_catch": 0.8333,
+      "alerts": 101
+    },
+    {
+      "z": 3,
+      "k": 1,
+      "min_usd": 0.25,
+      "mean_f1": 0.6679,
+      "mean_catch": 0.8333,
+      "alerts": 105
+    },
+    {
+      "z": 3,
+      "k": 1,
+      "min_usd": 0.1,
+      "mean_f1": 0.6315,
+      "mean_catch": 0.8333,
+      "alerts": 115
+    }
+  ],
+  "by_difficulty": [
+    {
+      "difficulty": "easy",
+      "anomalies": 15,
+      "caught": 15,
+      "alerts": 27,
+      "false_alarms": 4,
+      "catch_rate_%": 100.0,
+      "precision_%": 85.0
+    },
+    {
+      "difficulty": "medium",
+      "anomalies": 15,
+      "caught": 15,
+      "alerts": 27,
+      "false_alarms": 4,
+      "catch_rate_%": 100.0,
+      "precision_%": 85.0
+    },
+    {
+      "difficulty": "hard",
+      "anomalies": 15,
+      "caught": 10,
+      "alerts": 22,
+      "false_alarms": 4,
+      "catch_rate_%": 67.0,
+      "precision_%": 82.0
+    }
+  ],
+  "by_type_catch_rate": [
+    {
+      "type": "idle_gpu",
+      "easy": 100.0,
+      "medium": 100.0,
+      "hard": 100.0
+    },
+    {
+      "type": "orphaned_disk",
+      "easy": 100.0,
+      "medium": 100.0,
+      "hard": 100.0
+    },
+    {
+      "type": "sp_expired",
+      "easy": 100.0,
+      "medium": 100.0,
+      "hard": 100.0
+    },
+    {
+      "type": "transfer_drift",
+      "easy": 100.0,
+      "medium": 100.0,
+      "hard": 0.0
+    },
+    {
+      "type": "transfer_spike",
+      "easy": 100.0,
+      "medium": 100.0,
+      "hard": 0.0
+    },
+    {
+      "type": "untagged_resource",
+      "easy": 100.0,
+      "medium": 100.0,
+      "hard": 100.0
+    }
+  ],
+  "missed": [
+    {
+      "difficulty": "hard",
+      "type": "transfer_spike",
+      "caught": false,
+      "case_id": "hard-r1-I02"
+    },
+    {
+      "difficulty": "hard",
+      "type": "transfer_drift",
+      "caught": false,
+      "case_id": "hard-r1-I04"
+    },
+    {
+      "difficulty": "hard",
+      "type": "transfer_drift",
+      "caught": false,
+      "case_id": "hard-r2-I03"
+    },
+    {
+      "difficulty": "hard",
+      "type": "transfer_spike",
+      "caught": false,
+      "case_id": "hard-r2-I01"
+    },
+    {
+      "difficulty": "hard",
+      "type": "transfer_drift",
+      "caught": false,
+      "case_id": "hard-r2-I02"
+    }
+  ],
+  "per_dataset": [
+    {
+      "difficulty": "easy",
+      "replica": 1,
+      "anomalies": 9,
+      "caught": 9,
+      "catch_rate": 1.0,
+      "alerts": 16,
+      "false_alarms": 2,
+      "precision": 0.875,
+      "f1": 0.9333,
+      "decoys_flagged": "3/3"
+    },
+    {
+      "difficulty": "easy",
+      "replica": 2,
+      "anomalies": 6,
+      "caught": 6,
+      "catch_rate": 1.0,
+      "alerts": 11,
+      "false_alarms": 2,
+      "precision": 0.8182,
+      "f1": 0.9,
+      "decoys_flagged": "1/1"
+    },
+    {
+      "difficulty": "medium",
+      "replica": 1,
+      "anomalies": 9,
+      "caught": 9,
+      "catch_rate": 1.0,
+      "alerts": 16,
+      "false_alarms": 2,
+      "precision": 0.875,
+      "f1": 0.9333,
+      "decoys_flagged": "3/3"
+    },
+    {
+      "difficulty": "medium",
+      "replica": 2,
+      "anomalies": 6,
+      "caught": 6,
+      "catch_rate": 1.0,
+      "alerts": 11,
+      "false_alarms": 2,
+      "precision": 0.8182,
+      "f1": 0.9,
+      "decoys_flagged": "1/1"
+    },
+    {
+      "difficulty": "hard",
+      "replica": 1,
+      "anomalies": 9,
+      "caught": 7,
+      "catch_rate": 0.7778,
+      "alerts": 14,
+      "false_alarms": 2,
+      "precision": 0.8571,
+      "f1": 0.8155,
+      "decoys_flagged": "3/3"
+    },
+    {
+      "difficulty": "hard",
+      "replica": 2,
+      "anomalies": 6,
+      "caught": 3,
+      "catch_rate": 0.5,
+      "alerts": 8,
+      "false_alarms": 2,
+      "precision": 0.75,
+      "f1": 0.6,
+      "decoys_flagged": "1/1"
+    }
+  ]
+}

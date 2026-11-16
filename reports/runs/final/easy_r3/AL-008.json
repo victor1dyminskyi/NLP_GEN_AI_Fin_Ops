@@ -1,0 +1,117 @@
+{
+  "alert": {
+    "alert_id": "AL-008",
+    "resource": "sf-web-asg",
+    "account": "storefront-prod",
+    "rule": "price+usage",
+    "start_date": "2026-06-15 00:00:00",
+    "score": 24.5,
+    "normal_usd_day": 113.66,
+    "current_usd_day": 163.72,
+    "extra_usd_day": 50.06,
+    "usage_effect": 0.95,
+    "price_effect": 49.12,
+    "resource_kind": "server"
+  },
+  "resource": "sf-web-asg",
+  "form": {
+    "type": "transfer_spike",
+    "owner_team": "storefront",
+    "action": "notify_owner_open_ticket",
+    "start_date": "2026-06-15",
+    "confidence": 0.9,
+    "explanation": "The server is still running and busy, but there's no approved ticket for the cost increase. The cost spike is unexpected.",
+    "evidence": [
+      "The server is still running and busy.",
+      "There are no approved change tickets for the cost increase."
+    ],
+    "owner_message": "The cost for the 'sf-web-asg' server has increased unexpectedly. Please review and open a ticket if this was not intentional."
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "auto_executed (simulated)"
+  },
+  "model": "finops-agent",
+  "llm_calls": 6,
+  "tool_calls": 5,
+  "form_fixes": 0,
+  "seconds": 19.0,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.9,
+      "raw": "{\"thought\": \"The resource is a server, and its cost has increased significantly. I need to determine if it's still busy, if there's an approved ticket, and if it's covered by a Savings Plan.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"sf-web-asg\"}}",
+      "thought": "The resource is a server, and its cost has increased significantly. I need to determine if it's still busy, if there's an approved ticket, and if it's covered by a Savings Plan.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "sf-web-asg"
+      },
+      "result": "{\"ResourceName\": \"sf-web-asg\", \"ResourceId\": \"i-0573caab302269683\", \"account\": \"storefront-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.34 per On Demand Linux c5.2xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"storefront\\\", \\\"application\\\": \\\"web\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 135.03, \"account_team\": \"storefront\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.7,
+      "raw": "{\"thought\": \"The server is tagged and owned by the 'storefront' team. I need to check if it's still running and if there's an approved ticket for the cost increase.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-web-asg\"}}",
+      "thought": "The server is tagged and owned by the 'storefront' team. I need to check if it's still running and if there's an approved ticket for the cost increase.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-web-asg"
+      },
+      "result": "TICKETS: none\nevent_time,event_name,actor,ticket,details\n2025-06-29 07:06:00,RunInstances,alex.moreno,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.5,
+      "raw": "{\"thought\": \"There are no approved change tickets for the cost increase. I need to check if the server is still running and if it's busy.\", \"tool\": \"usage\", \"args\": {\"resource\": \"sf-web-asg\", \"around_date\": \"2026-06-15\"}}",
+      "thought": "There are no approved change tickets for the cost increase. I need to check if the server is still running and if it's busy.",
+      "tool": "usage",
+      "args": {
+        "resource": "sf-web-asg",
+        "around_date": "2026-06-15"
+      },
+      "result": "CHANGE: CPU busy: 3.1% before \u2192 3.1% after (78 days after)\nperiod,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nbefore,106,3.1,,,20\nafter,78,3.1,,,20\n"
+    },
+    {
+      "step": 4,
+      "seconds": 2.1,
+      "raw": "{\"thought\": \"The server is still running and busy, but there's no approved ticket for the cost increase. This is an unexpected cost spike.\", \"tool\": \"commitment_status\", \"args\": {\"resource\": \"sf-web-asg\"}}",
+      "thought": "The server is still running and busy, but there's no approved ticket for the cost increase. This is an unexpected cost spike.",
+      "tool": "commitment_status",
+      "args": {
+        "resource": "sf-web-asg"
+      },
+      "result": "commitment_id,type,discount,start,end,managed_by\nsp-compute-2025,Savings Plan,0.3,2025-09-01,2026-06-15,platform\n"
+    },
+    {
+      "step": 5,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"The Savings Plan is still active, but the cost increase is unexpected. I need to check if the server is still running and if it's busy.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-web-asg\"}}",
+      "thought": "The Savings Plan is still active, but the cost increase is unexpected. I need to check if the server is still running and if it's busy.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-web-asg"
+      },
+      "result": "TICKETS: none\nevent_time,event_name,actor,ticket,details\n2025-06-29 07:06:00,RunInstances,alex.moreno,,\n"
+    },
+    {
+      "step": 6,
+      "seconds": 6.7,
+      "raw": "{\"thought\": \"There are no approved change tickets for the cost increase. The server is still running and busy, but there's no approved ticket. This is an unexpected cost spike.\", \"final\": {\n     \"type\": \"transfer_spike\",\n     \"owner_team\": \"storefront\",\n     \"action\": \"notify_owner_open_ticket\",\n     \"start_date\": \"2026-06-15\",\n     \"confidence\": 0.9,\n     \"explanation\": \"The server is still running and busy, but there's no approved ticket for the cost increase. The cost spike is unexpected.\",\n     \"evidence\": [\"The server is still running and busy.\", \"There are no approved change tickets for the cost increase.\"],\n     \"owner_message\": \"The cost for the 'sf-web-asg' server has increased unexpectedly. Please review and open a ticket if this was not intentional.\"\n}}",
+      "thought": "There are no approved change tickets for the cost increase. The server is still running and busy, but there's no approved ticket. This is an unexpected cost spike.",
+      "final": {
+        "type": "transfer_spike",
+        "owner_team": "storefront",
+        "action": "notify_owner_open_ticket",
+        "start_date": "2026-06-15",
+        "confidence": 0.9,
+        "explanation": "The server is still running and busy, but there's no approved ticket for the cost increase. The cost spike is unexpected.",
+        "evidence": [
+          "The server is still running and busy.",
+          "There are no approved change tickets for the cost increase."
+        ],
+        "owner_message": "The cost for the 'sf-web-asg' server has increased unexpectedly. Please review and open a ticket if this was not intentional."
+      }
+    }
+  ]
+}

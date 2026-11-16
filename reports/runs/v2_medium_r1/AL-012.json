@@ -1,0 +1,116 @@
+{
+  "alert": {
+    "alert_id": "AL-012",
+    "resource": "plat-inter-az",
+    "account": "platform-shared",
+    "rule": "usage",
+    "start_date": "2026-07-06 00:00:00",
+    "score": 4.4,
+    "normal_usd_day": 5.64,
+    "current_usd_day": 10.01,
+    "extra_usd_day": 4.37,
+    "usage_effect": 4.37,
+    "price_effect": -0.0,
+    "related": NaN
+  },
+  "resource": "plat-inter-az",
+  "form": {
+    "type": "transfer_spike",
+    "owner_team": "platform",
+    "action": "notify_owner_open_ticket",
+    "start_date": "2026-07-06",
+    "confidence": 0.9,
+    "explanation": "The daily cost increased from $5.60 to $10.01 on 2026-07-06, which is a significant spike. There are no change events or Savings Plans involved.",
+    "evidence": [
+      "The daily cost increased from $5.60 to $10.01 on 2026-07-06.",
+      "No change events or Savings Plans involved."
+    ]
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "auto_executed (simulated)"
+  },
+  "model": "finops-agent",
+  "llm_calls": 6,
+  "tool_calls": 5,
+  "form_fixes": 0,
+  "seconds": 19.6,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 1.9,
+      "raw": "{\"thought\": \"Investigate the resource 'plat-inter-az' in the 'platform-shared' account.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"plat-inter-az\"}}",
+      "thought": "Investigate the resource 'plat-inter-az' in the 'platform-shared' account.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "plat-inter-az"
+      },
+      "result": "{\"ResourceName\": \"plat-inter-az\", \"ResourceId\": \"plat-inter-az-acc41810\", \"account\": \"platform-shared\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.010 per GB - regional data transfer - in/out/between EC2 AZs or using elastic IPs or ELB\", \"tags\": \"{\\\"team\\\": \\\"platform\\\", \\\"application\\\": \\\"network\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 6.95, \"account_team\": \"platform\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"Check the change events for 'plat-inter-az' to see if there were any changes that could explain the cost increase.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"plat-inter-az\"}}",
+      "thought": "Check the change events for 'plat-inter-az' to see if there were any changes that could explain the cost increase.",
+      "tool": "change_events",
+      "args": {
+        "resource": "plat-inter-az"
+      },
+      "result": "(no create/delete/ticket events)"
+    },
+    {
+      "step": 3,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"Examine the cost history around the alert date to see if there were any changes in quantity or price per unit.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"plat-inter-az\", \"around_date\": \"2026-07-06\"}}",
+      "thought": "Examine the cost history around the alert date to see if there were any changes in quantity or price per unit.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "plat-inter-az",
+        "around_date": "2026-07-06"
+      },
+      "result": "SUMMARY {\"avg_cost_before\": 5.6, \"avg_cost_after\": 9.88, \"avg_quantity_before\": 559.66, \"avg_quantity_after\": 987.89, \"unit_price_before\": 0.01, \"unit_price_after\": 0.01, \"pricing_before\": \"Standard\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-07-03,5,499.9,GB,0.01,Standard,\n2026-07-04,7.83,782.7,GB,0.01,Standard,\n2026-07-05,7.21,720.7,GB,0.01,Standard,\n2026-07-06,9.58,958.1,GB,0.01,Standard,\n2026-07-07,8.75,875,GB,0.01,Standard,\n2026-07-08,7.69,769.1,GB,0.01,Standard,\n2026-07-09,10.01,1001,GB,0.01,Standard,\n2026-07-10,9.94,994.1,GB,0.01,Standard,\n2026-07-11,8.69,868.6,GB,0.01,Standard,\n2026-07-12,10.83,1083,GB,0.01,Standard,\n2026-07-13,9.41,940.6,GB,0.01,Standard,\n2026-07-14,9.04,903.9,GB,0.01,Standard,\n2026-07-15,10.13,1013,GB,0.01,Standard,\n2026-07-16,12.59,1259,GB,0.01,Standard,\n2026-07-17,10.17,1017,GB,0.01,Standard,\n2026-07-18,12.95,1295,GB,0.01,Standard,\n2026-07-19,11.94,1194,GB,0.01,Standard,\n2026-07-20,6.47,646.9,GB,0.01,Standard,\n"
+    },
+    {
+      "step": 4,
+      "seconds": 4.7,
+      "raw": "{\"thought\": \"Check the usage metrics for 'plat-inter-az' to see if the server was busy on the alert date.\", \"tool\": \"usage\", \"args\": {\"resource\": \"plat-inter-az\", \"around_date\": \"2026-07-06\"}}",
+      "thought": "Check the usage metrics for 'plat-inter-az' to see if the server was busy on the alert date.",
+      "tool": "usage",
+      "args": {
+        "resource": "plat-inter-az",
+        "around_date": "2026-07-06"
+      },
+      "result": "(no usage metrics \u2014 not a server, or never running)"
+    },
+    {
+      "step": 5,
+      "seconds": 2.1,
+      "raw": "{\"thought\": \"The resource 'plat-inter-az' is a data transfer cost, not a server. Check if the price per unit changed due to a Savings Plan.\", \"tool\": \"commitment_status\", \"args\": {\"resource\": \"plat-inter-az\"}}",
+      "thought": "The resource 'plat-inter-az' is a data transfer cost, not a server. Check if the price per unit changed due to a Savings Plan.",
+      "tool": "commitment_status",
+      "args": {
+        "resource": "plat-inter-az"
+      },
+      "result": "No Savings Plan covers this resource."
+    },
+    {
+      "step": 6,
+      "seconds": 6.3,
+      "raw": "{\"thought\": \"The cost increase is due to a data transfer spike. Notify the owner to open a ticket.\", \"final\": {\n    \"type\": \"transfer_spike\",\n    \"owner_team\": \"platform\",\n    \"action\": \"notify_owner_open_ticket\",\n    \"start_date\": \"2026-07-06\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The daily cost increased from $5.60 to $10.01 on 2026-07-06, which is a significant spike. There are no change events or Savings Plans involved.\",\n    \"evidence\": [\"The daily cost increased from $5.60 to $10.01 on 2026-07-06.\", \"No change events or Savings Plans involved.\"]\n}}",
+      "thought": "The cost increase is due to a data transfer spike. Notify the owner to open a ticket.",
+      "final": {
+        "type": "transfer_spike",
+        "owner_team": "platform",
+        "action": "notify_owner_open_ticket",
+        "start_date": "2026-07-06",
+        "confidence": 0.9,
+        "explanation": "The daily cost increased from $5.60 to $10.01 on 2026-07-06, which is a significant spike. There are no change events or Savings Plans involved.",
+        "evidence": [
+          "The daily cost increased from $5.60 to $10.01 on 2026-07-06.",
+          "No change events or Savings Plans involved."
+        ]
+      }
+    }
+  ]
+}

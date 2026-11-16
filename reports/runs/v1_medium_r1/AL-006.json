@@ -1,0 +1,81 @@
+{
+  "alert": {
+    "alert_id": "AL-006",
+    "resource": "pay-fraud-82",
+    "account": "payments-prod",
+    "rule": "new_resource",
+    "start_date": "2026-06-14 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 18.3,
+    "extra_usd_day": 18.3,
+    "usage_effect": 18.3,
+    "price_effect": 0.0,
+    "related": NaN
+  },
+  "resource": "pay-fraud-82",
+  "form": {
+    "type": "planned_change",
+    "owner_team": "payments",
+    "action": "no_action",
+    "start_date": "2026-06-14",
+    "confidence": 1.0,
+    "explanation": "The cost increase is covered by an approved change ticket (CHG-4814) for launching the 'pay-fraud' service.",
+    "evidence": [
+      "The resource is tagged with 'payments' team, 'pay-fraud' application, and 'prod' environment.",
+      "There is an approved change ticket 'CHG-4814' for the launch of the 'pay-fraud' service on 2026-06-14."
+    ]
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 3,
+  "tool_calls": 2,
+  "form_fixes": 0,
+  "seconds": 14.1,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 3.4,
+      "raw": "{\"thought\": \"The resource 'pay-fraud-82' in the 'payments-prod' account has a significant cost increase from 0 to 18.3 USD on 2026-06-14. I need to determine if this is a new resource or if there's an approved change ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"pay-fraud-82\"}}",
+      "thought": "The resource 'pay-fraud-82' in the 'payments-prod' account has a significant cost increase from 0 to 18.3 USD on 2026-06-14. I need to determine if this is a new resource or if there's an approved change ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "pay-fraud-82"
+      },
+      "result": "{\"ResourceName\": \"pay-fraud-82\", \"ResourceId\": \"i-0c55fe40cc6625a51\", \"account\": \"payments-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.192 per On Demand Linux m5.xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"payments\\\", \\\"application\\\": \\\"pay-fraud\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-06-14\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 18.35, \"account_team\": \"payments\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 3.0,
+      "raw": "{\"thought\": \"The resource 'pay-fraud-82' is tagged with 'payments' team, 'pay-fraud' application, and 'prod' environment. I need to check if there's an approved change ticket for this resource.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"pay-fraud-82\"}}",
+      "thought": "The resource 'pay-fraud-82' is tagged with 'payments' team, 'pay-fraud' application, and 'prod' environment. I need to check if there's an approved change ticket for this resource.",
+      "tool": "change_events",
+      "args": {
+        "resource": "pay-fraud-82"
+      },
+      "result": "event_time,event_name,actor,ticket,details\n2026-06-14 11:00:00,RunInstances,priya.nair,CHG-4814: launch new service pay-fraud (4\u00d7 ec2_m5_xlarge),\n"
+    },
+    {
+      "step": 3,
+      "seconds": 7.6,
+      "raw": "{\"thought\": \"There is an approved change ticket 'CHG-4814' for the launch of the 'pay-fraud' service on 2026-06-14. The cost increase is covered by this approved change.\", \"final\": {\n    \"type\": \"planned_change\",\n    \"owner_team\": \"payments\",\n    \"action\": \"no_action\",\n    \"start_date\": \"2026-06-14\",\n    \"confidence\": 1.0,\n    \"explanation\": \"The cost increase is covered by an approved change ticket (CHG-4814) for launching the 'pay-fraud' service.\",\n    \"evidence\": [\"The resource is tagged with 'payments' team, 'pay-fraud' application, and 'prod' environment.\", \"There is an approved change ticket 'CHG-4814' for the launch of the 'pay-fraud' service on 2026-06-14.\"]\n}}",
+      "thought": "There is an approved change ticket 'CHG-4814' for the launch of the 'pay-fraud' service on 2026-06-14. The cost increase is covered by this approved change.",
+      "final": {
+        "type": "planned_change",
+        "owner_team": "payments",
+        "action": "no_action",
+        "start_date": "2026-06-14",
+        "confidence": 1.0,
+        "explanation": "The cost increase is covered by an approved change ticket (CHG-4814) for launching the 'pay-fraud' service.",
+        "evidence": [
+          "The resource is tagged with 'payments' team, 'pay-fraud' application, and 'prod' environment.",
+          "There is an approved change ticket 'CHG-4814' for the launch of the 'pay-fraud' service on 2026-06-14."
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+[project]
+name = "finops-anomaly-agent"
+version = "0.1.0"
+description = "FinOps billing anomaly agent — detect, investigate, diagnose, act, report (UCU GenAI assignment)"
+requires-python = ">=3.11"
+dependencies = [
+    "duckdb>=1.1",
+    "pyyaml>=6.0",
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "pyarrow>=15",
+    "matplotlib>=3.8",
+    "openai>=3.51.0",
+    "streamlit>=1.67.0",
+]
+
+[tool.uv]
+package = false
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]

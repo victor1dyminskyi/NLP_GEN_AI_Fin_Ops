@@ -1,0 +1,6 @@
+FROM qwen2.5-coder:7b
+# Agent model: the approved benchmark winner with a bigger memory (context window).
+# Ollama's default context silently truncated long prompts (~2k tokens seen of ~9k sent).
+PARAMETER num_ctx 16384
+PARAMETER temperature 0
+PARAMETER seed 42

@@ -1,0 +1,84 @@
+{
+  "alert": {
+    "alert_id": "AL-007",
+    "resource": "data-replication",
+    "account": "data-prod",
+    "rule": "usage",
+    "start_date": "2026-05-07 00:00:00",
+    "score": 19.5,
+    "normal_usd_day": 0.81,
+    "current_usd_day": 2.14,
+    "extra_usd_day": 1.33,
+    "usage_effect": 1.33,
+    "price_effect": 0.0,
+    "related": NaN,
+    "resource_kind": "data_transfer"
+  },
+  "resource": "data-replication",
+  "form": {
+    "type": "transfer_spike",
+    "owner_team": "data",
+    "action": "notify_owner_open_ticket",
+    "start_date": "2026-05-07",
+    "confidence": 0.9,
+    "explanation": "The cost increased sharply by $1.33 per day, and there are no approved tickets or attached servers.",
+    "evidence": [
+      "extra_usd_day: 1.33",
+      "no attached server"
+    ],
+    "owner_message": "The data transfer cost for 'data-replication' has increased sharply by $1.33 per day. Please review and open a ticket if this is intentional."
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "auto_executed (simulated)"
+  },
+  "model": "finops-agent",
+  "llm_calls": 3,
+  "tool_calls": 2,
+  "form_fixes": 0,
+  "seconds": 10.1,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The resource is a data transfer, and the cost has increased sharply. I need to check if there's an approved ticket or if the server is still running.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"data-replication\"}}",
+      "thought": "The resource is a data transfer, and the cost has increased sharply. I need to check if there's an approved ticket or if the server is still running.",
+      "tool": "change_events",
+      "args": {
+        "resource": "data-replication"
+      },
+      "result": "TICKETS: none\n(no create/delete/ticket events)"
+    },
+    {
+      "step": 2,
+      "seconds": 1.6,
+      "raw": "{\"thought\": \"There are no approved tickets for this change. I need to check if the server is still running.\", \"tool\": \"attached_server\", \"args\": {\"volume\": \"data-replication\"}}",
+      "thought": "There are no approved tickets for this change. I need to check if the server is still running.",
+      "tool": "attached_server",
+      "args": {
+        "volume": "data-replication"
+      },
+      "result": "No AttachVolume event for this resource."
+    },
+    {
+      "step": 3,
+      "seconds": 6.1,
+      "raw": "{\"thought\": \"The resource is a data transfer, and there are no approved tickets or attached servers. This is likely a data transfer spike.\", \"final\": {\n    \"type\": \"transfer_spike\",\n    \"owner_team\": \"data\",\n    \"action\": \"notify_owner_open_ticket\",\n    \"start_date\": \"2026-05-07\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The cost increased sharply by $1.33 per day, and there are no approved tickets or attached servers.\",\n    \"evidence\": [\"extra_usd_day: 1.33\", \"no attached server\"],\n    \"owner_message\": \"The data transfer cost for 'data-replication' has increased sharply by $1.33 per day. Please review and open a ticket if this is intentional.\"\n}}",
+      "thought": "The resource is a data transfer, and there are no approved tickets or attached servers. This is likely a data transfer spike.",
+      "final": {
+        "type": "transfer_spike",
+        "owner_team": "data",
+        "action": "notify_owner_open_ticket",
+        "start_date": "2026-05-07",
+        "confidence": 0.9,
+        "explanation": "The cost increased sharply by $1.33 per day, and there are no approved tickets or attached servers.",
+        "evidence": [
+          "extra_usd_day: 1.33",
+          "no attached server"
+        ],
+        "owner_message": "The data transfer cost for 'data-replication' has increased sharply by $1.33 per day. Please review and open a ticket if this is intentional."
+      }
+    }
+  ]
+}

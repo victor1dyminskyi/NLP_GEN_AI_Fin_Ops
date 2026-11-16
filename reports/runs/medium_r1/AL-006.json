@@ -1,0 +1,96 @@
+{
+  "alert": {
+    "alert_id": "AL-006",
+    "resource": "pay-fraud-82",
+    "account": "payments-prod",
+    "rule": "new_resource",
+    "start_date": "2026-06-14 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 18.3,
+    "extra_usd_day": 18.3,
+    "usage_effect": 18.3,
+    "price_effect": 0.0,
+    "related": NaN,
+    "resource_kind": "server"
+  },
+  "resource": "pay-fraud-82",
+  "form": {
+    "type": "planned_change",
+    "owner_team": "payments",
+    "action": "no_action",
+    "start_date": "2026-06-14",
+    "confidence": 1.0,
+    "explanation": "The server was launched with an approved ticket (CHG-4814) and the cost matches the expected usage.",
+    "evidence": [
+      "The server was launched with an approved ticket (CHG-4814).",
+      "The cost matches the expected usage based on the approved ticket."
+    ],
+    "owner_message": ""
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 4,
+  "tool_calls": 3,
+  "form_fixes": 0,
+  "seconds": 15.1,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"The resource is a server with a significant cost spike. I need to determine if it's still running and if there's an approved ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"pay-fraud-82\"}}",
+      "thought": "The resource is a server with a significant cost spike. I need to determine if it's still running and if there's an approved ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "pay-fraud-82"
+      },
+      "result": "{\"ResourceName\": \"pay-fraud-82\", \"ResourceId\": \"i-0c55fe40cc6625a51\", \"account\": \"payments-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.192 per On Demand Linux m5.xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"payments\\\", \\\"application\\\": \\\"pay-fraud\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-06-14\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 18.35, \"account_team\": \"payments\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The server is tagged and has a known owner. I need to check if it's still running and if there's an approved ticket.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"pay-fraud-82\"}}",
+      "thought": "The server is tagged and has a known owner. I need to check if it's still running and if there's an approved ticket.",
+      "tool": "change_events",
+      "args": {
+        "resource": "pay-fraud-82"
+      },
+      "result": "TICKETS: CHG-4814: launch new service pay-fraud (4\u00d7 ec2_m5_xlarge)\nevent_time,event_name,actor,ticket,details\n2026-06-14 11:00:00,RunInstances,priya.nair,CHG-4814: launch new service pay-fraud (4\u00d7 ec2_m5_xlarge),\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.7,
+      "raw": "{\"thought\": \"There's an approved ticket for the launch of the server. I need to verify if the cost matches the ticket details.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"pay-fraud-82\", \"around_date\": \"2026-06-14\"}}",
+      "thought": "There's an approved ticket for the launch of the server. I need to verify if the cost matches the ticket details.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "pay-fraud-82",
+        "around_date": "2026-06-14"
+      },
+      "result": "CHANGE from 2026-06-14: cost None%, quantity None%, price per unit None%; pricing None \u2192 Standard\nSUMMARY {\"avg_cost_before\": null, \"avg_cost_after\": 18.34, \"avg_quantity_before\": null, \"avg_quantity_after\": 95.54, \"unit_price_before\": null, \"unit_price_after\": 0.192, \"pricing_before\": null, \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-06-14,18.28,95.2,Hours,0.192,Standard,\n2026-06-15,18.32,95.4,Hours,0.192,Standard,\n2026-06-16,18.43,96,Hours,0.192,Standard,\n2026-06-17,18.43,96,Hours,0.192,Standard,\n2026-06-18,18.2,94.8,Hours,0.192,Standard,\n2026-06-19,18.43,96,Hours,0.192,Standard,\n2026-06-20,18.4,95.81,Hours,0.192,Standard,\n2026-06-21,18.33,95.45,Hours,0.192,Standard,\n2026-06-22,18.43,96,Hours,0.192,Standard,\n2026-06-23,18.36,95.6,Hours,0.192,Standard,\n2026-06-24,18.06,94.07,Hours,0.192,Standard,\n2026-06-25,18.19,94.77,Hours,0.192,Standard,\n2026-06-26,18.43,96,Hours,0.192,Standard,\n2026-06-27,18.43,96,Hours,0.192,Standard,\n2026-06-28,18.43,96,Hours,0.192,Standard,\n"
+    },
+    {
+      "step": 4,
+      "seconds": 7.6,
+      "raw": "{\"thought\": \"The cost matches the approved ticket details. The server was launched and is still running.\", \"final\": {\n    \"type\": \"planned_change\",\n    \"owner_team\": \"payments\",\n    \"action\": \"no_action\",\n    \"start_date\": \"2026-06-14\",\n    \"confidence\": 1.0,\n    \"explanation\": \"The server was launched with an approved ticket (CHG-4814) and the cost matches the expected usage.\",\n    \"evidence\": [\"The server was launched with an approved ticket (CHG-4814).\", \"The cost matches the expected usage based on the approved ticket.\"],\n    \"owner_message\": \"\"\n}}",
+      "thought": "The cost matches the approved ticket details. The server was launched and is still running.",
+      "final": {
+        "type": "planned_change",
+        "owner_team": "payments",
+        "action": "no_action",
+        "start_date": "2026-06-14",
+        "confidence": 1.0,
+        "explanation": "The server was launched with an approved ticket (CHG-4814) and the cost matches the expected usage.",
+        "evidence": [
+          "The server was launched with an approved ticket (CHG-4814).",
+          "The cost matches the expected usage based on the approved ticket."
+        ],
+        "owner_message": ""
+      }
+    }
+  ]
+}

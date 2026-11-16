@@ -1,0 +1,117 @@
+{
+  "alert": {
+    "alert_id": "AL-014",
+    "resource": "data-migration-45-vol",
+    "account": "data-prod",
+    "rule": "orphan",
+    "start_date": "2026-07-10 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 5.16,
+    "extra_usd_day": 5.16,
+    "usage_effect": NaN,
+    "price_effect": NaN,
+    "related": "data-migration-45"
+  },
+  "resource": "data-migration-45-vol",
+  "form": {
+    "type": "orphaned_disk",
+    "owner_team": "data",
+    "action": "snapshot_then_delete_volume",
+    "start_date": "2026-07-10",
+    "confidence": 0.9,
+    "explanation": "The disk is still billed daily and there's no approved change ticket or Savings Plan covering it.",
+    "evidence": [
+      "Disk is still billed daily",
+      "No approved change ticket",
+      "No Savings Plan covering the disk"
+    ]
+  },
+  "gate": {
+    "needs_approval": true,
+    "escalated": false,
+    "status": "awaiting_approval"
+  },
+  "model": "finops-agent",
+  "llm_calls": 6,
+  "tool_calls": 5,
+  "form_fixes": 0,
+  "seconds": 15.8,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 1.7,
+      "raw": "{\"thought\": \"Check if the disk is still attached to a server.\", \"tool\": \"attached_server\", \"args\": {\"volume\": \"data-migration-45-vol\"}}",
+      "thought": "Check if the disk is still attached to a server.",
+      "tool": "attached_server",
+      "args": {
+        "volume": "data-migration-45-vol"
+      },
+      "result": "{\"server\": \"data-migration-45\", \"server_terminated_at\": \"2026-07-09 18:00:00\", \"terminated_by\": \"mei.lin\", \"volume_last_billed_day\": \"2026-08-31\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"Verify the cost history of the disk to understand if it's still being billed.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"data-migration-45-vol\", \"around_date\": \"2026-07-10\"}}",
+      "thought": "Verify the cost history of the disk to understand if it's still being billed.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "data-migration-45-vol",
+        "around_date": "2026-07-10"
+      },
+      "result": "SUMMARY {\"avg_cost_before\": 5.22, \"avg_cost_after\": 5.15, \"avg_quantity_before\": 65.22, \"avg_quantity_after\": 64.42, \"unit_price_before\": 0.08, \"unit_price_after\": 0.08, \"pricing_before\": \"Standard\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-07-07,5.15,64.39,GB-Months,0.08,Standard,\n2026-07-08,5.19,64.92,GB-Months,0.08,Standard,\n2026-07-09,5.15,64.36,GB-Months,0.08,Standard,\n2026-07-10,5.09,63.68,GB-Months,0.08,Standard,\n2026-07-11,5.16,64.49,GB-Months,0.08,Standard,\n2026-07-12,5.12,63.98,GB-Months,0.08,Standard,\n2026-07-13,5.22,65.21,GB-Months,0.08,Standard,\n2026-07-14,5.15,64.42,GB-Months,0.08,Standard,\n2026-07-15,5.18,64.77,GB-Months,0.08,Standard,\n2026-07-16,5.19,64.85,GB-Months,0.08,Standard,\n2026-07-17,5.14,64.29,GB-Months,0.08,Standard,\n2026-07-18,5.19,64.84,GB-Months,0.08,Standard,\n2026-07-19,5.13,64.18,GB-Months,0.08,Standard,\n2026-07-20,5.11,63.92,GB-Months,0.08,Standard,\n2026-07-21,5.22,65.19,GB-Months,0.08,Standard,\n2026-07-22,5.14,64.24,GB-Months,0.08,Standard,\n2026-07-23,5.12,63.95,GB-Months,0.08,Standard,\n2026-07-24,5.15,64.32,GB-Months,0.08,Standard,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 4.0,
+      "raw": "{\"thought\": \"Check if there's an approved change ticket for the disk.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"data-migration-45-vol\"}}",
+      "thought": "Check if there's an approved change ticket for the disk.",
+      "tool": "change_events",
+      "args": {
+        "resource": "data-migration-45-vol"
+      },
+      "result": "event_time,event_name,actor,ticket,details\n2026-06-26 09:00:00,CreateVolume,mei.lin,,\n2026-06-26 09:05:00,AttachVolume,mei.lin,,attached to data-migration-45\n"
+    },
+    {
+      "step": 4,
+      "seconds": 1.5,
+      "raw": "{\"thought\": \"Determine the owner of the AWS account.\", \"tool\": \"get_owner\", \"args\": {\"account\": \"data-prod\"}}",
+      "thought": "Determine the owner of the AWS account.",
+      "tool": "get_owner",
+      "args": {
+        "account": "data-prod"
+      },
+      "result": "team,owner,email,slack\ndata,Mei Lin,data-team@demoshop.example,#team-data\n"
+    },
+    {
+      "step": 5,
+      "seconds": 1.5,
+      "raw": "{\"thought\": \"Review the commitment status of the disk.\", \"tool\": \"commitment_status\", \"args\": {\"resource\": \"data-migration-45-vol\"}}",
+      "thought": "Review the commitment status of the disk.",
+      "tool": "commitment_status",
+      "args": {
+        "resource": "data-migration-45-vol"
+      },
+      "result": "No Savings Plan covers this resource."
+    },
+    {
+      "step": 6,
+      "seconds": 4.7,
+      "raw": "{\"thought\": \"The disk is still billed and there's no approved change ticket or Savings Plan covering it.\", \"final\": {\n    \"type\": \"orphaned_disk\",\n    \"owner_team\": \"data\",\n    \"action\": \"snapshot_then_delete_volume\",\n    \"start_date\": \"2026-07-10\",\n    \"confidence\": 0.9,\n    \"explanation\": \"The disk is still billed daily and there's no approved change ticket or Savings Plan covering it.\",\n    \"evidence\": [\"Disk is still billed daily\", \"No approved change ticket\", \"No Savings Plan covering the disk\"]\n}}",
+      "thought": "The disk is still billed and there's no approved change ticket or Savings Plan covering it.",
+      "final": {
+        "type": "orphaned_disk",
+        "owner_team": "data",
+        "action": "snapshot_then_delete_volume",
+        "start_date": "2026-07-10",
+        "confidence": 0.9,
+        "explanation": "The disk is still billed daily and there's no approved change ticket or Savings Plan covering it.",
+        "evidence": [
+          "Disk is still billed daily",
+          "No approved change ticket",
+          "No Savings Plan covering the disk"
+        ]
+      }
+    }
+  ]
+}

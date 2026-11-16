@@ -1,0 +1,63 @@
+
+=== reports/runs/medium_r1 v2
+ alert              resource      kind                true_type         pred_type true_owner pred_owner              pred_action  confidence                    status
+AL-001       sf-perf-test-24   anomaly        untagged_resource          no_issue storefront storefront                no_action         0.9                 no_action
+AL-002             sf-egress     decoy decoy_marketing_campaign    planned_change storefront storefront                no_action         1.0                 no_action
+AL-003       sf-perf-test-53   anomaly        untagged_resource          no_issue storefront storefront                no_action         0.9                 no_action
+AL-004           ml-train-37     decoy   decoy_planned_training    planned_change         ml         ml                no_action         1.0                 no_action
+AL-005             bi-egress   anomaly           transfer_spike    transfer_spike  analytics  analytics notify_owner_open_ticket         0.9 auto_executed (simulated)
+AL-006          pay-fraud-82     decoy     decoy_feature_launch          no_issue   payments   payments                no_action         1.0                 no_action
+AL-007     data-migration-45 unmatched                      NaN          no_issue        NaN       data                no_action         1.0                 no_action
+AL-008 data-migration-45-vol unmatched                      NaN          no_issue        NaN       data                no_action         1.0                 no_action
+AL-009      data-etl-workers   anomaly               sp_expired             other   platform        NaN                no_action         0.0        escalated_to_human
+AL-010            sf-api-asg   anomaly               sp_expired        sp_expired   platform   platform     recommend_sp_renewal         0.9         awaiting_approval
+AL-011            sf-web-asg   anomaly               sp_expired          idle_gpu   platform storefront            stop_instance         0.9         awaiting_approval
+AL-012         plat-inter-az   anomaly           transfer_drift    transfer_spike   platform   platform notify_owner_open_ticket         0.9 auto_executed (simulated)
+AL-013           ml-train-72   anomaly                 idle_gpu untagged_resource         ml         ml     tag_and_notify_owner         0.9 auto_executed (simulated)
+AL-014 data-migration-45-vol   anomaly            orphaned_disk          no_issue       data       data                no_action         0.9                 no_action
+AL-015       sf-perf-test-29   anomaly        untagged_resource untagged_resource storefront storefront     tag_and_notify_owner         0.9 auto_executed (simulated)
+AL-016           ml-train-22   anomaly                 idle_gpu          no_issue         ml         ml                no_action         1.0                 no_action
+{
+ "alerts": 16,
+ "anomaly_alerts": 11,
+ "type_acc_%": 27.0,
+ "owner_acc_%": 82.0,
+ "action_acc_%": 36.0,
+ "tier_acc_%": 64.0,
+ "decoys_dismissed": "3/3",
+ "false_alarms_dismissed": "2/2",
+ "end_to_end_%": 33.0,
+ "escalated": 1,
+ "risky_actions_without_approval": 0,
+ "median_seconds": 22.9
+}
+
+=== reports/runs/medium_r2 v2
+ alert              resource      kind            true_type         pred_type true_owner pred_owner                 pred_action  confidence                    status
+AL-001          sf-search-10     decoy decoy_feature_launch          no_issue storefront storefront                   no_action         1.0                 no_action
+AL-002     data-migration-71 unmatched                  NaN          no_issue        NaN       data                   no_action         1.0                 no_action
+AL-003 data-migration-71-vol unmatched                  NaN          no_issue        NaN       data                   no_action         1.0                 no_action
+AL-004      plat-nat-traffic   anomaly       transfer_drift    transfer_spike   platform   platform    notify_owner_open_ticket         0.9 auto_executed (simulated)
+AL-005 data-migration-71-vol   anomaly        orphaned_disk     orphaned_disk       data       data snapshot_then_delete_volume         0.9         awaiting_approval
+AL-006       sf-perf-test-45   anomaly    untagged_resource untagged_resource storefront storefront        tag_and_notify_owner         0.9 auto_executed (simulated)
+AL-007             bi-egress   anomaly       transfer_spike    transfer_spike  analytics  analytics    notify_owner_open_ticket         0.9 auto_executed (simulated)
+AL-008         plat-inter-az   anomaly       transfer_drift    transfer_spike   platform   platform    notify_owner_open_ticket         0.9 auto_executed (simulated)
+AL-009      data-etl-workers   anomaly           sp_expired        sp_expired   platform   platform        recommend_sp_renewal         0.9         awaiting_approval
+AL-010            sf-api-asg   anomaly           sp_expired        sp_expired   platform   platform        recommend_sp_renewal         0.9         awaiting_approval
+AL-011            sf-web-asg   anomaly           sp_expired        sp_expired   platform   platform        recommend_sp_renewal         0.9         awaiting_approval
+{
+ "alerts": 11,
+ "anomaly_alerts": 8,
+ "type_acc_%": 75.0,
+ "owner_acc_%": 100.0,
+ "action_acc_%": 100.0,
+ "tier_acc_%": 100.0,
+ "decoys_dismissed": "1/1",
+ "false_alarms_dismissed": "2/2",
+ "end_to_end_%": 67.0,
+ "escalated": 0,
+ "risky_actions_without_approval": 0,
+ "median_seconds": 20.9
+}
+
+Saved reports/eval/agent_dev_v2.json

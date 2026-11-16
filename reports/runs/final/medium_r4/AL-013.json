@@ -1,0 +1,84 @@
+{
+  "alert": {
+    "alert_id": "AL-013",
+    "resource": "sf-search-81",
+    "account": "storefront-prod",
+    "rule": "new_resource",
+    "start_date": "2026-08-17 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 18.35,
+    "extra_usd_day": 18.35,
+    "usage_effect": 18.35,
+    "price_effect": 0.0,
+    "related": NaN,
+    "resource_kind": "server"
+  },
+  "resource": "sf-search-81",
+  "form": {
+    "type": "no_issue",
+    "owner_team": "storefront",
+    "action": "no_action",
+    "start_date": "2026-08-17",
+    "confidence": 1.0,
+    "explanation": "The cost spike is due to the launch of a new service as approved by ticket CHG-2945.",
+    "evidence": [
+      "CHG-2945: launch new service sf-search (4\u00d7 ec2_m5_xlarge)",
+      "RunInstances event by alex.moreno"
+    ],
+    "owner_message": ""
+  },
+  "gate": {
+    "needs_approval": false,
+    "escalated": false,
+    "status": "no_action"
+  },
+  "model": "finops-agent",
+  "llm_calls": 3,
+  "tool_calls": 2,
+  "form_fixes": 0,
+  "seconds": 10.4,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.2,
+      "raw": "{\"thought\": \"The resource is a server with a significant cost spike. I need to determine if it's still running and if there's an approved ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"sf-search-81\"}}",
+      "thought": "The resource is a server with a significant cost spike. I need to determine if it's still running and if there's an approved ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "sf-search-81"
+      },
+      "result": "{\"ResourceName\": \"sf-search-81\", \"ResourceId\": \"i-0a99baccc18164b4d\", \"account\": \"storefront-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.192 per On Demand Linux m5.xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"storefront\\\", \\\"application\\\": \\\"sf-search\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-08-17\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 18.33, \"account_team\": \"storefront\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The server is tagged and owned by the storefront team. I need to check if there's an approved ticket for this cost spike.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-search-81\"}}",
+      "thought": "The server is tagged and owned by the storefront team. I need to check if there's an approved ticket for this cost spike.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-search-81"
+      },
+      "result": "TICKETS: CHG-2945: launch new service sf-search (4\u00d7 ec2_m5_xlarge)\nevent_time,event_name,actor,ticket,details\n2026-08-17 11:00:00,RunInstances,alex.moreno,CHG-2945: launch new service sf-search (4\u00d7 ec2_m5_xlarge),\n"
+    },
+    {
+      "step": 3,
+      "seconds": 5.8,
+      "raw": "{\"thought\": \"There is an approved ticket for the launch of the sf-search service. The cost spike is legitimate and explained.\", \"final\": {\n    \"type\": \"no_issue\",\n    \"owner_team\": \"storefront\",\n    \"action\": \"no_action\",\n    \"start_date\": \"2026-08-17\",\n    \"confidence\": 1.0,\n    \"explanation\": \"The cost spike is due to the launch of a new service as approved by ticket CHG-2945.\",\n    \"evidence\": [\"CHG-2945: launch new service sf-search (4\u00d7 ec2_m5_xlarge)\", \"RunInstances event by alex.moreno\"],\n    \"owner_message\": \"\"\n}}",
+      "thought": "There is an approved ticket for the launch of the sf-search service. The cost spike is legitimate and explained.",
+      "final": {
+        "type": "no_issue",
+        "owner_team": "storefront",
+        "action": "no_action",
+        "start_date": "2026-08-17",
+        "confidence": 1.0,
+        "explanation": "The cost spike is due to the launch of a new service as approved by ticket CHG-2945.",
+        "evidence": [
+          "CHG-2945: launch new service sf-search (4\u00d7 ec2_m5_xlarge)",
+          "RunInstances event by alex.moreno"
+        ],
+        "owner_message": ""
+      }
+    }
+  ]
+}

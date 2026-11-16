@@ -1,0 +1,8 @@
+# Detector settings. window_days, price_change: design choices (see docs/CRISP_DM.md §4).
+# z, k, min_usd: TUNED on dev replicas 1–2 by src/eval/eval_detector.py — then frozen.
+window_days: 28        # 4 full weeks of history = "normal"
+price_change: 0.05     # ≥ 5% higher price per unit → price alert
+z: 3           # TUNED on dev r1–2 (eval_detector.py), frozen
+k: 2           # TUNED on dev r1–2 (eval_detector.py), frozen
+min_usd: 0.5   # TUNED on dev r1–2 (eval_detector.py), frozen
+orphan_rule: true

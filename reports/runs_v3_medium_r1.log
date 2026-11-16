@@ -1,0 +1,18 @@
+16 alerts on data/synthetic/medium/r1 · model finops-agent
+  AL-001 sf-perf-test-24          → untagged_resource  storefront  tag_and_notify_owner         conf=0.9 [auto_executed (simulated)] 3 tools, 22.4s
+  AL-002 sf-egress                → planned_change     storefront  no_action                    conf=1.0 [no_action] 2 tools, 15.2s
+  AL-003 sf-perf-test-53          → untagged_resource  storefront  tag_and_notify_owner         conf=0.9 [auto_executed (simulated)] 3 tools, 15.1s
+  AL-004 ml-train-37              → other              ml          no_action                    conf=0.9 [escalated_to_human] 4 tools, 15.2s
+  AL-005 bi-egress                → other              analytics   no_action                    conf=0.8 [escalated_to_human] 3 tools, 11.9s
+  AL-006 pay-fraud-82             → planned_change     payments    no_action                    conf=1.0 [no_action] 3 tools, 15.0s
+  AL-007 data-migration-45        → no_issue           data        no_action                    conf=0.9 [no_action] 3 tools, 14.8s
+  AL-008 data-migration-45-vol    → other              data        no_action                    conf=0.9 [escalated_to_human] 2 tools, 11.1s
+  AL-009 data-etl-workers         → idle_gpu           data        stop_instance                conf=0.9 [awaiting_approval] 3 tools, 14.4s
+  AL-010 sf-api-asg               → other              storefront  no_action                    conf=0.9 [escalated_to_human] 2 tools, 12.7s
+  AL-011 sf-web-asg               → sp_expired         platform    recommend_sp_renewal         conf=0.9 [awaiting_approval] 4 tools, 16.3s
+  AL-012 plat-inter-az            → no_issue           platform    no_action                    conf=0.9 [no_action] 3 tools, 15.6s
+  AL-013 ml-train-72              → idle_gpu           ml          stop_instance                conf=0.9 [awaiting_approval] 3 tools, 13.5s
+  AL-014 data-migration-45-vol    → orphaned_disk      data        snapshot_then_delete_volume  conf=1.0 [awaiting_approval] 5 tools, 18.4s
+  AL-015 sf-perf-test-29          → untagged_resource  storefront  tag_and_notify_owner         conf=0.9 [auto_executed (simulated)] 3 tools, 15.3s
+  AL-016 ml-train-22              → idle_gpu           ml          stop_instance                conf=0.9 [awaiting_approval] 3 tools, 13.6s
+Saved reports/runs/medium_r1/

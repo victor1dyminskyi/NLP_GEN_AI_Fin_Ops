@@ -1,0 +1,84 @@
+{
+  "alert": {
+    "alert_id": "AL-002",
+    "resource": "bi-migration-48-vol",
+    "account": "analytics-prod",
+    "rule": "new_resource",
+    "start_date": "2026-04-19 00:00:00",
+    "score": NaN,
+    "normal_usd_day": 0.0,
+    "current_usd_day": 5.33,
+    "extra_usd_day": 5.33,
+    "usage_effect": 5.33,
+    "price_effect": 0.0,
+    "related": NaN,
+    "resource_kind": "disk"
+  },
+  "resource": "bi-migration-48-vol",
+  "form": {
+    "type": "orphaned_disk",
+    "owner_team": "analytics",
+    "action": "snapshot_then_delete_volume",
+    "start_date": "2026-04-19",
+    "confidence": 0.9,
+    "explanation": "The disk was attached to a server that was terminated on 2026-05-02. There is no approved ticket for this change, indicating it is an orphaned disk.",
+    "evidence": [
+      "The server was terminated on 2026-05-02.",
+      "There is no approved ticket for the disk creation or attachment."
+    ],
+    "owner_message": "The disk bi-migration-48-vol is orphaned and still billed. Please create a snapshot and then delete the volume."
+  },
+  "gate": {
+    "needs_approval": true,
+    "escalated": false,
+    "status": "awaiting_approval"
+  },
+  "model": "finops-agent",
+  "llm_calls": 3,
+  "tool_calls": 2,
+  "form_fixes": 0,
+  "seconds": 12.7,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.6,
+      "raw": "{\"thought\": \"The resource is a disk (EBS volume) with a significant cost spike. I need to check if the server it was attached to is still running and if there's an approved ticket.\", \"tool\": \"attached_server\", \"args\": {\"volume\": \"bi-migration-48-vol\"}}",
+      "thought": "The resource is a disk (EBS volume) with a significant cost spike. I need to check if the server it was attached to is still running and if there's an approved ticket.",
+      "tool": "attached_server",
+      "args": {
+        "volume": "bi-migration-48-vol"
+      },
+      "result": "{\"server\": \"bi-migration-48\", \"server_terminated_at\": \"2026-05-02 18:00:00\", \"terminated_by\": \"sofia.rossi\", \"volume_last_billed_day\": \"2026-08-31\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.5,
+      "raw": "{\"thought\": \"The disk was attached to a server that was terminated on 2026-05-02. I need to check if there's an approved ticket for this change.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"bi-migration-48-vol\"}}",
+      "thought": "The disk was attached to a server that was terminated on 2026-05-02. I need to check if there's an approved ticket for this change.",
+      "tool": "change_events",
+      "args": {
+        "resource": "bi-migration-48-vol"
+      },
+      "result": "TICKETS: none\nevent_time,event_name,actor,ticket,details\n2026-04-19 09:00:00,CreateVolume,sofia.rossi,,\n2026-04-19 09:05:00,AttachVolume,sofia.rossi,,attached to bi-migration-48\n"
+    },
+    {
+      "step": 3,
+      "seconds": 7.6,
+      "raw": "{\"thought\": \"There is no approved ticket for the creation or attachment of the disk. The disk is still billed despite the server being terminated. This is an orphaned disk.\", \"final\": {\n     \"type\": \"orphaned_disk\",\n     \"owner_team\": \"analytics\",\n     \"action\": \"snapshot_then_delete_volume\",\n     \"start_date\": \"2026-04-19\",\n     \"confidence\": 0.9,\n     \"explanation\": \"The disk was attached to a server that was terminated on 2026-05-02. There is no approved ticket for this change, indicating it is an orphaned disk.\",\n     \"evidence\": [\"The server was terminated on 2026-05-02.\", \"There is no approved ticket for the disk creation or attachment.\"],\n     \"owner_message\": \"The disk bi-migration-48-vol is orphaned and still billed. Please create a snapshot and then delete the volume.\"\n}}",
+      "thought": "There is no approved ticket for the creation or attachment of the disk. The disk is still billed despite the server being terminated. This is an orphaned disk.",
+      "final": {
+        "type": "orphaned_disk",
+        "owner_team": "analytics",
+        "action": "snapshot_then_delete_volume",
+        "start_date": "2026-04-19",
+        "confidence": 0.9,
+        "explanation": "The disk was attached to a server that was terminated on 2026-05-02. There is no approved ticket for this change, indicating it is an orphaned disk.",
+        "evidence": [
+          "The server was terminated on 2026-05-02.",
+          "There is no approved ticket for the disk creation or attachment."
+        ],
+        "owner_message": "The disk bi-migration-48-vol is orphaned and still billed. Please create a snapshot and then delete the volume."
+      }
+    }
+  ]
+}

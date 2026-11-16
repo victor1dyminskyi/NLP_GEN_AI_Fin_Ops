@@ -1,0 +1,117 @@
+{
+  "alert": {
+    "alert_id": "AL-010",
+    "resource": "sf-api-asg",
+    "account": "storefront-prod",
+    "rule": "price+usage",
+    "start_date": "2026-07-01 00:00:00",
+    "score": 5.4,
+    "normal_usd_day": 43.94,
+    "current_usd_day": 64.79,
+    "extra_usd_day": 20.85,
+    "usage_effect": 3.55,
+    "price_effect": 19.44,
+    "related": NaN
+  },
+  "resource": "sf-api-asg",
+  "form": {
+    "type": "sp_expired",
+    "owner_team": "platform",
+    "action": "recommend_sp_renewal",
+    "start_date": "2026-07-01",
+    "confidence": 0.9,
+    "explanation": "The Savings Plan expired on 2026-07-01, causing the price per unit to rise from $0.1344 to $0.192, which is a 40% increase. There is no approved change ticket for this change.",
+    "evidence": [
+      "The Savings Plan expired on 2026-07-01.",
+      "The price per unit increased from $0.1344 to $0.192.",
+      "There is no approved change ticket for this change."
+    ]
+  },
+  "gate": {
+    "needs_approval": true,
+    "escalated": false,
+    "status": "awaiting_approval"
+  },
+  "model": "finops-agent",
+  "llm_calls": 6,
+  "tool_calls": 5,
+  "form_fixes": 0,
+  "seconds": 18.2,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 1.7,
+      "raw": "{\"thought\": \"Check if the resource is still active and billed.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"sf-api-asg\"}}",
+      "thought": "Check if the resource is still active and billed.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "sf-api-asg"
+      },
+      "result": "{\"ResourceName\": \"sf-api-asg\", \"ResourceId\": \"i-05e3fdfbef0b29ce3\", \"account\": \"storefront-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.192 per On Demand Linux m5.xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"storefront\\\", \\\"application\\\": \\\"api\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 48.39, \"account_team\": \"storefront\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 1.8,
+      "raw": "{\"thought\": \"Check if there is an approved change ticket for this increase.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-api-asg\"}}",
+      "thought": "Check if there is an approved change ticket for this increase.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-api-asg"
+      },
+      "result": "event_time,event_name,actor,ticket,details\n2025-10-30 18:32:00,RunInstances,alex.moreno,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 1.9,
+      "raw": "{\"thought\": \"Check the cost history to understand the usage pattern.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"sf-api-asg\", \"around_date\": \"2026-07-01\"}}",
+      "thought": "Check the cost history to understand the usage pattern.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "sf-api-asg",
+        "around_date": "2026-07-01"
+      },
+      "result": "SUMMARY {\"avg_cost_before\": 42.39, \"avg_cost_after\": 59.47, \"avg_quantity_before\": 315.42, \"avg_quantity_after\": 309.75, \"unit_price_before\": 0.1344, \"unit_price_after\": 0.192, \"pricing_before\": \"Committed\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-06-28,42.95,319.6,Hours,0.1344,Committed,sp-compute-2025\n2026-06-29,45.06,335.3,Hours,0.1344,Committed,sp-compute-2025\n2026-06-30,45.19,336.2,Hours,0.1344,Committed,sp-compute-2025\n2026-07-01,57.2,297.9,Hours,0.192,Standard,\n2026-07-02,62,322.9,Hours,0.192,Standard,\n2026-07-03,58.86,306.6,Hours,0.192,Standard,\n2026-07-04,57.47,299.3,Hours,0.192,Standard,\n2026-07-05,53.8,280.2,Hours,0.192,Standard,\n2026-07-06,58.74,305.9,Hours,0.192,Standard,\n2026-07-07,60.09,313,Hours,0.192,Standard,\n2026-07-08,62.68,326.4,Hours,0.192,Standard,\n2026-07-09,52.86,275.3,Hours,0.192,Standard,\n2026-07-10,64.79,337.5,Hours,0.192,Standard,\n2026-07-11,61.33,319.4,Hours,0.192,Standard,\n2026-07-12,59.56,310.2,Hours,0.192,Standard,\n2026-07-13,57.6,300,Hours,0.192,Standard,\n2026-07-14,64.18,334.3,Hours,0.192,Standard,\n2026-07-15,60.92,317.3,Hours,0.192,Standard,\n"
+    },
+    {
+      "step": 4,
+      "seconds": 4.0,
+      "raw": "{\"thought\": \"Check if the Savings Plan is still active.\", \"tool\": \"commitment_status\", \"args\": {\"resource\": \"sf-api-asg\"}}",
+      "thought": "Check if the Savings Plan is still active.",
+      "tool": "commitment_status",
+      "args": {
+        "resource": "sf-api-asg"
+      },
+      "result": "commitment_id,type,discount,start,end,managed_by\nsp-compute-2025,Savings Plan,0.3,2025-09-01,2026-07-01,platform\n"
+    },
+    {
+      "step": 5,
+      "seconds": 1.8,
+      "raw": "{\"thought\": \"Check if there is an approved change ticket for the Savings Plan expiration.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sp-compute-2025\"}}",
+      "thought": "Check if there is an approved change ticket for the Savings Plan expiration.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sp-compute-2025"
+      },
+      "result": "(no create/delete/ticket events)"
+    },
+    {
+      "step": 6,
+      "seconds": 7.0,
+      "raw": "{\"thought\": \"The Savings Plan expired and the cost increased. This is a problem.\", \"final\": {\n  \"type\": \"sp_expired\",\n  \"owner_team\": \"platform\",\n  \"action\": \"recommend_sp_renewal\",\n  \"start_date\": \"2026-07-01\",\n  \"confidence\": 0.9,\n  \"explanation\": \"The Savings Plan expired on 2026-07-01, causing the price per unit to rise from $0.1344 to $0.192, which is a 40% increase. There is no approved change ticket for this change.\",\n  \"evidence\": [\"The Savings Plan expired on 2026-07-01.\", \"The price per unit increased from $0.1344 to $0.192.\", \"There is no approved change ticket for this change.\"]\n}}",
+      "thought": "The Savings Plan expired and the cost increased. This is a problem.",
+      "final": {
+        "type": "sp_expired",
+        "owner_team": "platform",
+        "action": "recommend_sp_renewal",
+        "start_date": "2026-07-01",
+        "confidence": 0.9,
+        "explanation": "The Savings Plan expired on 2026-07-01, causing the price per unit to rise from $0.1344 to $0.192, which is a 40% increase. There is no approved change ticket for this change.",
+        "evidence": [
+          "The Savings Plan expired on 2026-07-01.",
+          "The price per unit increased from $0.1344 to $0.192.",
+          "There is no approved change ticket for this change."
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "alert": {
+    "alert_id": "AL-010",
+    "resource": "sf-api-asg",
+    "account": "storefront-prod",
+    "rule": "price+usage",
+    "start_date": "2026-07-24 00:00:00",
+    "score": 9.2,
+    "normal_usd_day": 42.46,
+    "current_usd_day": 61.79,
+    "extra_usd_day": 19.33,
+    "usage_effect": 0.79,
+    "price_effect": 18.54,
+    "related": NaN,
+    "resource_kind": "server"
+  },
+  "resource": "sf-api-asg",
+  "form": {
+    "type": "sp_expired",
+    "owner_team": "platform",
+    "action": "recommend_sp_renewal",
+    "start_date": "2026-07-24",
+    "confidence": 0.9,
+    "explanation": "The cost increased by 46.13 USD/day, and the Savings Plan expired on 2026-07-24.",
+    "evidence": [
+      "The cost increased by 46.13 USD/day.",
+      "The Savings Plan expired on 2026-07-24."
+    ],
+    "owner_message": "The cost for the sf-api-asg server has increased significantly due to the expiration of the Savings Plan. Please consider renewing the Savings Plan."
+  },
+  "gate": {
+    "needs_approval": true,
+    "escalated": false,
+    "status": "awaiting_approval"
+  },
+  "model": "finops-agent",
+  "llm_calls": 6,
+  "tool_calls": 5,
+  "form_fixes": 0,
+  "seconds": 21.2,
+  "trace": [
+    {
+      "step": 1,
+      "seconds": 2.3,
+      "raw": "{\"thought\": \"The resource is a server, and the cost has increased significantly. I need to check if it's still busy and if there's an approved ticket.\", \"tool\": \"resource_info\", \"args\": {\"resource\": \"sf-api-asg\"}}",
+      "thought": "The resource is a server, and the cost has increased significantly. I need to check if it's still busy and if there's an approved ticket.",
+      "tool": "resource_info",
+      "args": {
+        "resource": "sf-api-asg"
+      },
+      "result": "{\"ResourceName\": \"sf-api-asg\", \"ResourceId\": \"i-05e3fdfbef0b29ce3\", \"account\": \"storefront-prod\", \"ServiceName\": \"Amazon Elastic Compute Cloud\", \"price_line\": \"$0.192 per On Demand Linux m5.xlarge Instance Hour\", \"tags\": \"{\\\"team\\\": \\\"storefront\\\", \\\"application\\\": \\\"api\\\", \\\"environment\\\": \\\"prod\\\"}\", \"first_billed\": \"2026-03-01\", \"last_billed\": \"2026-08-31\", \"avg_cost_per_day\": 46.13, \"account_team\": \"storefront\"}"
+    },
+    {
+      "step": 2,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The server is tagged and owned by the storefront team. I need to check if it's still running and if there's an approved ticket.\", \"tool\": \"change_events\", \"args\": {\"resource\": \"sf-api-asg\"}}",
+      "thought": "The server is tagged and owned by the storefront team. I need to check if it's still running and if there's an approved ticket.",
+      "tool": "change_events",
+      "args": {
+        "resource": "sf-api-asg"
+      },
+      "result": "TICKETS: none\nevent_time,event_name,actor,ticket,details\n2025-10-30 18:32:00,RunInstances,alex.moreno,,\n"
+    },
+    {
+      "step": 3,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"There are no approved tickets for this server. I need to check if the server is still running and if it's busy.\", \"tool\": \"usage\", \"args\": {\"resource\": \"sf-api-asg\", \"around_date\": \"2026-07-24\"}}",
+      "thought": "There are no approved tickets for this server. I need to check if the server is still running and if it's busy.",
+      "tool": "usage",
+      "args": {
+        "resource": "sf-api-asg",
+        "around_date": "2026-07-24"
+      },
+      "result": "CHANGE: CPU busy: 17.1% before \u2192 16.8% after (39 days after)\nperiod,days,avg_cpu_pct,avg_gpu_pct,max_gpu_pct,avg_instances\nbefore,145,17.1,,,13.1\nafter,39,16.8,,,13.2\n"
+    },
+    {
+      "step": 4,
+      "seconds": 1.9,
+      "raw": "{\"thought\": \"The server is still running and busy, but there's no approved ticket. This is a potential issue.\", \"tool\": \"commitment_status\", \"args\": {\"resource\": \"sf-api-asg\"}}",
+      "thought": "The server is still running and busy, but there's no approved ticket. This is a potential issue.",
+      "tool": "commitment_status",
+      "args": {
+        "resource": "sf-api-asg"
+      },
+      "result": "commitment_id,type,discount,start,end,managed_by\nsp-compute-2025,Savings Plan,0.3,2025-09-01,2026-07-24,platform\n"
+    },
+    {
+      "step": 5,
+      "seconds": 2.4,
+      "raw": "{\"thought\": \"The Savings Plan is still active, but the cost has increased significantly. This is a potential issue.\", \"tool\": \"cost_history\", \"args\": {\"resource\": \"sf-api-asg\", \"around_date\": \"2026-07-24\"}}",
+      "thought": "The Savings Plan is still active, but the cost has increased significantly. This is a potential issue.",
+      "tool": "cost_history",
+      "args": {
+        "resource": "sf-api-asg",
+        "around_date": "2026-07-24"
+      },
+      "result": "CHANGE from 2026-07-24: cost 43.0%, quantity 0.1%, price per unit 42.9%; pricing Committed \u2192 Standard\nSUMMARY {\"avg_cost_before\": 42.11, \"avg_cost_after\": 60.21, \"avg_quantity_before\": 313.33, \"avg_quantity_after\": 313.6, \"unit_price_before\": 0.1344, \"unit_price_after\": 0.192, \"pricing_before\": \"Committed\", \"pricing_after\": \"Standard\"}\nDAILY\nday,cost,quantity,unit,unit_price,PricingCategory,CommitmentDiscountId\n2026-07-21,42.99,319.8,Hours,0.1344,Committed,sp-compute-2025\n2026-07-22,42.29,314.6,Hours,0.1344,Committed,sp-compute-2025\n2026-07-23,41.96,312.2,Hours,0.1344,Committed,sp-compute-2025\n2026-07-24,61.79,321.9,Hours,0.192,Standard,\n2026-07-25,57.51,299.5,Hours,0.192,Standard,\n2026-07-26,60.26,313.8,Hours,0.192,Standard,\n2026-07-27,65.14,339.3,Hours,0.192,Standard,\n2026-07-28,62.28,324.4,Hours,0.192,Standard,\n2026-07-29,59.81,311.5,Hours,0.192,Standard,\n2026-07-30,53.9,280.7,Hours,0.192,Standard,\n2026-07-31,61.22,318.9,Hours,0.192,Standard,\n2026-08-01,59.94,312.2,Hours,0.192,Standard,\n2026-08-02,60.85,316.9,Hours,0.192,Standard,\n2026-08-03,56.63,294.9,Hours,0.192,Standard,\n2026-08-04,61.86,322.2,Hours,0.192,Standard,\n2026-08-05,62.5,325.5,Hours,0.192,Standard,\n2026-08-06,61.14,318.4,Hours,0.192,Standard,\n2026-08-07,58.32,303.8,Hours,0.192,Standard,\n"
+    },
+    {
+      "step": 6,
+      "seconds": 9.7,
+      "raw": "{\"thought\": \"The cost has increased significantly and the Savings Plan has expired. This is a potential issue.\", \"final\": {\n  \"type\": \"sp_expired\",\n  \"owner_team\": \"platform\",\n  \"action\": \"recommend_sp_renewal\",\n  \"start_date\": \"2026-07-24\",\n  \"confidence\": 0.9,\n  \"explanation\": \"The cost increased by 46.13 USD/day, and the Savings Plan expired on 2026-07-24.\",\n  \"evidence\": [\"The cost increased by 46.13 USD/day.\", \"The Savings Plan expired on 2026-07-24.\"],\n  \"owner_message\": \"The cost for the sf-api-asg server has increased significantly due to the expiration of the Savings Plan. Please consider renewing the Savings Plan.\"\n}}",
+      "thought": "The cost has increased significantly and the Savings Plan has expired. This is a potential issue.",
+      "final": {
+        "type": "sp_expired",
+        "owner_team": "platform",
+        "action": "recommend_sp_renewal",
+        "start_date": "2026-07-24",
+        "confidence": 0.9,
+        "explanation": "The cost increased by 46.13 USD/day, and the Savings Plan expired on 2026-07-24.",
+        "evidence": [
+          "The cost increased by 46.13 USD/day.",
+          "The Savings Plan expired on 2026-07-24."
+        ],
+        "owner_message": "The cost for the sf-api-asg server has increased significantly due to the expiration of the Savings Plan. Please consider renewing the Savings Plan."
+      }
+    }
+  ]
+}

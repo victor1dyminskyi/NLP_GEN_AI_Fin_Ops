@@ -1,0 +1,22 @@
+sku_key,kind,is_gpu,ServiceName,ServiceCategory,ChargeDescription,ListUnitPrice,PricingUnit,ConsumedUnit,ResourceType,SkuId,rows_in_sample
+ec2_t3_medium,hourly,false,Amazon Elastic Compute Cloud,Compute,$0.0416 per On Demand Linux t3.medium Instance Hour,0.0416,Hours,Hours,instance,83H2W4FZK86NAGZF,100
+ec2_m5_large,hourly,false,Amazon Elastic Compute Cloud,Compute,$0.096 per On Demand Linux m5.large Instance Hour,0.096,Hours,Hours,instance,VCN9BB3M49B23Y77,35
+ec2_m5_xlarge,hourly,false,Amazon Elastic Compute Cloud,Compute,$0.192 per On Demand Linux m5.xlarge Instance Hour,0.192,Hours,Hours,instance,5G4TA8Z4MUKE6MJB,101
+ec2_m5_2xlarge,hourly,false,Amazon Elastic Compute Cloud,Compute,$0.384 per On Demand Linux m5.2xlarge Instance Hour,0.384,Hours,Hours,instance,ZH8KU2QB7FHAJJXW,71
+ec2_c5_2xlarge,hourly,false,Amazon Elastic Compute Cloud,Compute,$0.34 per On Demand Linux c5.2xlarge Instance Hour,0.34,Hours,Hours,instance,H9ZN7EUEHC2S7YH5,584
+ec2_c5_4xlarge,hourly,false,Amazon Elastic Compute Cloud,Compute,$0.68 per On Demand Linux c5.4xlarge Instance Hour,0.68,Hours,Hours,instance,QW4FHUGEZYB74TW8,90
+ec2_r5_xlarge,hourly,false,Amazon Elastic Compute Cloud,Compute,$0.252 per On Demand Linux r5.xlarge Instance Hour,0.252,Hours,Hours,instance,TZG8KMRSS5ASP78Y,13
+ec2_g5_4xlarge,hourly,true,Amazon Elastic Compute Cloud,Compute,$1.624 per On Demand Linux g5.4xlarge Instance Hour,1.624,Hours,Hours,instance,4GQWNPC9K2PZAY97,239
+ec2_g5_12xlarge,hourly,true,Amazon Elastic Compute Cloud,Compute,$5.672 per On Demand Linux g5.12xlarge Instance Hour,5.672,Hours,Hours,instance,UH59G55UJ94HZTJJ,11
+rds_m5_large_multiaz_mysql,hourly,false,Amazon Relational Database Service,Databases,$0.342 per RDS db.m5.large Multi-AZ instance hour (or partial hour) running MySQL,0.342,Hours,Hours,NULL,DYABU2ES8VWH2PKH,33
+rds_m5_large_pg,hourly,false,Amazon Relational Database Service,Databases,$0.178 per RDS db.m5.large Single-AZ instance hour (or partial hour) running PostgreSQL,0.178,Hours,Hours,NULL,BQFZBWR92CNPFNBV,7
+ebs_gp3,storage,false,Amazon Elastic Compute Cloud,Storage,$0.08 per GB-month of General Purpose (gp3) provisioned storage - US East (N. Virginia),0.08,GB-Months,GB-Months,volume,JG3KUJMBRGHV3N8G,1816
+ebs_snapshot,storage,false,Amazon Elastic Compute Cloud,Storage,$0.05 per GB-Month of snapshot data stored - US West (Oregon),0.05,GB-Months,GB-Months,NULL,CNYETXBBP73CTYPG,1428
+s3_standard,storage,false,Amazon Simple Storage Service,Storage,$0.023 per GB - first 50 TB / month of storage used,0.023,GB-Months,GB-Months,bucket,Z3FQZG73HYSPVABR,95
+alb_hours,hourly,false,Elastic Load Balancing,Networking,$0.0225 per Application LoadBalancer-hour (or partial hour),0.0225,Hours,Hours,NULL,7AKU6NT3G9ZEJTB5,185
+nat_hours,hourly,false,Amazon Elastic Compute Cloud,Compute,$0.045 per NAT Gateway Hour,0.045,Hours,Hours,NULL,M2YSHUBETB3JX4M4,500
+nat_gb,transfer,false,Amazon Elastic Compute Cloud,Compute,$0.045 per GB Data Processed by NAT Gateways,0.045,GB,GB,NULL,9AXD6XJT8GZWPQED,519
+dt_out_internet,transfer,false,Amazon Elastic Compute Cloud,Compute,$0.090 per GB - first 10 TB / month data transfer out beyond the global free tier,0.09,GB,GB,NULL,QZ73H5RGR5JYYB4D,2747
+dt_inter_az,transfer,false,Amazon Elastic Compute Cloud,Compute,$0.010 per GB - regional data transfer - in/out/between EC2 AZs or using elastic IPs or ELB,0.01,GB,GB,NULL,PNUBVW4CPC8XA46W,5011
+dt_inter_region,transfer,false,Amazon Elastic Compute Cloud,Compute,$0.02 per GB - US West (Oregon) data transfer to US East (Northern Virginia),0.02,GB,GB,NULL,EAUDKWWNQJZTV253,261
+cw_logs_ingest,transfer,false,AmazonCloudWatch,Management and Governance,$0.50 per GB custom log data ingested in Standard log class - US East (Northern Virginia),0.5,GB,GB,NULL,S8QGXX5R2BKKMDSJ,87
